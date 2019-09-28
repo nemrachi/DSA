@@ -6,7 +6,9 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/emari/CLionProjects/DSA/Cvicenia/cv1.2_prvocisla.c
+C:/Users/emari/CLionProjects/DSA/Cvicenia/cv1-2_prvocisla.c
 stdio.h
+-
+stdlib.h
 -
 

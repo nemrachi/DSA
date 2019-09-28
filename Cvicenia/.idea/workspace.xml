@@ -14,12 +14,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fb821c4-1417-4667-bc02-d4510ad471d8" name="Default Changelist" comment="paprikaDone">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/C.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/cv1.3_dlazdice.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/objects.a" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1_paprika.dir/cv1-1_paprika.c.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1_paprika.dir/cv1-1_paprika.c.obj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1_paprika.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1_paprika.dir/objects.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/C.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/cv1.2_prvocisla.c.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/objects.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cv1.3_dlazdice.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cv1.3_dlazdice.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/cv1_paprika.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cv1_paprika.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cv1-1_paprika.c" beforeDir="false" afterPath="$PROJECT_DIR$/cv1-1_paprika.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cv2_prvocisla.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cv2_prvocisla.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cv1-2_prvocisla.c" beforeDir="false" afterPath="$PROJECT_DIR$/cv1-2_prvocisla.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cv1-3_dlazdice.c" beforeDir="false" afterPath="$PROJECT_DIR$/cv1-3_dlazdice.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,7 +73,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="CMake Application.cv1_paprika">
+  <component name="RunManager" selected="CMake Application.cv1.3_dlazdice">
     <configuration name="cv1.3_dlazdice" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Cvicenia" TARGET_NAME="cv1.3_dlazdice" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Cvicenia" RUN_TARGET_NAME="cv1.3_dlazdice">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -95,8 +107,16 @@
       <updated>1569439350289</updated>
       <workItem from="1569439351562" duration="6027000" />
       <workItem from="1569500839814" duration="2795000" />
-      <workItem from="1569674661713" duration="7709000" />
+      <workItem from="1569674661713" duration="17347000" />
     </task>
+    <task id="LOCAL-00001" summary="paprikaDone">
+      <created>1569682993063</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1569682993063</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,6 +134,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="paprikaDone" />
     <option name="LAST_COMMIT_MESSAGE" value="paprikaDone" />
   </component>

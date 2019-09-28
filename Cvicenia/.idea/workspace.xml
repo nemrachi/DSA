@@ -2,9 +2,9 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
+      <config projectName="Cvicenia" targetName="cv2_prvocisla" />
       <config projectName="Cvicenia" targetName="cv1_paprika" />
       <config projectName="Cvicenia" targetName="cv1.3_dlazdice" />
-      <config projectName="Cvicenia" targetName="cv2_prvocisla" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -13,7 +13,14 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1fb821c4-1417-4667-bc02-d4510ad471d8" name="Default Changelist" comment="" />
+    <list default="true" id="1fb821c4-1417-4667-bc02-d4510ad471d8" name="Default Changelist" comment="paprikaDone">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1_paprika.dir/cv1-1_paprika.c.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1_paprika.dir/cv1-1_paprika.c.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1_paprika.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1_paprika.dir/objects.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cv1_paprika.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cv1_paprika.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cv1-1_paprika.c" beforeDir="false" afterPath="$PROJECT_DIR$/cv1-1_paprika.c" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +31,13 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1RLHFHXLmXeENOPtjnS27Y3nMHz" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -83,10 +95,26 @@
       <updated>1569439350289</updated>
       <workItem from="1569439351562" duration="6027000" />
       <workItem from="1569500839814" duration="2795000" />
+      <workItem from="1569674661713" duration="7709000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="paprikaDone" />
+    <option name="LAST_COMMIT_MESSAGE" value="paprikaDone" />
   </component>
 </project>

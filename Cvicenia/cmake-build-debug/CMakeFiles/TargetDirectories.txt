@@ -2,4 +2,5 @@ C:/Users/emari/CLionProjects/DSA/Cvicenia/cmake-build-debug/CMakeFiles/edit_cach
 C:/Users/emari/CLionProjects/DSA/Cvicenia/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir
 C:/Users/emari/CLionProjects/DSA/Cvicenia/cmake-build-debug/CMakeFiles/cv1_paprika.dir
 C:/Users/emari/CLionProjects/DSA/Cvicenia/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir
+C:/Users/emari/CLionProjects/DSA/Cvicenia/cmake-build-debug/CMakeFiles/cv2-1_hrackarstvo.dir
 C:/Users/emari/CLionProjects/DSA/Cvicenia/cmake-build-debug/CMakeFiles/rebuild_cache.dir

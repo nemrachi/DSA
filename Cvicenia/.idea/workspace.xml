@@ -2,9 +2,10 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="Cvicenia" targetName="cv2_prvocisla" />
       <config projectName="Cvicenia" targetName="cv1_paprika" />
       <config projectName="Cvicenia" targetName="cv1.3_dlazdice" />
+      <config projectName="Cvicenia" targetName="cv2-1_hrackarstvo" />
+      <config projectName="Cvicenia" targetName="cv2_prvocisla" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -13,12 +14,24 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1fb821c4-1417-4667-bc02-d4510ad471d8" name="Default Changelist" comment="paprikaDone">
+    <list default="true" id="1fb821c4-1417-4667-bc02-d4510ad471d8" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/cv2-1_hrackarstvo.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/C.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/C.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/objects.a" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/objects.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Cvicenia.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Cvicenia.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cv1.3_dlazdice.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cv1.3_dlazdice.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/cv2_prvocisla.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cv2_prvocisla.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cv1-2_prvocisla.c" beforeDir="false" afterPath="$PROJECT_DIR$/cv1-2_prvocisla.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cv1-3_dlazdice.c" beforeDir="false" afterPath="$PROJECT_DIR$/cv1-3_dlazdice.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,7 +59,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -60,13 +73,18 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="CMake Application.cv2_prvocisla">
+  <component name="RunManager" selected="CMake Application.cv2-1_hrackarstvo">
     <configuration name="cv1.3_dlazdice" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Cvicenia" TARGET_NAME="cv1.3_dlazdice" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Cvicenia" RUN_TARGET_NAME="cv1.3_dlazdice">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="cv1_paprika" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Cvicenia" TARGET_NAME="cv1_paprika" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Cvicenia" RUN_TARGET_NAME="cv1_paprika">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="cv2-1_hrackarstvo" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Cvicenia" TARGET_NAME="cv2-1_hrackarstvo" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Cvicenia" RUN_TARGET_NAME="cv2-1_hrackarstvo">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -79,6 +97,7 @@
     <list>
       <item itemvalue="CMake Application.cv1.3_dlazdice" />
       <item itemvalue="CMake Application.cv1_paprika" />
+      <item itemvalue="CMake Application.cv2-1_hrackarstvo" />
       <item itemvalue="CMake Application.cv2_prvocisla" />
     </list>
   </component>
@@ -95,7 +114,8 @@
       <workItem from="1569439351562" duration="6027000" />
       <workItem from="1569500839814" duration="2795000" />
       <workItem from="1569674661713" duration="17347000" />
-      <workItem from="1569826948622" duration="3473000" />
+      <workItem from="1569826948622" duration="5914000" />
+      <workItem from="1569847259611" duration="14054000" />
     </task>
     <task id="LOCAL-00001" summary="paprikaDone">
       <created>1569682993063</created>
@@ -104,7 +124,14 @@
       <option name="project" value="LOCAL" />
       <updated>1569682993063</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="prvocislaDone">
+      <created>1569830467193</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1569830467193</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,6 +153,33 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="paprikaDone" />
-    <option name="LAST_COMMIT_MESSAGE" value="paprikaDone" />
+    <MESSAGE value="prvocislaDone" />
+    <option name="LAST_COMMIT_MESSAGE" value="prvocislaDone" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/cv1-2_prvocisla.c</url>
+          <line>27</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/cv1-3_dlazdice.c</url>
+          <line>60</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/cv1-3_dlazdice.c</url>
+          <line>37</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/cv2-1_hrackarstvo.c</url>
+          <line>63</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -148,6 +148,19 @@ cv1.3_dlazdice/fast:
 	$(MAKE) -f CMakeFiles\cv1.3_dlazdice.dir\build.make CMakeFiles/cv1.3_dlazdice.dir/build
 .PHONY : cv1.3_dlazdice/fast
 
+#=============================================================================
+# Target rules for targets named cv2-1_hrackarstvo
+
+# Build rule for target.
+cv2-1_hrackarstvo: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 cv2-1_hrackarstvo
+.PHONY : cv2-1_hrackarstvo
+
+# fast build rule for target.
+cv2-1_hrackarstvo/fast:
+	$(MAKE) -f CMakeFiles\cv2-1_hrackarstvo.dir\build.make CMakeFiles/cv2-1_hrackarstvo.dir/build
+.PHONY : cv2-1_hrackarstvo/fast
+
 cv1-1_paprika.obj: cv1-1_paprika.c.obj
 
 .PHONY : cv1-1_paprika.obj
@@ -229,6 +242,33 @@ cv1-3_dlazdice.c.s:
 	$(MAKE) -f CMakeFiles\cv1.3_dlazdice.dir\build.make CMakeFiles/cv1.3_dlazdice.dir/cv1-3_dlazdice.c.s
 .PHONY : cv1-3_dlazdice.c.s
 
+cv2-1_hrackarstvo.obj: cv2-1_hrackarstvo.c.obj
+
+.PHONY : cv2-1_hrackarstvo.obj
+
+# target to build an object file
+cv2-1_hrackarstvo.c.obj:
+	$(MAKE) -f CMakeFiles\cv2-1_hrackarstvo.dir\build.make CMakeFiles/cv2-1_hrackarstvo.dir/cv2-1_hrackarstvo.c.obj
+.PHONY : cv2-1_hrackarstvo.c.obj
+
+cv2-1_hrackarstvo.i: cv2-1_hrackarstvo.c.i
+
+.PHONY : cv2-1_hrackarstvo.i
+
+# target to preprocess a source file
+cv2-1_hrackarstvo.c.i:
+	$(MAKE) -f CMakeFiles\cv2-1_hrackarstvo.dir\build.make CMakeFiles/cv2-1_hrackarstvo.dir/cv2-1_hrackarstvo.c.i
+.PHONY : cv2-1_hrackarstvo.c.i
+
+cv2-1_hrackarstvo.s: cv2-1_hrackarstvo.c.s
+
+.PHONY : cv2-1_hrackarstvo.s
+
+# target to generate assembly for a file
+cv2-1_hrackarstvo.c.s:
+	$(MAKE) -f CMakeFiles\cv2-1_hrackarstvo.dir\build.make CMakeFiles/cv2-1_hrackarstvo.dir/cv2-1_hrackarstvo.c.s
+.PHONY : cv2-1_hrackarstvo.c.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -239,6 +279,7 @@ help:
 	@echo ... cv2_prvocisla
 	@echo ... cv1_paprika
 	@echo ... cv1.3_dlazdice
+	@echo ... cv2-1_hrackarstvo
 	@echo ... rebuild_cache
 	@echo ... cv1-1_paprika.obj
 	@echo ... cv1-1_paprika.i
@@ -249,6 +290,9 @@ help:
 	@echo ... cv1-3_dlazdice.obj
 	@echo ... cv1-3_dlazdice.i
 	@echo ... cv1-3_dlazdice.s
+	@echo ... cv2-1_hrackarstvo.obj
+	@echo ... cv2-1_hrackarstvo.i
+	@echo ... cv2-1_hrackarstvo.s
 .PHONY : help
 
 

@@ -12,17 +12,20 @@ int main() {
     printf("Zadaj cisla:\n");
     //zadanie cisel poradia prvocisel
     while(scanf("%d%c", &temp, &ch) >= 1) {
-        inputNums = realloc(inputNums, sizeof(int)*(index+1));
-        inputNums[index] = temp;
-        index++;
-        //uklada si najvacsie poradove cislo
-        if (temp > maxNumIn) {
-            maxNumIn = temp;
+        if (1 <= temp <= 100000) {
+            inputNums = realloc(inputNums, sizeof(int)*(index+1));
+            inputNums[index] = temp;
+            index++;
+            //uklada si najvacsie poradove cislo
+            if (temp > maxNumIn) {
+                maxNumIn = temp;
+            }
+        } else {
+            printf("Number is out of range\n");
         }
     }
 
-
-    int sizeNums = maxNumIn*maxNumIn; //cca celkovy pocet cisel
+    int sizeNums = maxPrime; //cca celkovy pocet cisel
 
     primeNums = malloc((sizeNums) * sizeof(int));
 
@@ -32,9 +35,12 @@ int main() {
     }
 
     //oznaci neprvocisla 0
-    for (int j = 2; j < sizeNums; ++j) {
+    //
+    //TU JE NEJAKA CHYBA - PRISTUP K PAMATI
+    //
+    for (unsigned int j = 2; j < sizeNums; ++j) {
         if (primeNums[j]) {
-            for (int i = j; i*j < sizeNums ; ++i) {
+            for (unsigned int i = j; i*j < sizeNums ; ++i) {
                 primeNums[i*j] = 0;
             }
         }

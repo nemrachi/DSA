@@ -4,56 +4,65 @@
 
 int main() {
     int maxPrime = 1299709,
-    *nums, *primeNums, *inputNums,
+    *resultPrimes, *primeNums, *inputNums,
     temp, maxNumIn = 0, index = 0;
     char ch;
 
-    nums = malloc((maxPrime + 1) * sizeof(int));
     inputNums = malloc(sizeof(int));
-
     printf("Zadaj cisla:\n");
-
-    while(scanf("%d", &temp) >= 1) {
+    //zadanie cisel poradia prvocisel
+    while(scanf("%d%c", &temp, &ch) >= 1) {
         inputNums = realloc(inputNums, sizeof(int)*(index+1));
         inputNums[index] = temp;
         index++;
+        //uklada si najvacsie poradove cislo
         if (temp > maxNumIn) {
             maxNumIn = temp;
         }
     }
 
-    primeNums = malloc(sizeof(inputNums));
 
-    int max = maxNumIn*maxNumIn;
+    int sizeNums = maxNumIn*maxNumIn; //cca celkovy pocet cisel
 
-    for (int i = 0; i <= max; ++i) {
-        nums[i] = i;
+    primeNums = malloc((sizeNums) * sizeof(int));
+
+    //vypis postupnosti cisel
+    for (int i = 2; i < sizeNums ; ++i) {
+        primeNums[i] = i;
     }
 
-
-    for (int j = 2; j <= max ; ++j) {
-        if (j == 2) {
-            for (int i = 4; i <= max; i+=2) {
-                nums[i] = 0;
+    //oznaci neprvocisla 0
+    for (int j = 2; j < sizeNums; ++j) {
+        if (primeNums[j]) {
+            for (int i = j; i*j < sizeNums ; ++i) {
+                primeNums[i*j] = 0;
             }
-        } else if (j == 3) {
-            for (int i = 9; i <= max; i+=6) {
-                nums[i] = 0;
-            }
-        } else if (j == 5) {
-            for (int i = 25; i <= max; i+=20) {
-                nums[i] = 0;
-            }
-        } else if (j == 7) {
-            for (int i = 49; i <= max; i+=42) {
-                nums[i] = 0; //not true
-            }           }
         }
     }
 
+    resultPrimes = malloc(sizeof(inputNums));
+    int index2 = inputNums[0];
+    int index3 = 1;
+    int index4 = 0;
 
-    free(nums);
+    for (int l = 2; l < sizeNums; ++l) {
+        if(primeNums[l]) {
+            if (index3 == inputNums[index4]) {
+                resultPrimes[index4] = primeNums[l];
+                index4++;
+            }
+            index3++;
+        }
+    }
+
+    printf("prvocisla:\n");
+    for (int k = 0; k < index; ++k) {
+        temp = inputNums[k];
+        printf("\t %d\n", resultPrimes[k]);
+    }
+
     free(primeNums);
     free(inputNums);
+    free(resultPrimes);
     return 0;
 }

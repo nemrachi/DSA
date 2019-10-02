@@ -1,44 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define MAXINT 2147483646
+int max = 0;
 
 void sucet_k_najvacsich(int cena[], int n, int k) {
-    int *najdrahsiaCena = malloc(k* sizeof(int));
-    int min = MAXINT;
-    int minPos = 0;
+    int sortedCena[max];
+    memset(sortedCena, 0, max* sizeof(int));
+    int index = 0;
 
-    for (int i = 0; i < k; ++i) {
-        najdrahsiaCena[i] = cena[i];
-        if (cena[i] < min) {
-            min = cena[i];
-            minPos = i;
+    for (int i = 0; i < n; ++i) {
+        sortedCena[cena[i]-1] += 1;
+    }
+
+    for (int j = max-1; j >= 0; ++j) {
+        for (int i = 0; i < ; ++i) {
+            
         }
     }
-
-    for (int j = k; j < n; ++j) {
-        if (cena[j] > min) {
-            najdrahsiaCena[minPos] = cena[j];
-            min = MAXINT;
-
-            for (int i = 0; i < k; ++i) {
-                if (najdrahsiaCena[i] < min) {
-                    min = najdrahsiaCena[i];
-                    minPos = i;
-                }
-            }
-        }
-    }
-
-    int sum = 0;
-
-    for (int l = 0; l < k; ++l) {
-        sum += najdrahsiaCena[l];
-    }
-
-    printf("%d\n", sum);
-
-    free(najdrahsiaCena);
-
 }
 
 int main() {
@@ -54,8 +33,12 @@ int main() {
     printf("\n");
 
     while (scanf("%d%c", &cena[index], &ch)) {
-        index++;
+        if (max < cena[index]) {
+            max = cena[index];
+        }
 
+        index++;
+        
         if (ch == '\n' && index == n) {
             break;
         }

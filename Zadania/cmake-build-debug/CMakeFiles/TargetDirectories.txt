@@ -1,0 +1,3 @@
+C:/Users/emari/CLionProjects/DSA/Zadania/cmake-build-debug/CMakeFiles/Zadania.dir
+C:/Users/emari/CLionProjects/DSA/Zadania/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/emari/CLionProjects/DSA/Zadania/cmake-build-debug/CMakeFiles/rebuild_cache.dir

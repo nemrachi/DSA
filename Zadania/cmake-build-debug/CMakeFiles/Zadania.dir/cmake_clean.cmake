@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Zadania.dir/main.c.obj"
+  "CMakeFiles/Zadania.dir/DSAzadanie1.c.obj"
   "Zadania.pdb"
   "Zadania.exe"
   "Zadania.exe.manifest"

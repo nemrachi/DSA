@@ -56,27 +56,27 @@ include CMakeFiles/Zadania.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Zadania.dir/flags.make
 
-CMakeFiles/Zadania.dir/main.c.obj: CMakeFiles/Zadania.dir/flags.make
-CMakeFiles/Zadania.dir/main.c.obj: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/Zadania.dir/main.c.obj"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\Zadania.dir\main.c.obj   -c C:\Users\emari\CLionProjects\DSA\Zadania\main.c
+CMakeFiles/Zadania.dir/DSAzadanie1.c.obj: CMakeFiles/Zadania.dir/flags.make
+CMakeFiles/Zadania.dir/DSAzadanie1.c.obj: ../DSAzadanie1.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/Zadania.dir/DSAzadanie1.c.obj"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\Zadania.dir\DSAzadanie1.c.obj   -c C:\Users\emari\CLionProjects\DSA\Zadania\DSAzadanie1.c
 
-CMakeFiles/Zadania.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Zadania.dir/main.c.i"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\emari\CLionProjects\DSA\Zadania\main.c > CMakeFiles\Zadania.dir\main.c.i
+CMakeFiles/Zadania.dir/DSAzadanie1.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Zadania.dir/DSAzadanie1.c.i"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\emari\CLionProjects\DSA\Zadania\DSAzadanie1.c > CMakeFiles\Zadania.dir\DSAzadanie1.c.i
 
-CMakeFiles/Zadania.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Zadania.dir/main.c.s"
-	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\emari\CLionProjects\DSA\Zadania\main.c -o CMakeFiles\Zadania.dir\main.c.s
+CMakeFiles/Zadania.dir/DSAzadanie1.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Zadania.dir/DSAzadanie1.c.s"
+	C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\emari\CLionProjects\DSA\Zadania\DSAzadanie1.c -o CMakeFiles\Zadania.dir\DSAzadanie1.c.s
 
 # Object files for target Zadania
 Zadania_OBJECTS = \
-"CMakeFiles/Zadania.dir/main.c.obj"
+"CMakeFiles/Zadania.dir/DSAzadanie1.c.obj"
 
 # External object files for target Zadania
 Zadania_EXTERNAL_OBJECTS =
 
-Zadania.exe: CMakeFiles/Zadania.dir/main.c.obj
+Zadania.exe: CMakeFiles/Zadania.dir/DSAzadanie1.c.obj
 Zadania.exe: CMakeFiles/Zadania.dir/build.make
 Zadania.exe: CMakeFiles/Zadania.dir/linklibs.rsp
 Zadania.exe: CMakeFiles/Zadania.dir/objects1.rsp

@@ -122,32 +122,88 @@ Zadania/fast:
 	$(MAKE) -f CMakeFiles\Zadania.dir\build.make CMakeFiles/Zadania.dir/build
 .PHONY : Zadania/fast
 
-main.obj: main.c.obj
+#=============================================================================
+# Target rules for targets named DSAzadanie1
 
-.PHONY : main.obj
+# Build rule for target.
+DSAzadanie1: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 DSAzadanie1
+.PHONY : DSAzadanie1
+
+# fast build rule for target.
+DSAzadanie1/fast:
+	$(MAKE) -f CMakeFiles\DSAzadanie1.dir\build.make CMakeFiles/DSAzadanie1.dir/build
+.PHONY : DSAzadanie1/fast
+
+#=============================================================================
+# Target rules for targets named testingLanguageC
+
+# Build rule for target.
+testingLanguageC: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 testingLanguageC
+.PHONY : testingLanguageC
+
+# fast build rule for target.
+testingLanguageC/fast:
+	$(MAKE) -f CMakeFiles\testingLanguageC.dir\build.make CMakeFiles/testingLanguageC.dir/build
+.PHONY : testingLanguageC/fast
+
+DSAzadanie1.obj: DSAzadanie1.c.obj
+
+.PHONY : DSAzadanie1.obj
 
 # target to build an object file
-main.c.obj:
-	$(MAKE) -f CMakeFiles\Zadania.dir\build.make CMakeFiles/Zadania.dir/main.c.obj
-.PHONY : main.c.obj
+DSAzadanie1.c.obj:
+	$(MAKE) -f CMakeFiles\Zadania.dir\build.make CMakeFiles/Zadania.dir/DSAzadanie1.c.obj
+	$(MAKE) -f CMakeFiles\DSAzadanie1.dir\build.make CMakeFiles/DSAzadanie1.dir/DSAzadanie1.c.obj
+.PHONY : DSAzadanie1.c.obj
 
-main.i: main.c.i
+DSAzadanie1.i: DSAzadanie1.c.i
 
-.PHONY : main.i
+.PHONY : DSAzadanie1.i
 
 # target to preprocess a source file
-main.c.i:
-	$(MAKE) -f CMakeFiles\Zadania.dir\build.make CMakeFiles/Zadania.dir/main.c.i
-.PHONY : main.c.i
+DSAzadanie1.c.i:
+	$(MAKE) -f CMakeFiles\Zadania.dir\build.make CMakeFiles/Zadania.dir/DSAzadanie1.c.i
+	$(MAKE) -f CMakeFiles\DSAzadanie1.dir\build.make CMakeFiles/DSAzadanie1.dir/DSAzadanie1.c.i
+.PHONY : DSAzadanie1.c.i
 
-main.s: main.c.s
+DSAzadanie1.s: DSAzadanie1.c.s
 
-.PHONY : main.s
+.PHONY : DSAzadanie1.s
 
 # target to generate assembly for a file
-main.c.s:
-	$(MAKE) -f CMakeFiles\Zadania.dir\build.make CMakeFiles/Zadania.dir/main.c.s
-.PHONY : main.c.s
+DSAzadanie1.c.s:
+	$(MAKE) -f CMakeFiles\Zadania.dir\build.make CMakeFiles/Zadania.dir/DSAzadanie1.c.s
+	$(MAKE) -f CMakeFiles\DSAzadanie1.dir\build.make CMakeFiles/DSAzadanie1.dir/DSAzadanie1.c.s
+.PHONY : DSAzadanie1.c.s
+
+testingLanguageC.obj: testingLanguageC.c.obj
+
+.PHONY : testingLanguageC.obj
+
+# target to build an object file
+testingLanguageC.c.obj:
+	$(MAKE) -f CMakeFiles\testingLanguageC.dir\build.make CMakeFiles/testingLanguageC.dir/testingLanguageC.c.obj
+.PHONY : testingLanguageC.c.obj
+
+testingLanguageC.i: testingLanguageC.c.i
+
+.PHONY : testingLanguageC.i
+
+# target to preprocess a source file
+testingLanguageC.c.i:
+	$(MAKE) -f CMakeFiles\testingLanguageC.dir\build.make CMakeFiles/testingLanguageC.dir/testingLanguageC.c.i
+.PHONY : testingLanguageC.c.i
+
+testingLanguageC.s: testingLanguageC.c.s
+
+.PHONY : testingLanguageC.s
+
+# target to generate assembly for a file
+testingLanguageC.c.s:
+	$(MAKE) -f CMakeFiles\testingLanguageC.dir\build.make CMakeFiles/testingLanguageC.dir/testingLanguageC.c.s
+.PHONY : testingLanguageC.c.s
 
 # Help Target
 help:
@@ -156,11 +212,16 @@ help:
 	@echo ... clean
 	@echo ... depend
 	@echo ... Zadania
+	@echo ... DSAzadanie1
+	@echo ... testingLanguageC
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... main.obj
-	@echo ... main.i
-	@echo ... main.s
+	@echo ... DSAzadanie1.obj
+	@echo ... DSAzadanie1.i
+	@echo ... DSAzadanie1.s
+	@echo ... testingLanguageC.obj
+	@echo ... testingLanguageC.i
+	@echo ... testingLanguageC.s
 .PHONY : help
 
 

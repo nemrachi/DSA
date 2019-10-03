@@ -1,44 +1,44 @@
-//
-// Created by emari on 2. 10. 2019.
-//
 #include <stdio.h>
-#define SIZE 50
-
-
-//structure for memory chunks
-typedef struct {
-    int prev_mchunk_size; //size of previous free chunk of memory
-    int mchunk_size;      //size of actual chunk of memory with size of header
-    void *data;           //pointer to data saved in memory block (chunk)
-    struct MEMORY_CHUNK *next;
-} MEMORY_CHUNK;
-
-
-//struct for pointer to beginning of the initialized memory
-typedef struct {
-    void * beginnig;
-    void * ending;
-    int size;
-    MEMORY_CHUNK memoryChunks;
-}  INIT_MEMORY_BEGIN;
-
-static INIT_MEMORY_BEGIN * memory_beginning = NULL;
-
-void memory_init(void *ptr, unsigned int size) {
-
-    memory_beginning->beginnig = ptr;
-    memory_beginning = ptr;
-    memory_beginning->()ending = ptr + size;
-
-    printf("%p ", memory_beginning->beginnig);
-    printf("%p ", memory_beginning);
-    printf("%p ", memory_beginning->beginnig);
-
-}
-
+//
+//typedef struct MEMORY_CHUNK{
+//    int prev_mchunk_size; //size of previous free chunk of memory
+//    int mchunk_size;      //size of actual chunk of memory with size of header
+//    void *data;           //pointer to data saved in memory block (chunk)
+//    struct MEMORY_CHUNK *next;
+//} MEMORY_CHUNK;
+//
+//typedef struct {
+//    unsigned int size;
+//    MEMORY_CHUNK *free_memory_chunks;
+//}  INIT_MEMORY;
+//
+//static INIT_MEMORY * memory_beginning = NULL;
+//
+//void foo(unsigned int size) {
+//    size = (int)size - (int)sizeof(INIT_MEMORY);
+//    memory_beginning->size = size;
+//    memory_beginning->free_memory_chunks->mchunk_size = (int)size;
+//    memory_beginning->free_memory_chunks->next = NULL;
+//    printf("%d\n", memory_beginning->free_memory_chunks->mchunk_size);
+//}
+//
 int main() {
-    char region[SIZE];
-    memory_init(region, SIZE);
+    int x = 33;
+    int z = 44;
+    int *p;
+
+    p = &x;
+
+    printf("%d ", *p);
+    printf("%p ", p);
+    printf("%p\n", &p);
+
+    p = &z;
+
+    printf("%d ", *p);
+    printf("%p ", p);
+    printf("%p ", &p);
+
     return 0;
 }
-
+//

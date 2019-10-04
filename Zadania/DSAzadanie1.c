@@ -36,23 +36,28 @@ static INIT_MEMORY_HEADER * memory_beginning = NULL;
 //memory allocation function
 //function input: size of wanted memory, which will be used b
 void *memory_alloc(unsigned int size) {
+    printf("\nMemory of %db starting allocating--------------\n", size);
+
     MEMORY_CHUNK *previous = NULL, *current = NULL;
     void * allocated_memory;
-
     current = memory_beginning->free_memory_chunks;
+
+    printf("size alloc:%d\n", current->mchunk_size);
 
     while(((current->mchunk_size<size) || (current->mchunk_size<0))&&(current->next!=NULL)){
         previous = current;
         current = current->next;
-        printf("One block checked\n");
+        printf("Block checked...\n");
     }
 
     if(current->mchunk_size == size) {
         current->mchunk_size *= -1;
+        printf("original ptr alloc:%p\n", current);
         allocated_memory = (void*)++current;
+        printf("++ptr alloc:%p\n", allocated_memory);
         printf("Allocated memory is same size as initialized memory.");
         return allocated_memory;
-    } else if (current->mchunk_size>size+ sizeof(MEMORY_CHUNK)) {
+    } else if (current->mchunk_size > size + sizeof(MEMORY_CHUNK)) {
         printf("Allocated block fit in init memory with a split\n");
         //return allocated_memory;
     } else {
@@ -60,9 +65,7 @@ void *memory_alloc(unsigned int size) {
         printf("Error: not enough memory\n");
         return allocated_memory;
     }
-
-
-
+    return NULL;
 }
 
 //memory free function
@@ -76,6 +79,7 @@ int memory_check(void *ptr){
 }
 
 void memory_init(void *ptr, unsigned int size) {
+    printf("Memory starting initializing-------------------\n");
     memory_beginning = ptr; //pointer to first memory address
     memory_beginning->beginning = ptr;
     memory_beginning->free_memory_chunks = ptr; //pointer to first free memory address
@@ -91,7 +95,7 @@ void memory_init(void *ptr, unsigned int size) {
     memory_beginning->size = size; //size of memory
     memory_beginning->free_memory_chunks->mchunk_size = (int)size; //size of free memory
     printf("size init:%d %d\n", memory_beginning->free_memory_chunks->mchunk_size, memory_beginning->size);
-    printf("Memory initialized\n");
+    printf("Memory initialized-----------------------------\n");
 }
 
 //---------------------------------------------------------------------//
@@ -110,7 +114,7 @@ void memory_init(void *ptr, unsigned int size) {
 int main() {
     char region[SIZE_INIT];
     memory_init(region, SIZE_INIT);
-    //char* pointer = (char*) memory_alloc(39);
+    char* pointer = (char*) memory_alloc(34);
 //    if (pointer)
 //        memset(pointer, 0, 10);
 //    if (pointer)

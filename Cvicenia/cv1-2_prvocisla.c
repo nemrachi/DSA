@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-
+//unsigned na double
+//prime prepisat na 1, potom brat index!!!
 int main() {
     int maxPrime = 1299709,
     *resultPrimes, *primeNums, *inputNums,
@@ -35,12 +35,10 @@ int main() {
     }
 
     //oznaci neprvocisla 0
-    //
-    //TU JE NEJAKA CHYBA - PRISTUP K PAMATI
-    //
-    for (unsigned int j = 2; j < sizeNums; ++j) {
+
+    for (unsigned int j = 2; j < sizeNums; j++) {
         if (primeNums[j]) {
-            for (unsigned int i = j; i*j < sizeNums ; ++i) {
+            for (unsigned int i = j; i*j < sizeNums ; i++) {
                 primeNums[i*j] = 0;
             }
         }

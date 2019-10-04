@@ -51,4 +51,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/Zadania.dir/DependInfo.cmake"
   "CMakeFiles/DSAzadanie1.dir/DependInfo.cmake"
   "CMakeFiles/testingLanguageC.dir/DependInfo.cmake"
+  "CMakeFiles/DSAzadanie1.1.dir/DependInfo.cmake"
   )

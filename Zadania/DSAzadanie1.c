@@ -1,123 +1,180 @@
-#include <stdio.h>
 #include <string.h>
-#include <stdint.h>
-#include <stddef.h> //offsetof
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
 
-#define SIZE_INIT 50 //size of init memory, delete it later
+#define OFFSET sizeof(int)
+#define HOFFSET sizeof(int)
 
-//structure for linked list of free memory chunks
-//size of this struct: 16
-typedef struct MEMORY_CHUNK{
-    //int prev_mchunk_size; //size of previous free chunk of memory
-    int mchunk_size;      //size of actual chunk of memory with size of header
-    void *data;           //pointer to data saved in memory block (chunk)
-    struct MEMORY_CHUNK *next; //next chunk of memory
-} MEMORY_CHUNK;
+char *mem;
 
+//funkcia zmení hlavičku pamätového bloku na volnú
+void clear(int * point){
+    *point = abs(*point);
+}
 
-//struct for pointer to beginning of the initialized memory
-//size of this struct: 12
-typedef struct {
-    void * beginning;
-    void * ending;
-    unsigned int size; //size of initialized memory
-    MEMORY_CHUNK *free_memory_chunks; //header to memory chunks
-}  INIT_MEMORY_HEADER;
+//funkcia spojí dve hlavičky do jednej
+void connect(int * first, int * second){
+    *first += *second + OFFSET;
+}
 
-//pointer to the beginning of the initialized memory
-static INIT_MEMORY_HEADER * memory_beginning = NULL;
+//funkcia zistí čí je hlavička volná alebo nie
+int isFree(int * point){
+    return *point > 0;
+}
 
-//---------------------------------------------------------------------//
-//                                                                     //
-//       MAIN 4 FUNCTIONS                                              //
-//                                                                     //
-//---------------------------------------------------------------------//
+//funkcia vrát ukazovatel typu int na hlavičku
+int *getPointOn(char * memory){
+    return (int*)memory;
+}
 
-//memory allocation function
-//function input: size of wanted memory, which will be used b
-void *memory_alloc(unsigned int size) {
-    printf("\nMemory of %db starting allocating--------------\n", size);
+//funkcia vráti hodnotu napísanu v hlavičke
+int getValOn(char * memory){
+    return *getPointOn(memory);
+}
 
-    MEMORY_CHUNK *previous = NULL, *current = NULL;
-    void * allocated_memory;
-    current = memory_beginning->free_memory_chunks;
+//funkcia zistí či sa pointer nachádza v pamäti s ktorouje možné pracovať
+int isInMem(char * point){
+    return point >= mem + HOFFSET && point < mem + getValOn(mem) - OFFSET -HOFFSET;
+}
 
-    printf("size alloc:%d\n", current->mchunk_size);
+//funkcia najde dalšiu hlavičku a ak nieje dalšia hlavička vráti NULL
+char *findNextMemBlock(char * memory){
+    if(mem - memory > getValOn(mem))
+        return NULL;
+    if(!isInMem((char*)(memory + OFFSET + (abs(getValOn(memory))))))
+        return NULL;
+    return (char*)(memory + OFFSET + (abs(getValOn(memory))));
+}
 
-    while(((current->mchunk_size<size) || (current->mchunk_size<0))&&(current->next!=NULL)){
-        previous = current;
-        current = current->next;
-        printf("Block checked...\n");
+//funkcia napíše velkosť a obsadenisť všetkých pamäťových blokov
+void showAllBlocks(){
+    char * actBlock = mem + HOFFSET;
+    do
+        printf("%p: %d\n", actBlock, getValOn(actBlock));
+    while((actBlock = findNextMemBlock(actBlock)) != NULL && actBlock < mem + getValOn(mem));
+}
+
+//funkcia vykreslí všetky bajty v pamäti, ich adresu aj hodnotu
+void showAllMem(){
+    int i;
+    for(i=0 ; i<*mem ; i++)
+        printf("%d %p: %d\n",i, getPointOn(mem + i), getValOn(mem + i));
+}
+
+//funkcia z vizualizuje pamäť
+void drawMemory(){
+    char * actBlock = mem + HOFFSET;
+    int i;
+    printf("MEMO");
+    do{
+        for(i=0 ; i<OFFSET ; i++)
+            printf("H");
+        for(i=0 ; i<abs(getValOn(actBlock)) ; i++)
+            printf("%c",(getValOn(actBlock) > 0 ? '_' : '*'));
+
     }
+    while((actBlock = findNextMemBlock(actBlock)) != NULL && actBlock < mem + getValOn(mem));
+    printf("\n\n");
+}
 
-    if(current->mchunk_size == size) {
-        current->mchunk_size *= -1;
-        printf("original ptr alloc:%p\n", current);
-        allocated_memory = (void*)++current;
-        printf("++ptr alloc:%p\n", allocated_memory);
-        printf("Allocated memory is same size as initialized memory.");
-        return allocated_memory;
-    } else if (current->mchunk_size > size + sizeof(MEMORY_CHUNK)) {
-        printf("Allocated block fit in init memory with a split\n");
-        //return allocated_memory;
-    } else {
-        allocated_memory = NULL;
-        printf("Error: not enough memory\n");
-        return allocated_memory;
+void *memory_alloc(unsigned int size){
+    char *actMem = mem + HOFFSET;
+    do{
+        if((int)((getValOn(actMem) ) - size) >= 0){
+            int memSize = getValOn(actMem);
+
+            //ak by sa nezmestiha hlavčka tak sa pridelí celý blok pamäte
+            if(memSize <= OFFSET + size)
+                size = memSize;
+
+            *(getPointOn(actMem)) = -size;
+
+            //ak ostane v bloku volné miesto tak sa prepíše
+            if(memSize - size > 0)
+                *(getPointOn(actMem + size + OFFSET )) = memSize - OFFSET - size;
+
+            return actMem + OFFSET;
+        }
+        actMem = findNextMemBlock(actMem);
     }
+    while(actMem != NULL);
+
+    //ak nenašlo volné miesto vráti null;
     return NULL;
 }
 
-//memory free function
-int memory_free(void *valid_ptr) {
+int memory_free(void *valid_ptr){
+    int * p_prev = getPointOn(mem + HOFFSET) ;
+    int * p_next = getPointOn(findNextMemBlock((char*)(valid_ptr - OFFSET)));
+    int * p_act  = getPointOn((char *)(valid_ptr - OFFSET));
 
+    //vyčistí aktuálny blok pamäťe;
+    clear(p_act);
+
+    //ak je volný nasledujúci tak ich spojí;
+    if(isInMem((char*)p_next) && isFree(p_next))
+        connect(p_act, p_next);
+
+    //nájde predchádzajúci
+    while(getPointOn(findNextMemBlock((char )p_prev)) != p_act && isInMem((char)p_prev))
+        p_prev = getPointOn(findNextMemBlock((char *)p_prev));
+
+
+    //ak je volný predchádzajúci tak ich spojí;
+    if(p_prev != 0 && getPointOn(mem + HOFFSET) != p_prev && isFree(p_prev))
+        connect(p_prev, p_act);
+
+    return 0;
 }
 
-//check
 int memory_check(void *ptr){
+    char * point = mem + HOFFSET;
 
+    //ak je pointer volný vráti 0
+    if(getValOn((char *)(ptr - OFFSET)) > 0)
+        return 0;
+
+    //ak je pointer prvý block pamäte vráti 1
+    if(ptr - OFFSET == point)
+        return 1;
+
+    //prechádza blocky a ak nájde tento istý vráti 1
+    while(isInMem(point))
+        if((point = findNextMemBlock(point)) == ptr - OFFSET)
+            return 1;
+
+    //ináč vráti 0
+    return 0;
 }
 
-void memory_init(void *ptr, unsigned int size) {
-    printf("Memory starting initializing-------------------\n");
-    memory_beginning = ptr; //pointer to first memory address
-    memory_beginning->beginning = ptr;
-    memory_beginning->free_memory_chunks = ptr; //pointer to first free memory address
+void memory_init(void *ptr, unsigned int size){
+    //priradím na začiatok velkosť
+    *(getPointOn(ptr)) = size;
 
-    printf("start init: %p %p %p\n", ptr, memory_beginning->beginning,memory_beginning->free_memory_chunks);
+    //priradím pointer ku globálnej premennej
+    mem = ((char *)ptr);
 
-    memory_beginning->ending = (memory_beginning->beginning + size) - 1;
-    printf("end init:%p\n", memory_beginning->ending);
-
-    size = size - sizeof(INIT_MEMORY_HEADER); //real size for data
-
-    memory_beginning->free_memory_chunks->next = NULL;
-    memory_beginning->size = size; //size of memory
-    memory_beginning->free_memory_chunks->mchunk_size = (int)size; //size of free memory
-    printf("size init:%d %d\n", memory_beginning->free_memory_chunks->mchunk_size, memory_beginning->size);
-    printf("Memory initialized-----------------------------\n");
+    //vytvorím prví blok pamäte
+    *(getPointOn(ptr + HOFFSET)) = size - OFFSET - HOFFSET;
 }
 
-//---------------------------------------------------------------------//
-//                                                                     //
-//       SECONDARY FUNCTIONS                                           //
-//                                                                     //
-//---------------------------------------------------------------------//
-
-
-
-//---------------------------------------------------------------------//
-//                                                                     //
-//       MAIN                                                          //
-//                                                                     //
-//---------------------------------------------------------------------//
 int main() {
-    char region[SIZE_INIT];
-    memory_init(region, SIZE_INIT);
-    char* pointer = (char*) memory_alloc(34);
-//    if (pointer)
-//        memset(pointer, 0, 10);
-//    if (pointer)
-//        memory_free(pointer);
+    char region[50];
+    memory_init(region, 50);
+    char* pointer = (char*) memory_alloc(10);
+    char* pointer2 = (char*) memory_alloc(20);
+    if (pointer)
+        memset(pointer, 0, 10);
+    drawMemory();
+    if (pointer2)
+        memset(pointer, 0, 10);
+    drawMemory();
+    if (pointer)
+        memory_free(pointer);
+    if (pointer2)
+        memory_free(pointer2);
+
+    drawMemory();
     return 0;
 }

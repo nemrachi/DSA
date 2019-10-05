@@ -22,22 +22,33 @@
 //    printf("%d\n", memory_beginning->free_memory_chunks->mchunk_size);
 //}
 //
+
+typedef struct test{
+    int size;
+    int size2;
+    struct test *next;
+} test;
+
+
 int main() {
+    char region[50];
+    void * ptr = region;
+    test *p = ptr;
     int x = 33;
     int z = 44;
-    int *p;
 
-    p = &x;
+    p->size = x;
+    p->size2 = z;
 
-    printf("%d ", *p);
     printf("%p ", p);
-    printf("%p\n", &p);
+    printf("%p ", &p->size);
+    printf("%p", &p->size2);
 
-    p = &z;
-
-    printf("%d ", *p);
-    printf("%p ", p);
-    printf("%p ", &p);
+//    p = &z;
+//
+//    printf("%d ", *p);
+//    printf("%p ", p);
+//    printf("%p ", &p);
 
     return 0;
 }

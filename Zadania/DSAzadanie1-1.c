@@ -2,20 +2,30 @@
 #include <string.h>
 #include <stdint.h>
 
-#define SIZE_INIT 50                            //size of init memory, delete it later
+#define SIZE_INIT 50                            //velkost inicializovanej pamate
+#define MALLOC_SIZE 37                          //velkost pamate, ktoru chce pouzivatel alokovat
+#define INT_OFFSET sizeof(int)                  //velkost int typu
 
-/*structure for linked list of free memory chunks
-    size of this struct: 8 */
+/*struktura ("hlavicka") pre linked list blokov volnej pamate
+    momentalna velkost: 8 */
 typedef struct FREE_MCHUNK {
-    int mchunk_size;                            //size of actual chunk of memory without size of header
-    //void *ptr_data;                           //pointer to data saved in memory block (chunk)
-    struct FREE_MCHUNK *next;                   //next free chunk of memory
+    int mchunk_size;                            //velkost pamate, ktoru moze pouzivatel REALNE vyuzit
+                                                //dalej v programe->mchunk_size+INT_OFFSET, lebo je rozdiel medzi hlavickami
+    struct FREE_MCHUNK *next;                   //odkaz na dalsi volny blok
 } FREE_MCHUNK;
 
-#define HEAD_OFFSET sizeof(FREE_MCHUNK)          //size of struct
+#define HEAD_SIZE sizeof(FREE_MCHUNK)          //velkost hlavicky volnych blokov
+
+static FREE_MCHUNK *h_free_mchunks = NULL;      //pointer na zaciatok volnych blokov
+                                                //ukazuje na hlavicku, nie na pouzitelnu pamat
+
+//---------------------------------------------------------------------//
+//                                                                     //
+//       SECONDARY FUNCTIONS                                           //
+//                                                                     //
+//---------------------------------------------------------------------//
 
 
-static FREE_MCHUNK *h_free_mchunks = NULL;      //pointer to the beginning of the initialized memory
 
 //---------------------------------------------------------------------//
 //                                                                     //
@@ -23,38 +33,65 @@ static FREE_MCHUNK *h_free_mchunks = NULL;      //pointer to the beginning of th
 //                                                                     //
 //---------------------------------------------------------------------//
 
-/*memory allocation function
-function input: size of wanted allocated memory*/
+/*funckia na alokaciu pamate
+atributy: velkost pamate, ktoru chce pouzivatel vyuzivat*/
 void *memory_alloc(unsigned int size) {
-    printf("\nMemory of %dB starting allocating--------------\n", size);
-    FREE_MCHUNK *previous = NULL, *current = NULL; //temporary pointers to blocks of memory
-    void *allocated_memory;
-    current = h_free_mchunks;
-    printf("size alloc:%d\n", size);
+    printf("Memory of %dB starting allocating--------------\n", size);
 
-    while((current->mchunk_size < size) && (current->next != NULL)) { //find free block for wanted size
+    FREE_MCHUNK *previous = NULL, *current = NULL;                    //docasne ukazovatele na volnu pamat
+    void *allocated_memory;                                           //ukazovatel na alokovanu pamat
+    current = h_free_mchunks;
+
+    //first fit
+    while((current->mchunk_size < (size + INT_OFFSET)) && (current->next != NULL)) { //najde prvy hodiaci sa volny blok
         previous = current;
         current = current->next;
     }
 
-    if(current->mchunk_size == size) {
+    if(current->mchunk_size + INT_OFFSET == (size + INT_OFFSET)) {                 //ak blok je rovnako velky ako velkost alokovanej
+                                                                      // pamate+hlavicka
+        if (previous != NULL) {                                       //ak nie je blok prvy
+
+        }
+        previous = current;
+        current =
         current->mchunk_size = ~current->mchunk_size + 1;
         printf("original ptr alloc:%p\n", current);
-        allocated_memory = (void*) ++current;    //jump to address for user data (after block header)
+        allocated_memory = (void*) ++current;    //jump to address for user data (address after header)
         printf("++ptr alloc:%p\n", allocated_memory);
         printf("Allocated memory is same size as initialized memory.");
         return allocated_memory;
 
-    } else if (current->mchunk_size > (size + HEAD_OFFSET)) {
+    } else if (current->mchunk_size > (size + HEAD_SIZE)) {
+        if (current->mchunk_size - size < HEAD_SIZE) { //ak by zostal fragment mensi ako samotna hlavicka free chunku, daj mallocu vsetku pamet
+            allocated_memory = current;
+            memset(allocated_memory, (int)size, INT_OFFSET); //ulozila som velkost allocovanej pamate do jeho hlavicky
+            allocated_memory = allocated_memory + INT_OFFSET; //posunula som sa na realne vyuzitie pamate
+            if (previous == NULL) {
+                h_free_mchunks = current;
+            } else {
+                previous->next = current->next;
+            }
+        } else {
+            allocated_memory = current;
+            memset(allocated_memory, (int)size, INT_OFFSET); //ulozila som velkost allocovanej pamate do jeho hlavicky
+            allocated_memory = allocated_memory + INT_OFFSET; //posunula som sa na realne vyuzitie pamate
+            current = allocated_memory + size;
+            if (previous == NULL) {
+                h_free_mchunks = current;
+            } else {
+                previous->next = current;
+            }
+        }
+
         printf("Allocated block fit in init memory with a split\n");
-        //return allocated_memory;
+        return allocated_memory;
 
     } else {
         allocated_memory = NULL;
         printf("Error:\tnot enough memory\n");
         return allocated_memory;
     }
-    return NULL;
 }
 
 //memory free function
@@ -69,32 +106,15 @@ int memory_check(void *ptr){
 
 void memory_init(void *ptr, unsigned int size) {
     printf("Memory starting initializing-------------------\n");
-    h_free_mchunks = ptr;                       //pointer to first memory address
-    printf("start init: %p %p\n", ptr, h_free_mchunks);
 
-    size = size - HEAD_OFFSET;                  //real size for user data
-    h_free_mchunks->mchunk_size = (int)size;
+    h_free_mchunks = ptr;                       //ukazovatel na volny blok pamate
+    size = size - HEAD_SIZE;                    //realna velkost pamate, ktora sa moze vyuzit
+    h_free_mchunks->mchunk_size = (int)size;    //ulozenie aktualnej velkosti do hlavicky
     h_free_mchunks->next = NULL;
-    printf("size init:%d\n", h_free_mchunks->mchunk_size);
+
+    printf("address of init memory: %p\n", h_free_mchunks);
+    printf("size    of init memory: %d\n", h_free_mchunks->mchunk_size);
     printf("Memory initialized-----------------------------\n");
-}
-
-//---------------------------------------------------------------------//
-//                                                                     //
-//       SECONDARY FUNCTIONS                                           //
-//                                                                     //
-//---------------------------------------------------------------------//
-
-void divide_and_conquer(FREE_MCHUNK * free_mchunks, unsigned int size){
-    printf("Memory spliting--------------------------------\n");
-    FREE_MCHUNK *new_list = (void*)((void*)free_mchunks + size + HEAD_OFFSET);
-    new_list->mchunk_size = (int)(free_mchunks->mchunk_size - size - HEAD_OFFSET);
-    printf("%d\n", new_list->mchunk_size);
-    new_list->next=free_mchunks->next;
-    free_mchunks->mchunk_size=size;
-    //free_mchunks->free=0;
-    free_mchunks->next=new_list;
-    //vyhodit z litu
 }
 
 //---------------------------------------------------------------------//
@@ -106,9 +126,9 @@ void divide_and_conquer(FREE_MCHUNK * free_mchunks, unsigned int size){
 int main() {
     char region[SIZE_INIT];
     memory_init(region, SIZE_INIT);
-    char * pointer = (char*) memory_alloc(42);
-//    if (pointer)
-//        memset(pointer, 0, 10);
+    char * pointer = (char*) memory_alloc(MALLOC_SIZE);
+    if (pointer)
+        memset(pointer, 0, MALLOC_SIZE);
 //    if (pointer)
 //        memory_free(pointer);
     return 0;

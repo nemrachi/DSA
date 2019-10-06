@@ -48,45 +48,39 @@ void *memory_alloc(unsigned int size) {
         current = current->next;
     }
 
-    if(current->mchunk_size + INT_OFFSET == (size + INT_OFFSET)) {                 //ak blok je rovnako velky ako velkost alokovanej
-                                                                      // pamate+hlavicka
-        if (previous != NULL) {                                       //ak nie je blok prvy
+    allocated_memory = current;
+    int alloc_size = (int) size;
+    int remain_mchunk = current->mchunk_size - alloc_size + INT_OFFSET;             //kolko zostane v bloku po alokacii
 
-        }
-        previous = current;
-        current =
-        current->mchunk_size = ~current->mchunk_size + 1;
-        printf("original ptr alloc:%p\n", current);
-        allocated_memory = (void*) ++current;    //jump to address for user data (address after header)
-        printf("++ptr alloc:%p\n", allocated_memory);
-        printf("Allocated memory is same size as initialized memory.");
-        return allocated_memory;
 
-    } else if (current->mchunk_size > (size + HEAD_SIZE)) {
-        if (current->mchunk_size - size < HEAD_SIZE) { //ak by zostal fragment mensi ako samotna hlavicka free chunku, daj mallocu vsetku pamet
-            allocated_memory = current;
-            memset(allocated_memory, (int)size, INT_OFFSET); //ulozila som velkost allocovanej pamate do jeho hlavicky
-            allocated_memory = allocated_memory + INT_OFFSET; //posunula som sa na realne vyuzitie pamate
-            if (previous == NULL) {
-                h_free_mchunks = current;
-            } else {
-                previous->next = current->next;
-            }
+
+    if (remain_mchunk >= HEAD_SIZE) {
+        current = current + alloc_size + INT_OFFSET;
+        current->mchunk_size = remain_mchunk;
+        memset(current, current->mchunk_size, INT_OFFSET);
+        //neviem, ci prepisem pointer na next node
+
+        memset(allocated_memory, ~alloc_size+1, INT_OFFSET);
+        memset(allocated_memory+INT_OFFSET, 0, INT_OFFSET);
+
+        if (previous == NULL) {
+            h_free_mchunks =  current;
         } else {
-            allocated_memory = current;
-            memset(allocated_memory, (int)size, INT_OFFSET); //ulozila som velkost allocovanej pamate do jeho hlavicky
-            allocated_memory = allocated_memory + INT_OFFSET; //posunula som sa na realne vyuzitie pamate
-            current = allocated_memory + size;
-            if (previous == NULL) {
-                h_free_mchunks = current;
-            } else {
-                previous->next = current;
-            }
+            previous->next = current;
         }
+        printf("After allocation, there remains extra space in chunk.");
 
-        printf("Allocated block fit in init memory with a split\n");
         return allocated_memory;
 
+    } else if ((remain_mchunk < HEAD_SIZE) && (remain_mchunk >= 0)){
+        current->next = current;
+        memset(current, current->mchunk_size, INT_OFFSET);
+
+        memset(allocated_memory, current->mchunk_size, INT_OFFSET);
+        memset(allocated_memory+INT_OFFSET, 0, INT_OFFSET);
+        printf("After allocation, there not remains extra space in chunk.\nAllocated memory consumed whole block.\n");
+
+        return allocated_memory;
     } else {
         allocated_memory = NULL;
         printf("Error:\tnot enough memory\n");

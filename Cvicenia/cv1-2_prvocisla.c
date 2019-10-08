@@ -9,7 +9,7 @@ int main() {
     char ch;
 
     inputNums = malloc(sizeof(int));
-    printf("Zadaj cisla:\n");
+    //printf("Zadaj cisla:\n");
     //zadanie cisel poradia prvocisel
     while(scanf("%d%c", &temp, &ch) >= 1) {
         if (1 <= temp <= 100000) {
@@ -21,7 +21,7 @@ int main() {
                 maxNumIn = temp;
             }
         } else {
-            printf("Number is out of range\n");
+            //printf("Number is out of range\n");
         }
     }
 
@@ -59,7 +59,7 @@ int main() {
         }
     }
 
-    printf("prvocisla:\n");
+    //printf("prvocisla:\n");
     for (int k = 0; k < index; ++k) {
         temp = inputNums[k];
         printf("\t %d\n", resultPrimes[k]);

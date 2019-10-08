@@ -2,10 +2,10 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="Cvicenia" targetName="cv1.3_dlazdice" />
       <config projectName="Cvicenia" targetName="cv2_prvocisla" />
-      <config projectName="Cvicenia" targetName="cv2-1_hrackarstvo" />
       <config projectName="Cvicenia" targetName="cv1_paprika" />
+      <config projectName="Cvicenia" targetName="cv2-1_hrackarstvo" />
+      <config projectName="Cvicenia" targetName="cv1.3_dlazdice" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -15,13 +15,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1fb821c4-1417-4667-bc02-d4510ad471d8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2-1_hrackarstvo.dir/cv2-1_hrackarstvo.c.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/cv1-2_prvocisla.c.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/cv1-2_prvocisla.c.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/objects.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cv2_prvocisla.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/cv2_prvocisla.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cv1-2_prvocisla.c" beforeDir="false" afterPath="$PROJECT_DIR$/cv1-2_prvocisla.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Zadania/DSAzadanie1.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Zadania/DSAzadanie1.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Zadania/DSAzadanie1-1.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Zadania/DSAzadanie1-1.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -108,6 +103,7 @@
       <workItem from="1569847259611" duration="23954000" />
       <workItem from="1570183131013" duration="1712000" />
       <workItem from="1570200428001" duration="52000" />
+      <workItem from="1570431616580" duration="92000" />
     </task>
     <task id="LOCAL-00001" summary="paprikaDone">
       <created>1569682993063</created>

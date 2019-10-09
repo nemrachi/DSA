@@ -55,17 +55,6 @@ CMAKE_BINARY_DIR = C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	"C:\Program Files\JetBrains\CLion 2018.3.4\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available."
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -76,6 +65,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	"C:\Program Files\JetBrains\CLion 2018.3.4\bin\cmake\win\bin\cmake.exe" -E echo "No interactive CMake dialog available."
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -161,6 +161,19 @@ DSAzadanie1.1/fast:
 	$(MAKE) -f CMakeFiles\DSAzadanie1.1.dir\build.make CMakeFiles/DSAzadanie1.1.dir/build
 .PHONY : DSAzadanie1.1/fast
 
+#=============================================================================
+# Target rules for targets named DSAzadanie1-2
+
+# Build rule for target.
+DSAzadanie1-2: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 DSAzadanie1-2
+.PHONY : DSAzadanie1-2
+
+# fast build rule for target.
+DSAzadanie1-2/fast:
+	$(MAKE) -f CMakeFiles\DSAzadanie1-2.dir\build.make CMakeFiles/DSAzadanie1-2.dir/build
+.PHONY : DSAzadanie1-2/fast
+
 DSAzadanie1-1.obj: DSAzadanie1-1.c.obj
 
 .PHONY : DSAzadanie1-1.obj
@@ -187,6 +200,33 @@ DSAzadanie1-1.s: DSAzadanie1-1.c.s
 DSAzadanie1-1.c.s:
 	$(MAKE) -f CMakeFiles\DSAzadanie1.1.dir\build.make CMakeFiles/DSAzadanie1.1.dir/DSAzadanie1-1.c.s
 .PHONY : DSAzadanie1-1.c.s
+
+DSAzadanie1-2.obj: DSAzadanie1-2.c.obj
+
+.PHONY : DSAzadanie1-2.obj
+
+# target to build an object file
+DSAzadanie1-2.c.obj:
+	$(MAKE) -f CMakeFiles\DSAzadanie1-2.dir\build.make CMakeFiles/DSAzadanie1-2.dir/DSAzadanie1-2.c.obj
+.PHONY : DSAzadanie1-2.c.obj
+
+DSAzadanie1-2.i: DSAzadanie1-2.c.i
+
+.PHONY : DSAzadanie1-2.i
+
+# target to preprocess a source file
+DSAzadanie1-2.c.i:
+	$(MAKE) -f CMakeFiles\DSAzadanie1-2.dir\build.make CMakeFiles/DSAzadanie1-2.dir/DSAzadanie1-2.c.i
+.PHONY : DSAzadanie1-2.c.i
+
+DSAzadanie1-2.s: DSAzadanie1-2.c.s
+
+.PHONY : DSAzadanie1-2.s
+
+# target to generate assembly for a file
+DSAzadanie1-2.c.s:
+	$(MAKE) -f CMakeFiles\DSAzadanie1-2.dir\build.make CMakeFiles/DSAzadanie1-2.dir/DSAzadanie1-2.c.s
+.PHONY : DSAzadanie1-2.c.s
 
 DSAzadanie1.obj: DSAzadanie1.c.obj
 
@@ -255,11 +295,15 @@ help:
 	@echo ... DSAzadanie1
 	@echo ... testingLanguageC
 	@echo ... DSAzadanie1.1
-	@echo ... edit_cache
 	@echo ... rebuild_cache
+	@echo ... DSAzadanie1-2
+	@echo ... edit_cache
 	@echo ... DSAzadanie1-1.obj
 	@echo ... DSAzadanie1-1.i
 	@echo ... DSAzadanie1-1.s
+	@echo ... DSAzadanie1-2.obj
+	@echo ... DSAzadanie1-2.i
+	@echo ... DSAzadanie1-2.s
 	@echo ... DSAzadanie1.obj
 	@echo ... DSAzadanie1.i
 	@echo ... DSAzadanie1.s

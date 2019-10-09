@@ -70,7 +70,7 @@ CMAKE_BINARY_DIR = C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug
 CMakeFiles/Zadania.dir/all:
 	$(MAKE) -f CMakeFiles\Zadania.dir\build.make CMakeFiles/Zadania.dir/depend
 	$(MAKE) -f CMakeFiles\Zadania.dir\build.make CMakeFiles/Zadania.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles --progress-num=5,6 "Built target Zadania"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles --progress-num=7,8 "Built target Zadania"
 .PHONY : CMakeFiles/Zadania.dir/all
 
 # Include target in all.
@@ -144,7 +144,7 @@ clean: CMakeFiles/DSAzadanie1.dir/clean
 CMakeFiles/testingLanguageC.dir/all:
 	$(MAKE) -f CMakeFiles\testingLanguageC.dir\build.make CMakeFiles/testingLanguageC.dir/depend
 	$(MAKE) -f CMakeFiles\testingLanguageC.dir\build.make CMakeFiles/testingLanguageC.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles --progress-num=7,8 "Built target testingLanguageC"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles --progress-num=9,10 "Built target testingLanguageC"
 .PHONY : CMakeFiles/testingLanguageC.dir/all
 
 # Include target in all.
@@ -181,7 +181,7 @@ clean: CMakeFiles/testingLanguageC.dir/clean
 CMakeFiles/DSAzadanie1.1.dir/all:
 	$(MAKE) -f CMakeFiles\DSAzadanie1.1.dir\build.make CMakeFiles/DSAzadanie1.1.dir/depend
 	$(MAKE) -f CMakeFiles\DSAzadanie1.1.dir\build.make CMakeFiles/DSAzadanie1.1.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles --progress-num=3,4 "Built target DSAzadanie1.1"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles --progress-num=5,6 "Built target DSAzadanie1.1"
 .PHONY : CMakeFiles/DSAzadanie1.1.dir/all
 
 # Include target in all.
@@ -208,6 +208,43 @@ CMakeFiles/DSAzadanie1.1.dir/clean:
 
 # clean rule for target.
 clean: CMakeFiles/DSAzadanie1.1.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/DSAzadanie1-2.dir
+
+# All Build rule for target.
+CMakeFiles/DSAzadanie1-2.dir/all:
+	$(MAKE) -f CMakeFiles\DSAzadanie1-2.dir\build.make CMakeFiles/DSAzadanie1-2.dir/depend
+	$(MAKE) -f CMakeFiles\DSAzadanie1-2.dir\build.make CMakeFiles/DSAzadanie1-2.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles --progress-num=3,4 "Built target DSAzadanie1-2"
+.PHONY : CMakeFiles/DSAzadanie1-2.dir/all
+
+# Include target in all.
+all: CMakeFiles/DSAzadanie1-2.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/DSAzadanie1-2.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles 2
+	$(MAKE) -f CMakeFiles\Makefile2 CMakeFiles/DSAzadanie1-2.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\emari\CLionProjects\DSA\Zadania\cmake-build-debug\CMakeFiles 0
+.PHONY : CMakeFiles/DSAzadanie1-2.dir/rule
+
+# Convenience name for target.
+DSAzadanie1-2: CMakeFiles/DSAzadanie1-2.dir/rule
+
+.PHONY : DSAzadanie1-2
+
+# clean rule for target.
+CMakeFiles/DSAzadanie1-2.dir/clean:
+	$(MAKE) -f CMakeFiles\DSAzadanie1-2.dir\build.make CMakeFiles/DSAzadanie1-2.dir/clean
+.PHONY : CMakeFiles/DSAzadanie1-2.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/DSAzadanie1-2.dir/clean
 
 .PHONY : clean
 

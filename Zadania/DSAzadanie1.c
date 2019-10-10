@@ -29,37 +29,37 @@ int *getPointOn(char * memory){
 }
 
 //funkcia vráti hodnotu napísanu v hlavičke
-int get_value_on(char * memory){
+int get_int_value_on(char * memory){
     return *getPointOn(memory);
 }
 
 //funkcia zistí či sa pointer nachádza v pamäti s ktorouje možné pracovať
 int isInMem(char * point){
-    return point >= mem + HOFFSET && point < mem + get_value_on(mem) - OFFSET - HOFFSET;
+    return point >= mem + HOFFSET && point < mem + get_int_value_on(mem) - OFFSET - HOFFSET;
 }
 
 //funkcia najde dalšiu hlavičku a ak nieje dalšia hlavička vráti NULL
 char *findNextMemBlock(char * memory){
-    if(mem - memory > get_value_on(mem))
+    if(mem - memory > get_int_value_on(mem))
         return NULL;
-    if(!isInMem((char*)(memory + OFFSET + (abs(get_value_on(memory))))))
+    if(!isInMem((char*)(memory + OFFSET + (abs(get_int_value_on(memory))))))
         return NULL;
-    return (char*)(memory + OFFSET + (abs(get_value_on(memory))));
+    return (char*)(memory + OFFSET + (abs(get_int_value_on(memory))));
 }
 
 //funkcia napíše velkosť a obsadenisť všetkých pamäťových blokov
 void showAllBlocks(){
     char * actBlock = mem + HOFFSET;
     do
-        printf("%p: %d\n", actBlock, get_value_on(actBlock));
-    while((actBlock = findNextMemBlock(actBlock)) != NULL && actBlock < mem + get_value_on(mem));
+        printf("%p: %d\n", actBlock, get_int_value_on(actBlock));
+    while((actBlock = findNextMemBlock(actBlock)) != NULL && actBlock < mem + get_int_value_on(mem));
 }
 
 //funkcia vykreslí všetky bajty v pamäti, ich adresu aj hodnotu
 void showAllMem(){
     int i;
     for(i=0 ; i<*mem ; i++)
-        printf("%d %p: %d\n", i, getPointOn(mem + i), get_value_on(mem + i));
+        printf("%d %p: %d\n", i, getPointOn(mem + i), get_int_value_on(mem + i));
 }
 
 //funkcia z vizualizuje pamäť
@@ -70,19 +70,19 @@ void drawMemory(){
     do{
         for(i=0 ; i<OFFSET ; i++)
             printf("H");
-        for(i=0 ; i<abs(get_value_on(actBlock)) ; i++)
-            printf("%c",(get_value_on(actBlock) > 0 ? '_' : '*'));
+        for(i=0 ; i<abs(get_int_value_on(actBlock)) ; i++)
+            printf("%c",(get_int_value_on(actBlock) > 0 ? '_' : '*'));
 
     }
-    while((actBlock = findNextMemBlock(actBlock)) != NULL && actBlock < mem + get_value_on(mem));
+    while((actBlock = findNextMemBlock(actBlock)) != NULL && actBlock < mem + get_int_value_on(mem));
     printf("\n\n");
 }
 
 void *memory_alloc(unsigned int size){
     char *actMem = mem + HOFFSET;
     do{
-        if((int)((get_value_on(actMem) ) - size) >= 0){
-            int memSize = get_value_on(actMem);
+        if((int)((get_int_value_on(actMem) ) - size) >= 0){
+            int memSize = get_int_value_on(actMem);
 
             //ak by sa nezmestiha hlavčka tak sa pridelí celý blok pamäte
             if(memSize <= OFFSET + size)
@@ -132,7 +132,7 @@ int memory_check(void *ptr){
     char * point = mem + HOFFSET;
 
     //ak je pointer volný vráti 0
-    if(get_value_on((char *) (ptr - OFFSET)) > 0)
+    if(get_int_value_on((char *) (ptr - OFFSET)) > 0)
         return 0;
 
     //ak je pointer prvý block pamäte vráti 1

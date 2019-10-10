@@ -31,7 +31,7 @@ int *get_on_memory_address(char *memory){
 }
 
 //funkcia vráti hodnotu napísanu v hlavičke
-int get_value_on(char *memory){
+int get_int_value_on(char *memory){
     return *get_on_memory_address(memory);
 }
 
@@ -76,7 +76,7 @@ void *memory_alloc(unsigned int size) {
         current = (BLOCK_HEAD*)((char*)current + alloc_size + (int)INT_OFFSET);
         current->mchunk_size = remain_mchunk - (int)INT_OFFSET;
         current->next = curr_next;
-        printf("%d %d\n", current->mchunk_size, get_value_on((char*)current));
+        printf("%d %d\n", current->mchunk_size, get_int_value_on((char *) current));
 
         alloc_head->mchunk_size = (-1)*alloc_size;
         //alloc_head->next = NULL;  !!!!!!!!prepisuje mi to hodnotu current->mchunk_size
@@ -137,7 +137,7 @@ void memory_init(void *ptr, unsigned int size) {
     printf("ptr: %p\n", ptr);
     printf("memory_h ptr: %p\n", memory_head);
     printf("free_block ptr: %p\n", free_block);
-    printf("size of free_block: %d\n", get_value_on((char*)free_block));
+    printf("size of free_block: %d\n", get_int_value_on((char *) free_block));
     printf("Memory initialized-----------------------------\n\n");
 }
 

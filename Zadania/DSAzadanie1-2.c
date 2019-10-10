@@ -1,29 +1,41 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-
-#define SIZE_INIT 30                            //velkost inicializovanej pamate
-#define MALLOC_SIZE 3                          //velkost pamate, ktoru chce pouzivatel alokovat
-#define INT_OFFSET sizeof(int)                  //velkost int typu
-#define CHAR_OFFSET sizeof(char)
+//---------------------------------------------------------------------//
+//Poznamka ku komentarom:                                              //
+//                                                                     //
+//Komentar ku kodu sa nachadza bud v tom istom riadku daneho           //
+//kodu alebo nad kodom                                                 //
+//                                                                     //
+//---------------------------------------------------------------------//
+#define SIZE_INIT 1000 //velkost inicializovanej pamate
+#define MALLOC_SIZE 3 //velkost pamate, ktoru chce pouzivatel alokovat
+#define INT_OFFSET sizeof(int) //velkost int typu (4)
+#define CHAR_OFFSET sizeof(char) //velkost char typu (1)
 
 /*struktura ("hlavicka") pre linked list blokov volnej pamate
-    momentalna velkost: 4 */
+    momentalna velkost struktury: 8 */
 typedef struct BLOCK_HEAD {
-    int mchunk_size;
-    int next_block_offset;
+    int mchunk_size;  //velkost volneho bloku, ktoru moze pouzivatel vyuzit pri alokacii
+    int next_block_offset; //offset k dalsiemu volnemu bloku v pamati
+                           //cize vlastne pocet bajtov od danej hlavicky k dalsej hlavicke volneho bloku
 } BLOCK_HEAD;
 
+/*struktura ("hlavicka") pre alokovanu pamat
+    momentalna velkost struktury: 4 */
 typedef struct ALLOC_HEAD {
-    int alloc_size;
+    int alloc_size; //udavana v minusovej hodnote, kvoli oznaceniu, ze dany blok pamate je zabraty
+                    //absolutna hodnota predstavuje velkost alokovanej pamate
 } ALLOC_HEAD;
 
+/*struktura ("hlavicka") pre celkovu inicializovanu pamat
+    momentalna velkost struktury: 4 */
 typedef struct MEM_HEAD {
-    int first_free_offset;
+    int first_free_offset; //offset k prvemu volnemu bloku v pamati
+                           //cize vlastne pocet bajtov od danej hlavicky k dalsej hlavicke volneho bloku
 } MEM_HEAD;
 
-static MEM_HEAD *memory_head = NULL;      //pointer na zaciatok volnych blokov
-//ukazuje na hlavicku pamate, nie na volnu pouzitelnu pamat
+static MEM_HEAD *memory_head = NULL; //ukazovatel na prvy volny blok
 
 //---------------------------------------------------------------------//
 //                                                                     //
@@ -31,33 +43,25 @@ static MEM_HEAD *memory_head = NULL;      //pointer na zaciatok volnych blokov
 //                                                                     //
 //---------------------------------------------------------------------//
 
-//funkcia vrati ukazovatel typu int na hlavicku
+/*funkcia vrati NULL hodnotu pre alokovanu pamat
+    atribut funkcie: ukazovatel na alokovany blok pamate*/
+void *allocated_memory_as_NULL(void *alloc_mem) {
+    alloc_mem = NULL;
+    printf("Error:\tnot enough memory\n"); //info pre pouzivatela
+    return alloc_mem;
+}
+
+/*funkcia vrati ukazovatel typu int
+    atribut funkcie: ukazovatel typu char*/
 int *get_on_memory_address(char *memory){
     return (int*)memory;
 }
 
-//funkcia vráti hodnotu napísanu v hlavičke
+/*funkcia vrati int hodnotu zapisanu na adrese, kde odkazuje ukazovatel typu char
+    atribut funkcie: ukazovatel typu char*/
 int get_int_value_on(char *memory){
     return *get_on_memory_address(memory);
 }
-
-//funkcia vrati ukazovatel typu int na hlavicku
-char *get_on_memory_address_char(char *memory){
-    return (char*)memory;
-}
-
-//funkcia vráti hodnotu napísanu v hlavičke
-char get_char_on(char *memory){
-    return *get_on_memory_address_char(memory);
-}
-
-void * allocated_memory_is_NULL (void *alloc_mem) {
-    alloc_mem = NULL;
-    printf("Error:\tnot enough memory\n");
-    return alloc_mem;
-}
-
-
 
 //---------------------------------------------------------------------//
 //                                                                     //
@@ -66,41 +70,51 @@ void * allocated_memory_is_NULL (void *alloc_mem) {
 //---------------------------------------------------------------------//
 
 /*funckia na alokaciu pamate
-atributy: velkost pamate, ktoru chce pouzivatel vyuzivat*/
+    atribut funkcie: velkost bloku pamate, ktoru chce pouzivatel alokovat*/
 void *memory_alloc(unsigned int size) {
-    printf("\nMemory of %dB starting allocating--------------\n", size);
-    BLOCK_HEAD *previous = NULL, *current = NULL;                    //docasne ukazovatele na volnu pamat
-    ALLOC_HEAD *alloc_head = NULL;
-    void *allocated_memory = NULL;                                           //ukazovatel na alokovanu pamat
-
-    int curr_mchunk_size = get_int_value_on((char *) ((char *) memory_head + memory_head->first_free_offset));
+    printf("\nMemory of %dB starting allocating---------------\n", size);
+    //docasne ukazovatele na volne bloky pamate, s ktorymi sa bude vo funkcii pracovat
+    BLOCK_HEAD *previous = NULL, *current = NULL;
+    ALLOC_HEAD *alloc_head = NULL; //hlavicka pre alokovanu pamat
+    void *allocated_memory = NULL; //ukazovatel na blok pamate, ktory bude alokovany pre pouzivatela
+    //velkost prveho volneho bloku v pamati
+    int curr_mchunk_size = get_int_value_on((char*)((char*)memory_head + memory_head->first_free_offset));
+    //offset (na dalsi volny blok) ulozeny v prvom volnom bloku
     int next_block_offset_val = get_int_value_on(
-            (char *) ((char *) memory_head + memory_head->first_free_offset + INT_OFFSET));
+            ((char*)memory_head + memory_head->first_free_offset + INT_OFFSET));
 
-    current = (BLOCK_HEAD*)((char*)memory_head + memory_head->first_free_offset);
+    printf("get_int_value_on:\n(int)%d (char)%d\n", next_block_offset_val, (char)next_block_offset_val);
 
-    if ((char) get_int_value_on((char *) current) != 0){ //mozno ((current->mchunk_size) > (size))
-        current->mchunk_size = curr_mchunk_size;
-        current->next_block_offset = next_block_offset_val;
-        //first fit
+    current = (BLOCK_HEAD*)((char*)memory_head + memory_head->first_free_offset); //ukazovatel na prvy volny blok
+
+    if ((char)get_int_value_on((char*)current) != 0){//ak sa ukazovatel na prvy volny blok nenachadza na konci pamate...
+        current->mchunk_size = curr_mchunk_size; //nastavi hlavicku prveho volneho bloku
+        current->next_block_offset = next_block_offset_val; //nastavi hlavicku prveho volneho bloku
+
+        //hlada vhodny volny blok pre alokaciu - FIRST FIT
         while(((current->mchunk_size) < (size)) &&
-        ((char) get_int_value_on((char *) ((char *) current + current->next_block_offset)) != 0)) { //najde prvy hodiaci sa volny blok
-            previous = current;
-            next_block_offset_val = get_int_value_on((char*) ((char*) current + current->next_block_offset + INT_OFFSET));
-            curr_mchunk_size = get_int_value_on((char *) ((char *) current + current->next_block_offset));
-            current = (BLOCK_HEAD*)((char*)current + current->next_block_offset);
+        ((char)get_int_value_on((char*)((char*)current + current->next_block_offset)) != 0)) {
+            previous = current; //ulozi si terajsi volny blok ako predosli a bude sa posuvat na dalsi volny blok
+            next_block_offset_val = get_int_value_on(
+                    (char*)((char*)current + current->next_block_offset + INT_OFFSET));
+            printf("vo while next_block_offset_val: (int)%d (char)%d\n",
+                    next_block_offset_val, (char)next_block_offset_val);
+            curr_mchunk_size = get_int_value_on((char*)((char*)current + current->next_block_offset));
+            current = (BLOCK_HEAD*)((char*)previous + previous->next_block_offset);
             current->mchunk_size = curr_mchunk_size;
             current->next_block_offset = next_block_offset_val;
         }
 
         if (((current->mchunk_size) < (size)) &&
             ((char) get_int_value_on((char *) ((char *) current + current->next_block_offset)) == 0)) {
-            return allocated_memory_is_NULL(allocated_memory);
+            return allocated_memory_as_NULL(allocated_memory);
         }
-    } else {
-        return allocated_memory_is_NULL(allocated_memory);
+
+    } else { //ak sa ukazovatel na prvy volny blok nachadza na konci pamate...
+        return allocated_memory_as_NULL(allocated_memory); //...vrati NULL
     }
 
+    ///skontrolovat este toto ak je prev = NULL a ak nie je + spravit poriadne komentare v malloc funkcii
     alloc_head = (ALLOC_HEAD*)current;
     allocated_memory = (char*)((char*)alloc_head + (int)INT_OFFSET);
     int alloc_size = (int) size;                                       //pretypovanie zadanej velkosti
@@ -127,8 +141,8 @@ void *memory_alloc(unsigned int size) {
 
     } else if ((remain_size < 2*(int)INT_OFFSET) && (remain_size >= 0)){
         printf("--------------current: %p %d\n", current, current->next_block_offset);
-        next_block_offset_val = get_int_value_on((char *) ((char *) current + current->next_block_offset));
-        printf("%d\n", (char)next_block_offset_val);
+        next_block_offset_val = (char)get_int_value_on((char *) ((char *) current + current->next_block_offset));
+        printf("%d\n", next_block_offset_val);
 
         alloc_head->alloc_size = (-1)*current->mchunk_size;
 
@@ -153,7 +167,7 @@ void *memory_alloc(unsigned int size) {
         return allocated_memory;
 
     } else {
-        return allocated_memory_is_NULL(allocated_memory);
+        return allocated_memory_as_NULL(allocated_memory);
     }
 }
 
@@ -167,22 +181,27 @@ int memory_check(void *ptr){
 
 }
 
+/*funckia na inicializaciu pamate
+    atribut funkcie: ukazovatel na volny blok pamate, velkost inicializovanej pamate*/
 void memory_init(void *ptr, unsigned int size) {
     printf("Memory starting initializing-------------------\n");
-    memory_head = (MEM_HEAD*)ptr;                       //ukazovatel na volny blok pamate
-    BLOCK_HEAD *free_block = (BLOCK_HEAD*)((char*)ptr + (int)INT_OFFSET);
-
+    memory_head = (MEM_HEAD*)ptr; //ulozenie ukazovatela na volny blok pamate do globalneho ukazovatela
+    BLOCK_HEAD *free_block = (BLOCK_HEAD*)((char*)ptr + (int)INT_OFFSET); //ukazovatel na hlavicku prveho volneho bloku
+    //offset od hlavicky inicializovanej pamate ku hlavicke prveho volneho bloku pamate
     memory_head->first_free_offset = (char*)free_block - (char*)memory_head;
+    //celkova velkost inicializovanej pamate - 2*velkost hlaviciek - velkost "paticky"(konca) pamate
     free_block->mchunk_size = (int)size - 2*(int)INT_OFFSET - (int)CHAR_OFFSET;
-    free_block->next_block_offset = (char)(size - CHAR_OFFSET - INT_OFFSET);
+    free_block->next_block_offset = (int)(size - CHAR_OFFSET - INT_OFFSET); //offset ku koncu inicializovanej pamate
+    //nastavenie "paticky" na hodnotu 0
     memset((char*)free_block + free_block->next_block_offset, 0, 1);
 
-    printf("memory_h ptr: %p\n", memory_head);
-    printf("last address: %p\n", (char*)free_block + free_block->next_block_offset);
-    printf("last address val: %d\n", (char) get_int_value_on((char *) free_block + free_block->next_block_offset));
-    printf("free_block ptr: %p\n", free_block);
-    printf("size free_block for user: %d\n", free_block->mchunk_size);
-    printf("offset free_block to end: %d\n", free_block->next_block_offset);
+/*  printf("memory_h ptr: %p\n", memory_head);
+      printf("last address: %p\n", (char*)free_block + free_block->next_block_offset);
+      printf("last address val: %d\n", (char)get_int_value_on(
+              (char *) free_block + free_block->next_block_offset));
+      printf("free_block ptr: %p\n", free_block);
+      printf("size free_block for user: %d\n", free_block->mchunk_size);
+      printf("offset free_block to end: %d\n", free_block->next_block_offset); */
     printf("Memory initialized-----------------------------\n");
 }
 
@@ -193,32 +212,28 @@ void memory_init(void *ptr, unsigned int size) {
 //---------------------------------------------------------------------//
 
 int main() {
-    char region[SIZE_INIT];
-    memory_init(region, SIZE_INIT);
+    char region[SIZE_INIT]; //blok pamate, na ktorom bude realizovana alokacia
+    memory_init(region, SIZE_INIT); //inicializacia bloku pamate
 
-//    for (int i = 0; i < SIZE_INIT; ++i) {
-//        printf("%d %p\n", region[i], &region[i]);
-//    }
-
-    char * pointer = (char*) memory_alloc(MALLOC_SIZE);
+    char *pointer = (char*) memory_alloc(MALLOC_SIZE); //alokacia
     if (pointer)
         memset(pointer, 0, MALLOC_SIZE);
 
-    char * pointer1 = (char*) memory_alloc(2);
+    char *pointer1 = (char*) memory_alloc(7); //alokacia
     if (pointer1)
-        memset(pointer1, 0, 2);
+        memset(pointer1, 0, 7);
 
-    char * pointer2 = (char*) memory_alloc(2);
+    char *pointer2 = (char*) memory_alloc(2); //alokacia
     if (pointer2)
         memset(pointer2, 0, 2);
 
-    char * pointer3 = (char*) memory_alloc(7);
+    char *pointer3 = (char*) memory_alloc(7); //alokacia
     if (pointer3)
         memset(pointer3, 0, 7);
 
-    for (int i = 0; i < SIZE_INIT; i++) {
-        printf("%d %p\n", region[i], &region[i]);
-    }
+//    for (int i = 0; i < SIZE_INIT; i++) { //vypis pamate
+//        printf("\n%d %p", region[i], &region[i]);
+//    }
 
 //    if (pointer)
 //        memory_free(pointer);

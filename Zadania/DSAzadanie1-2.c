@@ -8,7 +8,7 @@
 //kodu alebo nad kodom                                                 //
 //                                                                     //
 //---------------------------------------------------------------------//
-#define SIZE_INIT 30 //velkost inicializovanej pamate
+#define SIZE_INIT 100 //velkost inicializovanej pamate
 #define MALLOC_SIZE 8 //velkost pamate, ktoru chce pouzivatel alokovat
 #define INT_OFFSET sizeof(int) //velkost int typu (4)
 #define CHAR_OFFSET sizeof(char) //velkost char typu (1)
@@ -61,6 +61,10 @@ int *get_on_memory_address(char *memory){
     atribut funkcie: ukazovatel typu char*/
 int get_int_value_on(char *memory){
     return *get_on_memory_address(memory);
+}
+
+BLOCK_HEAD * retur_ptr(void *p) {
+    return  p;
 }
 
 void *get_last_mem_address() {
@@ -235,23 +239,27 @@ int memory_free(void *valid_ptr) {
         alloc_mem = (BLOCK_HEAD*)((char*)valid_ptr - INT_OFFSET);
         free_block = (BLOCK_HEAD*)((char*)memory_head + memory_head->first_free_offset);
 
-        if (free_block > alloc_mem) { //tuto viem, ze pred alokovanou pamatou nie je ziaden volny blok
+        if (&free_block->mchunk_size > &alloc_mem->mchunk_size) { //tuto viem, ze pred alokovanou pamatou nie je ziaden volny blok
             next = (BLOCK_HEAD*)((char*)alloc_mem + INT_OFFSET + alloc_mem_size);
 
-            if ((char)get_int_value_on((char*)next) > 0) {
+            if ((char)get_int_value_on((char*)next) > 0) { //asi ok
                 memory_head->first_free_offset = (char*)alloc_mem - (char*)memory_head;
                 alloc_mem->mchunk_size = next->mchunk_size + (int)INT_OFFSET + ((char*)next - (char*)alloc_mem - (int)INT_OFFSET);
                 alloc_mem->next_block_offset = next->next_block_offset + ((char*)next - (char*)alloc_mem);
+                printf("uvolnena pamet: >size %d >offset %d\n", alloc_mem->mchunk_size, alloc_mem->next_block_offset);
+                printf("after free > memory_head offset: %d\n", memory_head->first_free_offset);
 
             } else {
                 memory_head->first_free_offset = (char*)alloc_mem - (char*)memory_head;
                 alloc_mem->mchunk_size = ((char*)alloc_mem + (int)INT_OFFSET + alloc_mem_size) - ((char*)alloc_mem + (int)INT_OFFSET);
                 alloc_mem->next_block_offset = (char*)free_block - (char*)alloc_mem;
+                printf("uvolnena pamet: >size %d >offset %d\n", alloc_mem->mchunk_size, alloc_mem->next_block_offset);
+                printf("after free > memory_head offset: %d\n", memory_head->first_free_offset);
             }
-
+            return 0;
         } else {
             next = (BLOCK_HEAD*)((char*)alloc_mem + INT_OFFSET + alloc_mem_size);
-            printf("%d\n", (char)get_int_value_on((char*)next));
+            printf("free block je pred alokovanym blokom > next:%d\n", (char)get_int_value_on((char*)next));
             //urcit predchdzajuci
 
             while ((BLOCK_HEAD*)((char*)free_block + free_block->mchunk_size + INT_OFFSET) != (BLOCK_HEAD*)alloc_mem) {
@@ -262,27 +270,41 @@ int memory_free(void *valid_ptr) {
                 free_block = (BLOCK_HEAD*)((char*)prev + prev->next_block_offset);
                 free_block->mchunk_size = mchunk_size;
                 free_block->next_block_offset = next_block_offset_val;
+                if (&free_block->mchunk_size > &alloc_mem->mchunk_size) {
+                    free_block = NULL;
+                    break;
+                }
+
+                if ((char)get_int_value_on((char*)free_block) == 0) {
+                    break;
+                }
             }
+
             prev = free_block;
 
             if ((char)get_int_value_on((char*)next) > 0) {
                 alloc_mem->mchunk_size = next->mchunk_size + (int)INT_OFFSET + ((char*)next - (char*)alloc_mem - (int)INT_OFFSET);
                 alloc_mem->next_block_offset = next->next_block_offset + ((char*)next - (char*)alloc_mem);
+                printf("uvolnena pamet: >size %d >offset %d\n", alloc_mem->mchunk_size, alloc_mem->next_block_offset);
+                printf("after free > memory_head offset: %d\n", memory_head->first_free_offset);
 
             } else {
+                next = (BLOCK_HEAD*)((char*)prev + prev->next_block_offset);
                 alloc_mem->mchunk_size = ((char*)alloc_mem + (int)INT_OFFSET + alloc_mem_size) - ((char*)alloc_mem + (int)INT_OFFSET);
                 alloc_mem->next_block_offset = (char*)next - (char*)alloc_mem;
+                printf("uvolnena pamet: >size %d >offset %d\n", alloc_mem->mchunk_size, alloc_mem->next_block_offset);
+                printf("after free > memory_head offset: %d\n", memory_head->first_free_offset);
             }
 
+            memory_head->first_free_offset = (char*)prev - (char*)memory_head;
             prev->mchunk_size = alloc_mem->mchunk_size + (int)INT_OFFSET + ((char*)alloc_mem - (char*)prev - (int)INT_OFFSET);
             prev->next_block_offset = alloc_mem->next_block_offset + ((char*)alloc_mem - (char*)prev);
-
+//chyba hore
             return 0;
         }
     } else {
         return 1;
     }
-    return 1;
 }
 
 /*funckia na inicializaciu pamate
@@ -347,31 +369,35 @@ int main() {
     if (pointer6)
         memset(pointer6, 0, MALLOC_SIZE);
 
-//    char *pointer7 = (char*) memory_alloc(MALLOC_SIZE); //alokacia
-//    if (pointer7)
-//        memset(pointer7, 0, MALLOC_SIZE);
-
-
-
+    printf("2");
     if (pointer2)
         memory_free(pointer2);
 
+    printf("3");
     if (pointer3)
         memory_free(pointer3);
 
+    printf("1");
     if (pointer1)
         memory_free(pointer1);
 
+    printf("6");
     if (pointer6)
         memory_free(pointer6);
-
-    if (pointer5)
-        memory_free(pointer5);
-
 
     for (int i = 0; i < SIZE_INIT; i++) { //vypis pamate
         printf("\n%d %p", region[i], &region[i]);
     }
+
+    printf("\n5");
+    if (pointer5)
+        memory_free(pointer5);
+
+    char *pointer7 = (char*) memory_alloc(MALLOC_SIZE); //alokacia
+    if (pointer7)
+        memset(pointer7, 0, MALLOC_SIZE);
+
+
 
     return 0;
 }

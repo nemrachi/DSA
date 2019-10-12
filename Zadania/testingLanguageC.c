@@ -23,26 +23,26 @@
 //}
 //
 
-typedef struct test{
-    int size;
-    int size2;
-    struct test *next;
-} test;
-
 
 int main() {
     char region[50];
     void * ptr = region;
-    test *p = ptr;
-    int x = 33;
-    int z = 44;
+    void *p = ptr;
+    char x = 'n';
+    int z = 'n';
 
-    p->size = x;
-    p->size2 = z;
 
-    printf("%p ", p);
-    printf("%p ", &p->size);
-    printf("%p", &p->size2);
+
+    p = &x;
+    if (*(char*)p == 'n') {
+        printf("True");
+    }
+
+    p = &z;
+    if (*(char*)p == 'n') {
+        printf("True");
+    }
+
 
 //    p = &z;
 //

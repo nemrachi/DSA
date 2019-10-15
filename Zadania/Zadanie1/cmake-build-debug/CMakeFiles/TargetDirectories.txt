@@ -1,0 +1,7 @@
+C:/Users/emari/CLionProjects/DSA/Zadania/Zadanie1/cmake-build-debug/CMakeFiles/Zadania.dir
+C:/Users/emari/CLionProjects/DSA/Zadania/Zadanie1/cmake-build-debug/CMakeFiles/DSAzadanie1.dir
+C:/Users/emari/CLionProjects/DSA/Zadania/Zadanie1/cmake-build-debug/CMakeFiles/testingLanguageC.dir
+C:/Users/emari/CLionProjects/DSA/Zadania/Zadanie1/cmake-build-debug/CMakeFiles/DSAzadanie1.1.dir
+C:/Users/emari/CLionProjects/DSA/Zadania/Zadanie1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/emari/CLionProjects/DSA/Zadania/Zadanie1/cmake-build-debug/CMakeFiles/DSAzadanie1-2.dir
+C:/Users/emari/CLionProjects/DSA/Zadania/Zadanie1/cmake-build-debug/CMakeFiles/edit_cache.dir

@@ -1,0 +1,232 @@
+//    alloc(3583) -> 4944488
+    char *pointer4944488 = (char*) memory_alloc(3583); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4944488)
+        memset(pointer4944488, 0, 3583);
+
+//    alloc(2326) -> 4948075
+    char *pointer4948075 = (char*) memory_alloc(2326); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4948075)
+        memset(pointer4948075, 0, 2326);
+
+//    alloc(3537) -> 4950405
+    char *pointer4950405 = (char*) memory_alloc(3537); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4950405)
+        memset(pointer4950405, 0, 3537);
+
+//    alloc(1863) -> 4953946
+    char *pointer4953946= (char*) memory_alloc(1863); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4953946)
+        memset(pointer4953946, 0, 1863);
+
+//    alloc(4885) -> 4955813
+    char *pointer4955813= (char*) memory_alloc(4885); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4955813)
+        memset(pointer4955813, 0, 4885);
+
+//    alloc(4454) -> 4960702
+    char *pointer4960702= (char*) memory_alloc(4454); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4960702)
+        memset(pointer4960702, 0, 4454);
+
+//    alloc(3964) -> 4965160
+    char *pointer4965160= (char*) memory_alloc(3964); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4965160)
+        memset(pointer4965160, 0, 3964);
+
+//    alloc(2414) -> 4969128
+    char *pointer4969128= (char*) memory_alloc(2414); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4969128)
+        memset(pointer4969128, 0, 2414);
+
+//    alloc(3441) -> 4971546
+    char *pointer4971546= (char*) memory_alloc(3441); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4971546)
+        memset(pointer4971546, 0, 3441);
+
+//    alloc(2149) -> 4974991
+    char *pointer4974991= (char*) memory_alloc(2149); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4974991)
+        memset(pointer4974991, 0, 2149);
+
+//    alloc(2104) -> 4977144
+    char *pointer4977144= (char*) memory_alloc(2104); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4977144)
+        memset(pointer4977144, 0, 2104);
+
+//    alloc(779) -> 4979252
+    char *pointer4979252= (char*) memory_alloc(779); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4979252)
+        memset(pointer4979252, 0, 779);
+
+//    alloc(1218) -> 4980035
+    char *pointer4980035= (char*) memory_alloc(1218); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4980035)
+        memset(pointer4980035, 0, 1218);
+
+//    alloc(2382) -> 4981257
+    char *pointer4981257= (char*) memory_alloc(2382); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4981257)
+        memset(pointer4981257, 0, 2382);
+
+//    alloc(1320) -> 4983643
+    char *pointer4983643= (char*) memory_alloc(1320); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4983643)
+        memset(pointer4983643, 0, 1320);
+
+//    alloc(4873) -> 4984967
+    char *pointer4984967= (char*) memory_alloc(4873); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4984967)
+        memset(pointer4984967, 0, 4873);
+
+//    alloc(4756) -> 4989844
+    char *pointer4989844= (char*) memory_alloc(4756); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4989844)
+        memset(pointer4989844, 0, 4756);
+
+//    alloc(1619) -> 4994604
+    char *pointer4994604= (char*) memory_alloc(1619); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4994604)
+        memset(pointer4994604, 0, 1619);
+
+//    alloc(1224) -> 4996227
+    char *pointer4996227= (char*) memory_alloc(1224); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4996227)
+        memset(pointer4996227, 0, 1224);
+
+//    alloc(2822) -> 4997455
+    char *pointer4997455= (char*) memory_alloc(2822); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer4997455)
+        memset(pointer4997455, 0, 2822);
+
+//    alloc(4879) -> 5000281
+    char *pointer5000281 = (char*) memory_alloc(4879); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5000281)
+        memset(pointer5000281, 0, 4879);
+
+//    alloc(4675) -> 5005164
+    char *pointer5005164 = (char*) memory_alloc(4675); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5005164)
+        memset(pointer5005164, 0, 4675);
+
+//    alloc(1531) -> 5009843
+    char *pointer5009843 = (char*) memory_alloc(1531); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5009843)
+        memset(pointer5009843, 0, 1531);
+
+//    alloc(1098) -> 5011378
+    char *pointer5011378 = (char*) memory_alloc(1098); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5011378)
+        memset(pointer5011378, 0, 1098);
+
+//    alloc(843) -> 5012480
+    char *pointer5012480 = (char*) memory_alloc(843); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5012480)
+        memset(pointer5012480, 0, 843);
+
+//    alloc(4189) -> 5013327
+    char *pointer5013327 = (char*) memory_alloc(4189); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5013327)
+        memset(pointer5013327, 0, 4189);
+
+//    alloc(2067) -> 5017520
+    char *pointer5017520 = (char*) memory_alloc(2067); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5017520)
+        memset(pointer5017520, 0, 2067);
+
+//    alloc(3372) -> 5019591
+    char *pointer5019591 = (char*) memory_alloc(3372); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5019591)
+        memset(pointer5019591, 0, 3372);
+
+//    alloc(1495) -> 5022967
+    char *pointer5022967 = (char*) memory_alloc(1495); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5022967)
+        memset(pointer5022967, 0, 1495);
+
+//    alloc(2006) -> 5024466
+    char *pointer5024466 = (char*) memory_alloc(2006); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5024466)
+        memset(pointer5024466, 0, 2006);
+
+//    alloc(3237) -> 5026476
+    char *pointer5026476= (char*) memory_alloc(3237); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5026476)
+        memset(pointer5026476, 0, 3237);
+
+
+//    alloc(3572) -> 5029717
+    char *pointer5029717= (char*) memory_alloc(3572); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5029717)
+        memset(pointer5029717, 0, 3572);
+
+//    alloc(931) -> 5033293
+    char *pointer5033293= (char*) memory_alloc(931); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5033293)
+        memset(pointer5033293, 0, 931);
+
+//    alloc(3139) -> 5034228
+    char *pointer5034228= (char*) memory_alloc(3139); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5034228)
+        memset(pointer5034228, 0, 3139);
+
+//    alloc(4526) -> 5037371
+    char *pointer5037371= (char*) memory_alloc(4526); //alokacia
+    printf("%d. mem_head > %p offset > %d\n", ++count, (char*)memory_head, memory_head->first_free_offset);
+    if (pointer5037371)
+        memset(pointer5037371, 0, 4526);
+
+
+//    FREE 0x4bfa30
+//    FREE after check
+//    free(4979252) OK (length 779).
+    if (pointer4979252)
+        memory_free(pointer4979252);
+    printf("mem_head > %p offset > %d\n", (char*)memory_head, memory_head->first_free_offset);
+
+    //FREE 0x2309067 size -2326
+    //FREE after check
+    //free(36737131) OK (length 2326).
+    if (pointer4948075)
+        memory_free(pointer4948075);
+    printf("mem_head > %p offset > %d\n", (char*)memory_head, memory_head->first_free_offset);
+
+    //FREE 0x230f98b size -2149
+    //FREE after check
+//    if (pointer4974991)
+//        memory_free(pointer4974991);
+
+    return 0;

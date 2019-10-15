@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="Zadania" targetName="testingLanguageC" />
+      <config projectName="Zadania" targetName="DSAzadanie1-2" />
+      <config projectName="Zadania" targetName="Zadania" />
+      <config projectName="Zadania" targetName="DSAzadanie1" />
+      <config projectName="Zadania" targetName="DSAzadanie1.1" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b749971c-a9da-4e28-80db-2a12bf9c53f4" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Zadania.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DSAzadanie1-1.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DSAzadanie1-2.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DSAzadanie1.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CMakeCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CMakeRCCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CompilerIdC/a.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/DependInfo.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/build.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/cmake_clean.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/depend.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/flags.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/link.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/linklibs.rsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/objects1.rsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/progress.make" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Zadania.cbp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testingLanguageC.c" beforeDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="C:\Users\emari\CLionProjects\DSA\Zadania\.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1RebWzaCyXBXB1WrbedsFxY6HNI" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Zadanie1" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="CMake Application.DSAzadanie1-2">
+    <configuration name="DSAzadanie1-2" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Zadania" TARGET_NAME="DSAzadanie1-2" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Zadania" RUN_TARGET_NAME="DSAzadanie1-2">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DSAzadanie1" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Zadania" TARGET_NAME="DSAzadanie1" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Zadania" RUN_TARGET_NAME="DSAzadanie1">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DSAzadanie1.1" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Zadania" TARGET_NAME="DSAzadanie1.1" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Zadania" RUN_TARGET_NAME="DSAzadanie1.1">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Zadania" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Zadania" TARGET_NAME="Zadania" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Zadania" RUN_TARGET_NAME="Zadania">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="testingLanguageC" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Zadania" TARGET_NAME="testingLanguageC" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Zadania" RUN_TARGET_NAME="testingLanguageC">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.DSAzadanie1" />
+      <item itemvalue="CMake Application.DSAzadanie1-2" />
+      <item itemvalue="CMake Application.DSAzadanie1.1" />
+      <item itemvalue="CMake Application.testingLanguageC" />
+      <item itemvalue="CMake Application.Zadania" />
+    </list>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b749971c-a9da-4e28-80db-2a12bf9c53f4" name="Default Changelist" comment="" />
+      <created>1570030544800</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1570030544800</updated>
+      <workItem from="1570030547187" duration="9805000" />
+      <workItem from="1570084739644" duration="28959000" />
+      <workItem from="1570183050664" duration="78000" />
+      <workItem from="1570200481840" duration="10454000" />
+      <workItem from="1570253709461" duration="23764000" />
+      <workItem from="1570354874154" duration="36012000" />
+      <workItem from="1570514200251" duration="2751000" />
+      <workItem from="1570522138031" duration="21990000" />
+      <workItem from="1570601321549" duration="30417000" />
+      <workItem from="1570685612418" duration="17497000" />
+      <workItem from="1570706207373" duration="11940000" />
+      <workItem from="1570788065794" duration="646000" />
+      <workItem from="1570810414924" duration="1104000" />
+      <workItem from="1570823323360" duration="5558000" />
+      <workItem from="1570872093516" duration="22946000" />
+      <workItem from="1570902615387" duration="20873000" />
+      <workItem from="1570946297792" duration="61149000" />
+      <workItem from="1571037450149" duration="1271000" />
+      <workItem from="1571089518420" duration="770000" />
+    </task>
+    <task id="LOCAL-00001" summary="init is maybe working">
+      <created>1570133338229</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1570133338229</updated>
+    </task>
+    <task id="LOCAL-00002" summary="init is maybe working 1">
+      <created>1570358447972</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1570358447972</updated>
+    </task>
+    <task id="LOCAL-00003" summary="malloc little bit working">
+      <created>1570368093859</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1570368093859</updated>
+    </task>
+    <task id="LOCAL-00004" summary="malloc little bit working 1.1">
+      <created>1570539228355</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1570539228355</updated>
+    </task>
+    <task id="LOCAL-00005" summary="malloc little bit working on consuming block">
+      <created>1570620378377</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1570620378377</updated>
+    </task>
+    <task id="LOCAL-00006" summary="malloc working but not properly (must add size of block and move things)">
+      <created>1570625132571</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1570625132571</updated>
+    </task>
+    <task id="LOCAL-00007" summary="malloc working (don't have free fun - not tested, when there is prev block)">
+      <created>1570709210064</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1570709210064</updated>
+    </task>
+    <task id="LOCAL-00008" summary="malloc working (don't have free fun - not tested, when there is prev block) 2.0">
+      <created>1570722988078</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1570722988078</updated>
+    </task>
+    <task id="LOCAL-00009" summary="not working in turing &lt;3">
+      <created>1570902965284</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1570902965284</updated>
+    </task>
+    <task id="LOCAL-00010" summary="not working in turing &lt;3 - added some optimalizations">
+      <created>1570912437673</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1570912437673</updated>
+    </task>
+    <task id="LOCAL-00011" summary="turing - 3xOK &lt;3">
+      <created>1570988440983</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1570988440983</updated>
+    </task>
+    <task id="LOCAL-00012" summary="turing - 3xOK &lt;3&#10;so vstupom 4">
+      <created>1570991515594</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1570991515594</updated>
+    </task>
+    <task id="LOCAL-00013" summary="ide to na turingu &lt;3">
+      <created>1571008801549</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1571008801549</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="1">
+          <value>
+            <State>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$/.." />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="OPEN_TABS">
+      <set>
+        <option value="1" />
+      </set>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init is maybe working" />
+    <MESSAGE value="init is maybe working 1" />
+    <MESSAGE value="malloc little bit working" />
+    <MESSAGE value="malloc little bit working 1.1" />
+    <MESSAGE value="malloc little bit working on consuming block" />
+    <MESSAGE value="malloc working but not properly (must add size of block and move things)" />
+    <MESSAGE value="malloc working (don't have free fun - not tested, when there is prev block)" />
+    <MESSAGE value="malloc working (don't have free fun - not tested, when there is prev block) 2.0" />
+    <MESSAGE value="not working in turing &lt;3" />
+    <MESSAGE value="not working in turing &lt;3 - added some optimalizations" />
+    <MESSAGE value="turing - 3xOK &lt;3" />
+    <MESSAGE value="turing - 3xOK &lt;3&#10;so vstupom 4" />
+    <MESSAGE value="ide to na turingu &lt;3" />
+    <option name="LAST_COMMIT_MESSAGE" value="ide to na turingu &lt;3" />
+  </component>
+</project>

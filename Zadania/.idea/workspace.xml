@@ -16,47 +16,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b749971c-a9da-4e28-80db-2a12bf9c53f4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../Cvicenia/tetsingCode.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Cvicenia/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Zadania.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DSAzadanie1-1.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DSAzadanie1-2.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DSAzadanie1.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CMakeCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CMakeRCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CMakeSystem.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.14.5/CompilerIdC/a.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/DependInfo.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/build.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/cmake_clean.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/depend.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/flags.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/link.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/linklibs.rsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/objects1.rsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Zadania.dir/progress.make" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Zadania.cbp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/cmake_install.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/testingLanguageC.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/TargetDirectories.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/TargetDirectories.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/C.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/cv1-3_dlazdice.c.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/cv1-3_dlazdice.c.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1.3_dlazdice.dir/objects.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1_paprika.dir/cv1-1_paprika.c.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1_paprika.dir/cv1-1_paprika.c.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1_paprika.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv1_paprika.dir/objects.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/C.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/C.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/cv1-2_prvocisla.c.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/cv1-2_prvocisla.c.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/cv2_prvocisla.dir/objects.a" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/Cvicenia.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/Cvicenia.cbp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/cv1.3_dlazdice.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/cv1.3_dlazdice.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/cv1_paprika.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/cv1_paprika.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/cv2_prvocisla.exe" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cmake-build-debug/cv2_prvocisla.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cv1-1_paprika.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cv1-1_paprika.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cv1-2_prvocisla.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cv1-2_prvocisla.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Cvicenia/cv1-3_dlazdice.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Cvicenia/cv1-3_dlazdice.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +49,6 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -169,6 +150,7 @@
       <workItem from="1570946297792" duration="61149000" />
       <workItem from="1571037450149" duration="1271000" />
       <workItem from="1571089518420" duration="770000" />
+      <workItem from="1571642889595" duration="140000" />
     </task>
     <task id="LOCAL-00001" summary="init is maybe working">
       <created>1570133338229</created>

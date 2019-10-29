@@ -60,15 +60,15 @@ void foo (int *ver, int *hor, int n) {
         *ver += 2;
     }
 
-    if ((*hor*2)+*ver == n) {
-        for (int i = 0; i < n; ++i) {
-            for (int j =  0; j < ; ++j) {
-
-            }
-        }{
-
-        }
-    }
+//    if ((*hor*2)+*ver == n) {
+//        for (int i = 0; i < n; ++i) {
+//            for (int j =  0; j < ; ++j) {
+//
+//            }
+//        }{
+//
+//        }
+//    }
 }
 
 int main() {

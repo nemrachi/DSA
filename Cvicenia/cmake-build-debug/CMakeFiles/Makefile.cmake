@@ -52,4 +52,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/cv1_paprika.dir/DependInfo.cmake"
   "CMakeFiles/cv1.3_dlazdice.dir/DependInfo.cmake"
   "CMakeFiles/cv2-1_hrackarstvo.dir/DependInfo.cmake"
+  "CMakeFiles/tetsingCode.dir/DependInfo.cmake"
+  "CMakeFiles/cv3-2_pocet_bin_stromov.dir/DependInfo.cmake"
+  "CMakeFiles/cv3-1_bin_strom.dir/DependInfo.cmake"
   )

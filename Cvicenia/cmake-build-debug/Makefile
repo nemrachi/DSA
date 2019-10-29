@@ -161,6 +161,45 @@ cv2-1_hrackarstvo/fast:
 	$(MAKE) -f CMakeFiles\cv2-1_hrackarstvo.dir\build.make CMakeFiles/cv2-1_hrackarstvo.dir/build
 .PHONY : cv2-1_hrackarstvo/fast
 
+#=============================================================================
+# Target rules for targets named tetsingCode
+
+# Build rule for target.
+tetsingCode: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 tetsingCode
+.PHONY : tetsingCode
+
+# fast build rule for target.
+tetsingCode/fast:
+	$(MAKE) -f CMakeFiles\tetsingCode.dir\build.make CMakeFiles/tetsingCode.dir/build
+.PHONY : tetsingCode/fast
+
+#=============================================================================
+# Target rules for targets named cv3-2_pocet_bin_stromov
+
+# Build rule for target.
+cv3-2_pocet_bin_stromov: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 cv3-2_pocet_bin_stromov
+.PHONY : cv3-2_pocet_bin_stromov
+
+# fast build rule for target.
+cv3-2_pocet_bin_stromov/fast:
+	$(MAKE) -f CMakeFiles\cv3-2_pocet_bin_stromov.dir\build.make CMakeFiles/cv3-2_pocet_bin_stromov.dir/build
+.PHONY : cv3-2_pocet_bin_stromov/fast
+
+#=============================================================================
+# Target rules for targets named cv3-1_bin_strom
+
+# Build rule for target.
+cv3-1_bin_strom: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 cv3-1_bin_strom
+.PHONY : cv3-1_bin_strom
+
+# fast build rule for target.
+cv3-1_bin_strom/fast:
+	$(MAKE) -f CMakeFiles\cv3-1_bin_strom.dir\build.make CMakeFiles/cv3-1_bin_strom.dir/build
+.PHONY : cv3-1_bin_strom/fast
+
 cv1-1_paprika.obj: cv1-1_paprika.c.obj
 
 .PHONY : cv1-1_paprika.obj
@@ -269,6 +308,87 @@ cv2-1_hrackarstvo.c.s:
 	$(MAKE) -f CMakeFiles\cv2-1_hrackarstvo.dir\build.make CMakeFiles/cv2-1_hrackarstvo.dir/cv2-1_hrackarstvo.c.s
 .PHONY : cv2-1_hrackarstvo.c.s
 
+cv3-1_bin_strom.obj: cv3-1_bin_strom.c.obj
+
+.PHONY : cv3-1_bin_strom.obj
+
+# target to build an object file
+cv3-1_bin_strom.c.obj:
+	$(MAKE) -f CMakeFiles\cv3-1_bin_strom.dir\build.make CMakeFiles/cv3-1_bin_strom.dir/cv3-1_bin_strom.c.obj
+.PHONY : cv3-1_bin_strom.c.obj
+
+cv3-1_bin_strom.i: cv3-1_bin_strom.c.i
+
+.PHONY : cv3-1_bin_strom.i
+
+# target to preprocess a source file
+cv3-1_bin_strom.c.i:
+	$(MAKE) -f CMakeFiles\cv3-1_bin_strom.dir\build.make CMakeFiles/cv3-1_bin_strom.dir/cv3-1_bin_strom.c.i
+.PHONY : cv3-1_bin_strom.c.i
+
+cv3-1_bin_strom.s: cv3-1_bin_strom.c.s
+
+.PHONY : cv3-1_bin_strom.s
+
+# target to generate assembly for a file
+cv3-1_bin_strom.c.s:
+	$(MAKE) -f CMakeFiles\cv3-1_bin_strom.dir\build.make CMakeFiles/cv3-1_bin_strom.dir/cv3-1_bin_strom.c.s
+.PHONY : cv3-1_bin_strom.c.s
+
+cv3-2_pocet_bin_stromov.obj: cv3-2_pocet_bin_stromov.c.obj
+
+.PHONY : cv3-2_pocet_bin_stromov.obj
+
+# target to build an object file
+cv3-2_pocet_bin_stromov.c.obj:
+	$(MAKE) -f CMakeFiles\cv3-2_pocet_bin_stromov.dir\build.make CMakeFiles/cv3-2_pocet_bin_stromov.dir/cv3-2_pocet_bin_stromov.c.obj
+.PHONY : cv3-2_pocet_bin_stromov.c.obj
+
+cv3-2_pocet_bin_stromov.i: cv3-2_pocet_bin_stromov.c.i
+
+.PHONY : cv3-2_pocet_bin_stromov.i
+
+# target to preprocess a source file
+cv3-2_pocet_bin_stromov.c.i:
+	$(MAKE) -f CMakeFiles\cv3-2_pocet_bin_stromov.dir\build.make CMakeFiles/cv3-2_pocet_bin_stromov.dir/cv3-2_pocet_bin_stromov.c.i
+.PHONY : cv3-2_pocet_bin_stromov.c.i
+
+cv3-2_pocet_bin_stromov.s: cv3-2_pocet_bin_stromov.c.s
+
+.PHONY : cv3-2_pocet_bin_stromov.s
+
+# target to generate assembly for a file
+cv3-2_pocet_bin_stromov.c.s:
+	$(MAKE) -f CMakeFiles\cv3-2_pocet_bin_stromov.dir\build.make CMakeFiles/cv3-2_pocet_bin_stromov.dir/cv3-2_pocet_bin_stromov.c.s
+.PHONY : cv3-2_pocet_bin_stromov.c.s
+
+tetsingCode.obj: tetsingCode.c.obj
+
+.PHONY : tetsingCode.obj
+
+# target to build an object file
+tetsingCode.c.obj:
+	$(MAKE) -f CMakeFiles\tetsingCode.dir\build.make CMakeFiles/tetsingCode.dir/tetsingCode.c.obj
+.PHONY : tetsingCode.c.obj
+
+tetsingCode.i: tetsingCode.c.i
+
+.PHONY : tetsingCode.i
+
+# target to preprocess a source file
+tetsingCode.c.i:
+	$(MAKE) -f CMakeFiles\tetsingCode.dir\build.make CMakeFiles/tetsingCode.dir/tetsingCode.c.i
+.PHONY : tetsingCode.c.i
+
+tetsingCode.s: tetsingCode.c.s
+
+.PHONY : tetsingCode.s
+
+# target to generate assembly for a file
+tetsingCode.c.s:
+	$(MAKE) -f CMakeFiles\tetsingCode.dir\build.make CMakeFiles/tetsingCode.dir/tetsingCode.c.s
+.PHONY : tetsingCode.c.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -280,7 +400,10 @@ help:
 	@echo ... cv1_paprika
 	@echo ... cv1.3_dlazdice
 	@echo ... cv2-1_hrackarstvo
+	@echo ... tetsingCode
 	@echo ... rebuild_cache
+	@echo ... cv3-2_pocet_bin_stromov
+	@echo ... cv3-1_bin_strom
 	@echo ... cv1-1_paprika.obj
 	@echo ... cv1-1_paprika.i
 	@echo ... cv1-1_paprika.s
@@ -293,6 +416,15 @@ help:
 	@echo ... cv2-1_hrackarstvo.obj
 	@echo ... cv2-1_hrackarstvo.i
 	@echo ... cv2-1_hrackarstvo.s
+	@echo ... cv3-1_bin_strom.obj
+	@echo ... cv3-1_bin_strom.i
+	@echo ... cv3-1_bin_strom.s
+	@echo ... cv3-2_pocet_bin_stromov.obj
+	@echo ... cv3-2_pocet_bin_stromov.i
+	@echo ... cv3-2_pocet_bin_stromov.s
+	@echo ... tetsingCode.obj
+	@echo ... tetsingCode.i
+	@echo ... tetsingCode.s
 .PHONY : help
 
 

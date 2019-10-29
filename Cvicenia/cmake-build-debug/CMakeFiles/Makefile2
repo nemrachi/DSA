@@ -212,6 +212,117 @@ clean: CMakeFiles/cv2-1_hrackarstvo.dir/clean
 .PHONY : clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/tetsingCode.dir
+
+# All Build rule for target.
+CMakeFiles/tetsingCode.dir/all:
+	$(MAKE) -f CMakeFiles\tetsingCode.dir\build.make CMakeFiles/tetsingCode.dir/depend
+	$(MAKE) -f CMakeFiles\tetsingCode.dir\build.make CMakeFiles/tetsingCode.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Cvicenia\cmake-build-debug\CMakeFiles --progress-num=13,14 "Built target tetsingCode"
+.PHONY : CMakeFiles/tetsingCode.dir/all
+
+# Include target in all.
+all: CMakeFiles/tetsingCode.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/tetsingCode.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\emari\CLionProjects\DSA\Cvicenia\cmake-build-debug\CMakeFiles 2
+	$(MAKE) -f CMakeFiles\Makefile2 CMakeFiles/tetsingCode.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\emari\CLionProjects\DSA\Cvicenia\cmake-build-debug\CMakeFiles 0
+.PHONY : CMakeFiles/tetsingCode.dir/rule
+
+# Convenience name for target.
+tetsingCode: CMakeFiles/tetsingCode.dir/rule
+
+.PHONY : tetsingCode
+
+# clean rule for target.
+CMakeFiles/tetsingCode.dir/clean:
+	$(MAKE) -f CMakeFiles\tetsingCode.dir\build.make CMakeFiles/tetsingCode.dir/clean
+.PHONY : CMakeFiles/tetsingCode.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/tetsingCode.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/cv3-2_pocet_bin_stromov.dir
+
+# All Build rule for target.
+CMakeFiles/cv3-2_pocet_bin_stromov.dir/all:
+	$(MAKE) -f CMakeFiles\cv3-2_pocet_bin_stromov.dir\build.make CMakeFiles/cv3-2_pocet_bin_stromov.dir/depend
+	$(MAKE) -f CMakeFiles\cv3-2_pocet_bin_stromov.dir\build.make CMakeFiles/cv3-2_pocet_bin_stromov.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Cvicenia\cmake-build-debug\CMakeFiles --progress-num=11,12 "Built target cv3-2_pocet_bin_stromov"
+.PHONY : CMakeFiles/cv3-2_pocet_bin_stromov.dir/all
+
+# Include target in all.
+all: CMakeFiles/cv3-2_pocet_bin_stromov.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/cv3-2_pocet_bin_stromov.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\emari\CLionProjects\DSA\Cvicenia\cmake-build-debug\CMakeFiles 2
+	$(MAKE) -f CMakeFiles\Makefile2 CMakeFiles/cv3-2_pocet_bin_stromov.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\emari\CLionProjects\DSA\Cvicenia\cmake-build-debug\CMakeFiles 0
+.PHONY : CMakeFiles/cv3-2_pocet_bin_stromov.dir/rule
+
+# Convenience name for target.
+cv3-2_pocet_bin_stromov: CMakeFiles/cv3-2_pocet_bin_stromov.dir/rule
+
+.PHONY : cv3-2_pocet_bin_stromov
+
+# clean rule for target.
+CMakeFiles/cv3-2_pocet_bin_stromov.dir/clean:
+	$(MAKE) -f CMakeFiles\cv3-2_pocet_bin_stromov.dir\build.make CMakeFiles/cv3-2_pocet_bin_stromov.dir/clean
+.PHONY : CMakeFiles/cv3-2_pocet_bin_stromov.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/cv3-2_pocet_bin_stromov.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/cv3-1_bin_strom.dir
+
+# All Build rule for target.
+CMakeFiles/cv3-1_bin_strom.dir/all:
+	$(MAKE) -f CMakeFiles\cv3-1_bin_strom.dir\build.make CMakeFiles/cv3-1_bin_strom.dir/depend
+	$(MAKE) -f CMakeFiles\cv3-1_bin_strom.dir\build.make CMakeFiles/cv3-1_bin_strom.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\emari\CLionProjects\DSA\Cvicenia\cmake-build-debug\CMakeFiles --progress-num=9,10 "Built target cv3-1_bin_strom"
+.PHONY : CMakeFiles/cv3-1_bin_strom.dir/all
+
+# Include target in all.
+all: CMakeFiles/cv3-1_bin_strom.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/cv3-1_bin_strom.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\emari\CLionProjects\DSA\Cvicenia\cmake-build-debug\CMakeFiles 2
+	$(MAKE) -f CMakeFiles\Makefile2 CMakeFiles/cv3-1_bin_strom.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\emari\CLionProjects\DSA\Cvicenia\cmake-build-debug\CMakeFiles 0
+.PHONY : CMakeFiles/cv3-1_bin_strom.dir/rule
+
+# Convenience name for target.
+cv3-1_bin_strom: CMakeFiles/cv3-1_bin_strom.dir/rule
+
+.PHONY : cv3-1_bin_strom
+
+# clean rule for target.
+CMakeFiles/cv3-1_bin_strom.dir/clean:
+	$(MAKE) -f CMakeFiles\cv3-1_bin_strom.dir\build.make CMakeFiles/cv3-1_bin_strom.dir/clean
+.PHONY : CMakeFiles/cv3-1_bin_strom.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/cv3-1_bin_strom.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Special targets to cleanup operation of make.
 
 # Special rule to run CMake to check the build system integrity.

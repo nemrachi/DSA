@@ -3,14 +3,18 @@
 #include <string.h>
 #include <math.h>
 #define MAX_LEN 51
+//profit moze ist do minusu!!
 
 int main() {
     char ch;
     int scenarios, profit = 0, temp, prev = 0,
-    buyPrice = 0, sellPrice, business = 1; // 1 - buy      0 - sell
+            buyPrice = 0, sellPrice, business = 1; // 1 - buy      0 - sell
 
-    printf("Zadaj pocet scenarov:\n");
-    scanf(" %d\n", &scenarios);
+    scanf("%d\n", &scenarios);
+
+    if (scenarios <= 0) {
+        return 0;
+    }
 
     while (scenarios--) {
         while (1) {
@@ -39,7 +43,7 @@ int main() {
                 }
             }
 
-            if (ch == '\n' || ch == '\t') {
+            if (ch == '\r' || ch == '\n' || ch == '\t') {
                 if (!business) {
                     if (temp > buyPrice) {
                         profit += temp - buyPrice;

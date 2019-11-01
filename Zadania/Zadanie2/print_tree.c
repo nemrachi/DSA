@@ -1,10 +1,4 @@
-typedef struct AVLnode {
-    int val;
-    struct AVLnode *parent;
-    struct AVLnode *left; //left child
-    struct AVLnode *right; //right child
-    int bf;
-} AVLnode;
+#include "AVL_tree_struct.c"
 
 int _print_t(AVLnode *tree, int is_left, int offset, int depth, char s[20][255])
 {
@@ -13,7 +7,7 @@ int _print_t(AVLnode *tree, int is_left, int offset, int depth, char s[20][255])
 
     if (!tree) return 0;
 
-    sprintf(b, "(%03d)", tree->val);
+    sprintf(b, "(%03d)", tree->data);
 
     int left  = _print_t(tree->left,  1, offset,                depth + 1, s);
     int right = _print_t(tree->right, 0, offset + left + width, depth + 1, s);

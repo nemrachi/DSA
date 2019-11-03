@@ -1,13 +1,36 @@
 typedef struct AVLnode {
-    int data; //hodnota uzla
+    int data;
     struct AVLnode *parent, *left, *right; //smerniky na rodica a lave a prave dieta
-    int lh, rh; //vyska lavej vetvy, vyska pravej vetvy
+    int lh, rh; //vyska lavej vetvy (lh), vyska pravej vetvy (rh)
 } AVLnode;
 
-void AVL_search(AVLnode *tree) {
+//funkcia, ktora vypisuje jednotlive uzly stromu
+void AVL_search(AVLnode *tree, int wanted_data) {
+    if (wanted_data < tree->data) {
+        if (tree->left != NULL) {
+            AVL_search(tree->left, wanted_data);
+        } else {
+            printf("Tree doesn't contain value '%d'\n", wanted_data);
+            return;
+        }
 
+    } else if (wanted_data > tree->data) {
+        if (tree->right != NULL) {
+            AVL_search(tree->right, wanted_data);
+        } else {
+            printf("Tree doesn't contain value '%d'\n", wanted_data);
+            return;
+        }
+
+    } else if (wanted_data == tree->data) {
+        printf("Tree contains value '%d'\n", wanted_data);
+
+    } else {
+        printf("Tree doesn't contain value '%d'\n", wanted_data);
+    }
 }
 
+//funkcia, ktora vypisuje jednotlive uzly stromu
 void AVL_print(AVLnode *tree) {
     if(tree != NULL) {
         if (tree->parent == NULL) {
@@ -44,7 +67,7 @@ int max(int left, int right) {
     }
 }
 
-//vypocet lavej alebo pravej vysky pre uzol tree
+//funkcia vypocitava vysku lavej alebo pravej vetvy uzla stromu
 int AVL_height(AVLnode *tree, char ch) {
     if (ch == 'l') {
         if (tree->left == NULL) {
@@ -65,15 +88,18 @@ int AVL_height(AVLnode *tree, char ch) {
 
 AVLnode *AVL_right_rotation(AVLnode *tree) {
     AVLnode *left_child = tree->left;
+    //otocenie uzla tree doprava, uzol left_child sa dostane nad uzol tree
     tree->left = left_child->right;
     left_child->right = tree;
 
+    //prepisanie rodicov oboch uzlov
     left_child->parent = tree->parent;
     tree->parent = left_child;
     if (tree->left != NULL) {
         tree->left->parent = tree;
     }
 
+    //prepocitanie vysok pre oba uzly, kedze sa vyrovnavali vetvy
     tree->lh = AVL_height(tree, 'l');
     tree->rh = AVL_height(tree, 'r');
     left_child->lh = AVL_height(left_child, 'l');
@@ -84,15 +110,18 @@ AVLnode *AVL_right_rotation(AVLnode *tree) {
 
 AVLnode *AVL_left_rotation(AVLnode *tree) {
     AVLnode *right_child = tree->right;
+    //otocenie uzla tree dolava, uzol right_child sa dostane nad uzol tree
     tree->right = right_child->left;
     right_child->left = tree;
 
+    //prepisanie rodicov oboch uzlov
     right_child->parent = tree->parent;
     tree->parent = right_child;
     if (tree->right != NULL) {
         tree->right->parent = tree;
     }
 
+    //prepocitanie vysok pre oba uzly, kedze sa vyrovnavali vetvy
     tree->lh = AVL_height(tree, 'l');
     tree->rh = AVL_height(tree, 'r');
     right_child->lh = AVL_height(right_child, 'l');
@@ -101,7 +130,7 @@ AVLnode *AVL_left_rotation(AVLnode *tree) {
     return right_child;
 }
 
-//vytvaranie noveho uzla
+//funckia na vytvaranie noveho uzla
 AVLnode *AVL_new_node(AVLnode *tree, AVLnode *parent, int data) {
     tree = (AVLnode *)malloc(sizeof(AVLnode));
     tree->data = data;
@@ -114,13 +143,15 @@ AVLnode *AVL_new_node(AVLnode *tree, AVLnode *parent, int data) {
     return tree;
 }
 
-//vkladanie noveho uzla do stromu
+//funckia na vkladanie noveho uzla do stromu
 AVLnode *AVL_insert(AVLnode *tree, AVLnode *parent, int new_data) {
     if (tree == NULL) { //ak dany uzol je NULL, vytvori sa novy uzol
         tree = AVL_new_node(tree, parent, new_data);
+
     } else if (new_data < tree->data) { //ak vlozena hodnota new_data je mensia ako hodnota aktualneho uzla...
-        tree->left = AVL_insert(tree->left, tree, new_data); //...novy uzol bude lave dieta aktualneho uzla
+        tree->left = AVL_insert(tree->left, tree, new_data); //...novy uzol bude v lavej vetve aktualneho uzla
         tree->lh = AVL_height(tree, 'l'); //prepocitanie vysky pre lavy podstrom aktualneho uzla
+
         //ak faktor vyvazenia (lava vyska - prava vyska) dosiahne hodnotu 2, je strom nevyvazeny a treba robit rotaciu
         if((tree->lh - tree->rh) == 2) {
             if(new_data < tree->left->data){ //ak vlozena hodnota je mensia, ako hodnota laveho dietata aktualneho uzla
@@ -133,9 +164,11 @@ AVLnode *AVL_insert(AVLnode *tree, AVLnode *parent, int new_data) {
                 tree = AVL_right_rotation(tree);
             }
         }
-    } else if (new_data >= tree->data) { //ak vlozena hodnota new_data je vacsia ako hodnota aktualneho uzla...
-        tree->right = AVL_insert(tree->right, tree, new_data); //...novy uzol bude prave dieta aktualneho uzla
+
+    } else if (new_data > tree->data) { //ak vlozena hodnota new_data je vacsia ako hodnota aktualneho uzla...
+        tree->right = AVL_insert(tree->right, tree, new_data); //...novy uzol bude v pravej vetve aktualneho uzla
         tree->rh = AVL_height(tree, 'r'); //prepocitanie vysky pre pravy podstrom aktualneho uzla
+
         //ak faktor vyvazenia (lava vyska - prava vyska) dosiahne hodnotu -2, je strom nevyvazeny a treba robit rotaciu
         if((tree->lh - tree->rh) == -2) {
             if(new_data > tree->right->data){//ak vlozena hodnota je vacsia, ako hodnota praveho dietata aktualneho uzla
@@ -148,6 +181,9 @@ AVLnode *AVL_insert(AVLnode *tree, AVLnode *parent, int new_data) {
                 tree = AVL_left_rotation(tree);
             }
         }
+    } else {
+        printf("\tValue '%d' is already in the tree", new_data);
     }
+
     return(tree);
 }

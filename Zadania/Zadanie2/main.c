@@ -1,163 +1,92 @@
 #include<stdio.h>
 #include <stdlib.h>
 #include "my_AVL_tree.c"
-#include "print_tree.c"
 //---------------------------------------------------------------------//
 //Poznamka ku komentarom:                                              //
 //                                                                     //
-//Komentar ku kodu sa nachadza nad danym kodom alebo vedla neho        //                     //
+//Komentar ku kodu sa nachadza nad danym kodom alebo vedla neho        //
 //                                                                     //
 //---------------------------------------------------------------------//
 
-
-int heigh(AVLnode *T, char ch) {
-    if (ch == 'l') {
-        if (T->left == NULL) {
-            return 0;
-        } else {
-            return max(T->left->lh, T->left->rh) + 1;
-        }
-    } else if (ch == 'r') {
-        if (T->right == NULL) {
-            return 0;
-        } else {
-            return max(T->right->lh, T->right->rh) + 1;
-        }
-    } else {
-        return -1;
-    }
-}
-
-AVLnode * rotateright(AVLnode *x)
-{
-    AVLnode *y;
-    y=x->left;
-    x->left=y->right;
-    y->right=x;
-    y->parent = x->parent;
-    x->parent = y;
-
-    if (x->left != NULL) {
-        x->left->parent = x;
-    }
-
-    x->lh = heigh(x, 'l');
-    x->rh = heigh(x, 'r');
-    y->lh=heigh(y, 'l');
-    y->rh=heigh(y, 'r');
-    return(y);
-}
-
-AVLnode * rotateleft(AVLnode *x)
-{
-    AVLnode *y;
-    y=x->right;
-    x->right=y->left;
-
-    if (x->right != NULL) {
-        x->right->parent = x;
-    }
-
-    y->left=x;
-    y->parent = x->parent;
-    x->parent = y;
-    x->lh = heigh(x, 'l');
-    x->rh = heigh(x, 'r');
-    y->lh=heigh(y, 'l');
-    y->rh=heigh(y, 'r');
-    return(y);
-}
-
-AVLnode * RR(AVLnode *T)
-{
-    T=rotateleft(T);
-    return(T);
-}
-
-AVLnode * LL(AVLnode *T)
-{
-    T=rotateright(T);
-    return(T);
-}
-
-AVLnode * LR(AVLnode *T)
-{
-    T->left=rotateleft(T->left);
-    T=rotateright(T);
-
-    return(T);
-}
-
-AVLnode * RL(AVLnode *T)
-{
-    T->right=rotateright(T->right);
-    T=rotateleft(T);
-    return(T);
-}
-
-AVLnode * insertNod(AVLnode *T, AVLnode *parent, int x) {
-    if(T==NULL) {
-        T=(AVLnode*)malloc(sizeof(AVLnode));
-        T->data=x;
-        T->left=NULL;
-        T->right=NULL;
-        T->parent = parent;
-        T->lh = heigh(T, 'l');
-        T->rh = heigh(T, 'r');
-    } else if(x >= T->data) {
-        T->right= insertNod(T->right, T, x);
-        T->rh = heigh(T, 'r');
-        if((T->lh-T->rh)==-2) {
-            if(x>T->right->data){
-                T=RR(T);
-            } else{
-                T=RL(T);
-            }
-        }
-    } else if(x<T->data) {
-        T->left= insertNod(T->left, T, x);
-        T->lh = heigh(T, 'l');
-        if((T->lh-T->rh)==2) {
-            if(x < T->left->data){
-                T=LL(T);
-            } else{
-                T=LR(T);
-            }
-        }
-    }
-
-    return(T);
-}
-
 int main() {
-    AVLnode *root = NULL;
-    short int input = 0;
+    AVLnode *AVL_root = NULL;
+    //root for another tree
+    char search_select, input = ' ';
     int data;
 
-    while (input != 4) {
-        printf("Insert(1)\tSearch(2)\tPrint(3)\tEnd(4)\n\nChoose number: ");
-        scanf("%hd", &input);
+    do {
+        printf("\n>Binary search tree (b)\n>Hashing (h)\n>End (e)\n\nSelect: ");
+        scanf("\n%c", &search_select);
 
-        switch(input) {
-            case 1:
-                printf("Enter data: ");
-                scanf("%d", &data);
-                root = insertNod(root, NULL, data);
+        switch (search_select) {
+            case 'b': //binarne vyhladavacie stromy
+                while (input != 'e') {
+                    printf("\n>My AVL tree (a)\t>Red-black tree (r)\t>End (e)\nChoose tree: ");
+                    scanf("\n%c", &input);
+
+                    switch (input) {
+                        case 'a': //moj AVL BVS
+                            while (input != 'e') {
+                                printf("\n>Insert (i)\t>Search (s)\t>Print (p)\t>End (e)\nChoose action: ");
+                                scanf("\n%c", &input);
+
+                                switch (input) {
+                                    case 'i': //vlozenie hodnoty do stromu
+                                        printf("\nEnter data: ");
+                                        scanf("%d", &data);
+                                        AVL_root = AVL_insert(AVL_root, NULL, data);
+                                        break;
+
+                                    case 's': //vyhladanie hodnoty v strome
+                                        break;
+
+                                    case 'p': //vypis jednotlivych uzlov stromu
+                                        AVL_print(AVL_root);
+                                        printf("\n");
+                                        break;
+
+                                    case 'e': //skoncenie s AVL BVS
+                                        if (AVL_root != NULL) {
+                                            char x = input;
+                                            printf("\nDo you want to delete whole tree?\n\tyes (y) / no (n)\n");
+                                            scanf("\n%c", &input);
+                                            if (input == 'y') {
+                                                printf("\tTree was deleted\n");
+                                                free(AVL_root);
+                                                AVL_root = NULL;
+                                            }
+                                            input = x;
+                                        }
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+
+                            input = ' ';
+                            break;
+
+                        case 'r':
+                            //another tree
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                input = ' ';
                 break;
 
-            case 2:
-                break;
-
-            case 3:
-                //print_t(root);
-                my_print(root);
-                printf("\n");
+            case 'h':
+                //hashing things
                 break;
 
             default:
                 break;
         }
-    }
+    } while (search_select != 'e');
 
     return 0;
 }

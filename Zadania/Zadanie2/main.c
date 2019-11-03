@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include <stdlib.h>
 #include "my_AVL_tree.c"
+#include "red-black_tree.c"
 //---------------------------------------------------------------------//
 //Poznamka ku komentarom:                                              //
 //                                                                     //
@@ -10,7 +11,6 @@
 
 int main() {
     AVLnode *AVL_root = NULL;
-    //root for another tree
     char search_select, input = ' ';
     int data;
 
@@ -68,7 +68,43 @@ int main() {
                             break;
 
                         case 'r':
-                            //another tree
+                            while (input != 'e') {
+                                printf("\n>Insert (i)\t>Print (p)\t>End (e)\nChoose action: ");
+                                scanf("\n%c", &input);
+
+                                switch (input) {
+                                    case 'i': //vlozenie hodnoty do stromu
+                                        printf("\nEnter data: ");
+                                        scanf("%d", &data);
+                                        insertion(data);
+                                        break;
+
+                                    case 'p': //vypis jednotlivych uzlov stromu
+                                        printf("BLACK: 0\t RED: 1\n");
+                                        inorderTraversal(root);
+                                        printf("\n");
+                                        break;
+
+                                    case 'e': //skoncenie s RB BVS
+                                        if (root != NULL) {
+                                            char x = input;
+                                            printf("\nDo you want to delete whole tree?\n\tyes (y) / no (n)\n");
+                                            scanf("\n%c", &input);
+                                            if (input == 'y') {
+                                                printf("\tTree was deleted\n");
+                                                free(root);
+                                                root = NULL;
+                                            }
+                                            input = x;
+                                        }
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
+
+                            input = ' ';
                             break;
 
                         default:

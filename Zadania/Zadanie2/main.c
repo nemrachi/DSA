@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include <stdlib.h>
 #include "my_AVL_tree.c"
+#include "print_tree.c"
 //---------------------------------------------------------------------//
 //Poznamka ku komentarom:                                              //
 //                                                                     //
@@ -8,22 +9,22 @@
 //                                                                     //
 //---------------------------------------------------------------------//
 
-int height(AVLnode *T) {
-    if (T == NULL) {
-        return 0;
-    }
-    if (T->right == NULL) {
+
+int heigh(AVLnode *T, char ch) {
+    if (ch == 'l') {
         if (T->left == NULL) {
             return 0;
         } else {
             return max(T->left->lh, T->left->rh) + 1;
         }
-    } else {
-        if (T->left == NULL) {
-            return max(T->right->lh, T->right->rh) + 1;
+    } else if (ch == 'r') {
+        if (T->right == NULL) {
+            return 0;
         } else {
-            return max(max(T->left->lh, T->left->rh), max(T->right->lh, T->right->rh)) + 1;
+            return max(T->right->lh, T->right->rh) + 1;
         }
+    } else {
+        return -1;
     }
 }
 
@@ -35,10 +36,15 @@ AVLnode * rotateright(AVLnode *x)
     y->right=x;
     y->parent = x->parent;
     x->parent = y;
-    x->lh = height(x);
-    x->rh = height(x);
-    y->lh=height(y);
-    y->rh=height(y);
+
+    if (x->left != NULL) {
+        x->left->parent = x;
+    }
+
+    x->lh = heigh(x, 'l');
+    x->rh = heigh(x, 'r');
+    y->lh=heigh(y, 'l');
+    y->rh=heigh(y, 'r');
     return(y);
 }
 
@@ -47,13 +53,18 @@ AVLnode * rotateleft(AVLnode *x)
     AVLnode *y;
     y=x->right;
     x->right=y->left;
+
+    if (x->right != NULL) {
+        x->right->parent = x;
+    }
+
     y->left=x;
     y->parent = x->parent;
     x->parent = y;
-    x->lh = height(x);
-    x->rh = height(x);
-    y->lh=height(y);
-    y->rh=height(y);
+    x->lh = heigh(x, 'l');
+    x->rh = heigh(x, 'r');
+    y->lh=heigh(y, 'l');
+    y->rh=heigh(y, 'r');
     return(y);
 }
 
@@ -84,26 +95,6 @@ AVLnode * RL(AVLnode *T)
     return(T);
 }
 
-void preorder(AVLnode *T)
-{
-    if(T!=NULL)
-    {
-        printf("%d(Bf=%d)",T->data,(T->lh-T->rh));
-        preorder(T->left);
-        preorder(T->right);
-    }
-}
-
-void inorder(AVLnode *T)
-{
-    if(T!=NULL)
-    {
-        inorder(T->left);
-        printf("%d(Bf=%d)",T->data,(T->lh-T->rh));
-        inorder(T->right);
-    }
-}
-
 AVLnode * insertNod(AVLnode *T, AVLnode *parent, int x) {
     if(T==NULL) {
         T=(AVLnode*)malloc(sizeof(AVLnode));
@@ -111,12 +102,11 @@ AVLnode * insertNod(AVLnode *T, AVLnode *parent, int x) {
         T->left=NULL;
         T->right=NULL;
         T->parent = parent;
-        T->lh = height(T->left);
-        T->rh = height(T->right);
-    } else if(x > T->data) {
-        //T->parent->rh = T->parent->rh + 1;
+        T->lh = heigh(T, 'l');
+        T->rh = heigh(T, 'r');
+    } else if(x >= T->data) {
         T->right= insertNod(T->right, T, x);
-        T->rh = height(T);
+        T->rh = heigh(T, 'r');
         if((T->lh-T->rh)==-2) {
             if(x>T->right->data){
                 T=RR(T);
@@ -125,9 +115,8 @@ AVLnode * insertNod(AVLnode *T, AVLnode *parent, int x) {
             }
         }
     } else if(x<T->data) {
-        //T->lh = T->lh + 1;
         T->left= insertNod(T->left, T, x);
-        T->lh = height(T);
+        T->lh = heigh(T, 'l');
         if((T->lh-T->rh)==2) {
             if(x < T->left->data){
                 T=LL(T);
@@ -136,8 +125,6 @@ AVLnode * insertNod(AVLnode *T, AVLnode *parent, int x) {
             }
         }
     }
-
-    printf("lh:%d  rh:%d\n", T->lh, T->rh);
 
     return(T);
 }
@@ -162,7 +149,9 @@ int main() {
                 break;
 
             case 3:
-                print_t(root);
+                //print_t(root);
+                my_print(root);
+                printf("\n");
                 break;
 
             default:

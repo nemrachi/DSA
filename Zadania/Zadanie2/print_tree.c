@@ -8,6 +8,7 @@ int _print_t(AVLnode *tree, int is_left, int offset, int depth, char s[20][255])
     if (!tree) return 0;
 
     sprintf(b, "(%03d)", tree->data);
+    printf("\n(%03d) lh:%d rh:%d", tree->data, tree->lh, tree->rh);
 
     int left  = _print_t(tree->left,  1, offset,                depth + 1, s);
     int right = _print_t(tree->right, 0, offset + left + width, depth + 1, s);

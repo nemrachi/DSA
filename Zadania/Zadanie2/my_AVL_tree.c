@@ -82,6 +82,7 @@ int AVL_height(AVLnode *tree, char ch) {
             return max(tree->right->lh, tree->right->rh) + 1;
         }
     } else {
+        printf("return -1");
         return -1;
     }
 }
@@ -158,31 +159,29 @@ AVLnode *AVL_insert(AVLnode *tree, AVLnode *parent, int new_data) {
                 //robi sa prava rotacia aktualneho uzla, aby sa mensie lave dieta dostalo vyssie v strome a vyrovnal
                 //sa rozdiel medzi lavym novym uzlom a pravou vetvou stromu
                 tree = AVL_right_rotation(tree);
-            } else{
+            } else {
                 //inak sa robi lava rotacia laveho dietata a prava rotacia aktualneho uzla
                 tree->left = AVL_left_rotation(tree->left);
                 tree = AVL_right_rotation(tree);
             }
         }
 
-    } else if (new_data > tree->data) { //ak vlozena hodnota new_data je vacsia ako hodnota aktualneho uzla...
+    } else if (new_data >= tree->data) { //ak vlozena hodnota new_data je vacsia alebo rovna ako hodnota aktualneho uzla...
         tree->right = AVL_insert(tree->right, tree, new_data); //...novy uzol bude v pravej vetve aktualneho uzla
         tree->rh = AVL_height(tree, 'r'); //prepocitanie vysky pre pravy podstrom aktualneho uzla
 
         //ak faktor vyvazenia (lava vyska - prava vyska) dosiahne hodnotu -2, je strom nevyvazeny a treba robit rotaciu
         if((tree->lh - tree->rh) == -2) {
-            if(new_data > tree->right->data){//ak vlozena hodnota je vacsia, ako hodnota praveho dietata aktualneho uzla
+            if(new_data >= tree->right->data){//ak vlozena hodnota je vacsia, ako hodnota praveho dietata aktualneho uzla
                 //robi sa lava rotacia aktualneho uzla, aby sa vacsie prave dieta dostalo vyssie v strome a vyrovnal
                 //sa rozdiel medzi pravym novym dietatom a lavou vetvou stromu
                 tree = AVL_left_rotation(tree);
-            } else{
+            } else {
                 //inak sa robi prava rotacia praveho dietata a lava rotacia aktualneho uzla
                 tree->right = AVL_right_rotation(tree->right);
                 tree = AVL_left_rotation(tree);
             }
         }
-    } else {
-        printf("\tValue '%d' is already in the tree", new_data);
     }
 
     return(tree);

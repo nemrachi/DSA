@@ -47,6 +47,32 @@ void RB_print(struct node *tree) {
     }
 }
 
+//mnou pridana funkcia, ktora vypisuje jednotlive uzly stromu
+void RB_search(struct node *tree, int wanted_data) {
+    if (wanted_data < tree->data) {
+        if (tree->left != NULL) {
+            RB_search(tree->left, wanted_data);
+        } else {
+            printf("Tree doesn't contain value '%d'\n", wanted_data);
+            return;
+        }
+
+    } else if (wanted_data > tree->data) {
+        if (tree->right != NULL) {
+            RB_search(tree->right, wanted_data);
+        } else {
+            printf("Tree doesn't contain value '%d'\n", wanted_data);
+            return;
+        }
+
+    } else if (wanted_data == tree->data) {
+        printf("Tree contains value '%d'\n", wanted_data);
+
+    } else {
+        printf("Tree doesn't contain value '%d'\n", wanted_data);
+    }
+}
+
 // Left Rotation
 void LeftRotate(struct node **root,struct node *x)
 {

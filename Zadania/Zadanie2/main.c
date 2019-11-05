@@ -12,9 +12,138 @@
 //                                                                     //
 //---------------------------------------------------------------------//
 
+#define MUL10 10
+#define MAX_NUM_NODES 1000000
+#define UPPER 100000
+#define LOWER 0
+
 BVSnode *BVS_root = NULL; //smernik pre BVS strom bez vyvazenia
 AVLnode *AVL_root = NULL; //smernik pre BVS strom s vyvazenim AVL
 struct node *RB_root = NULL; //smernik pre cerveno-cierny strom
+
+void delete_whole_trees() {
+    free(BVS_root);
+    BVS_root = NULL;
+    free(AVL_root);
+    AVL_root = NULL;
+    free(RB_root);
+    RB_root = NULL;
+}
+
+void reset_clock(clock_t *start, clock_t *end, double *exe_time) {
+    *start = (clock_t) NULL;
+    *end = (clock_t) NULL;
+    *exe_time = 0;
+}
+
+int get_random() {
+    return (rand() % (UPPER + 1 - LOWER)) + LOWER;
+}
+
+void test_trees_search(int num_of_nodes, int *rand_arr) {  // search
+    clock_t start, end;
+    double exe_time;
+    int rand_index = get_random();
+    rand_index = rand_index % num_of_nodes;
+
+    //BVS---------------------------------------------------
+    start = clock();
+    BVS_search(BVS_root, rand_arr[rand_index]);
+    end = clock();
+    exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("BVS search took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+    //BVS---------------------------------------------------
+
+    reset_clock(&start, &end, &exe_time);
+
+    //AVL---------------------------------------------------
+    start = clock();
+    AVL_search(AVL_root, rand_arr[rand_index]);
+    end = clock();
+    exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("AVL search took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+    //AVL---------------------------------------------------
+
+    reset_clock(&start, &end, &exe_time);
+
+    //RB----------------------------------------------------
+    start = clock();
+    RB_search(RB_root, rand_arr[rand_index]);
+    end = clock();
+    exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("RB insert took %f seconds for %d nodes\n\n", exe_time, num_of_nodes);
+    //RB----------------------------------------------------
+
+    reset_clock(&start, &end, &exe_time);
+}
+
+int test_trees_insert_random() { //random cisla v mnozinach 10, 100, 1000, 10 000, 100 000
+    int num_of_nodes = MUL10;
+    int *rand_arr = malloc(num_of_nodes * sizeof(int));
+
+    clock_t start, end;
+    double exe_time;
+
+    while (num_of_nodes != MAX_NUM_NODES) {
+        printf("//---------------------------------------------------------------------//\n"
+               "                                   %d                                 \n"
+               "//---------------------------------------------------------------------//\n", num_of_nodes);
+        for (int j = 0; j < num_of_nodes; j++) {
+            rand_arr[j] = get_random();
+        }
+
+        printf("\n.........................Insert.........................\n");
+
+        //BVS---------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            BVS_root = BVS_insert(BVS_root, NULL, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("BVS insert took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+        //BVS---------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //AVL---------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            AVL_root = AVL_insert(AVL_root, NULL, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("AVL insert took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+        //AVL---------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //RB----------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            insert(&RB_root, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("RB insert took %f seconds for %d nodes\n\n", exe_time, num_of_nodes);
+        //RB----------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //SEARCH-----------------------------------------------
+            printf(".........................Search.........................\n");
+            test_trees_search(num_of_nodes, rand_arr);
+        //SEARCH-----------------------------------------------
+
+        num_of_nodes *= MUL10;
+        rand_arr = realloc(rand_arr, num_of_nodes * sizeof(int));
+
+        delete_whole_trees();
+    }
+
+    return 0;
+}
+
 
 void BVS_main() {
     char input = ' ';
@@ -168,7 +297,14 @@ void RB_main() {
     }
 }
 
+
 int main() {
+    srand(time(0));
+    test_trees_insert_random();
+
+    //AVL_main();
+
+/*
     char search_select, input = ' ';
     int data;
 
@@ -229,6 +365,6 @@ int main() {
                 break;
         }
     } while (search_select != 'e');
-
+*/
     return 0;
 }

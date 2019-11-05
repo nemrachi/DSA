@@ -108,11 +108,9 @@ BVSnode *BVS_insert(BVSnode *tree, BVSnode *parent, int new_data) {
         tree->left = BVS_insert(tree->left, tree, new_data); //...novy uzol bude v lavej vetve aktualneho uzla
         tree->lh = BVS_height(tree, 'l'); //prepocitanie vysky pre lavy podstrom aktualneho uzla
 
-    } else if (new_data > tree->data) { //ak vlozena hodnota new_data je vacsia ako hodnota aktualneho uzla...
+    } else { //ak vlozena hodnota new_data je vacsia alebo rovna ako hodnota aktualneho uzla...
         tree->right = BVS_insert(tree->right, tree, new_data); //...novy uzol bude v pravej vetve aktualneho uzla
         tree->rh = BVS_height(tree, 'r'); //prepocitanie vysky pre pravy podstrom aktualneho uzla
-    } else {
-        printf("\tValue '%d' is already in the tree", new_data);
     }
 
     return(tree);

@@ -23,7 +23,8 @@ void AVL_search(AVLnode *tree, int wanted_data) {
         }
 
     } else if (wanted_data == tree->data) {
-        printf("Tree contains value '%d'\n", wanted_data);
+        //printf("Tree contains value '%d'\n", wanted_data);
+        printf("contains\t");
 
     } else {
         printf("Tree doesn't contain value '%d'\n", wanted_data);

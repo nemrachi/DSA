@@ -1,9 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+//files with trees
 #include "my_bvs.c"
 #include "my_AVL_tree.c"
 #include "red-black_tree.c"
+
+//files with hash
+#include "my_hash.c"
+#include "not_my_hash.c"
 
 //---------------------------------------------------------------------//
 //Poznamka ku komentarom:                                              //
@@ -40,11 +46,17 @@ int get_random() {
     return (rand() % (UPPER + 1 - LOWER)) + LOWER;
 }
 
+int get_random_range(int lower, int upper) {
+    return (rand() % (upper + 1 - lower)) + lower;
+}
+
 void test_trees_search(int num_of_nodes, int *rand_arr) {  // search
     clock_t start, end;
     double exe_time;
     int rand_index = get_random();
     rand_index = rand_index % num_of_nodes;
+
+    printf(".........................Search for '%d'\n", rand_arr[rand_index]);
 
     //BVS---------------------------------------------------
     start = clock();
@@ -77,7 +89,8 @@ void test_trees_search(int num_of_nodes, int *rand_arr) {  // search
     reset_clock(&start, &end, &exe_time);
 }
 
-int test_trees_insert_random() { //random cisla v mnozinach 10, 100, 1000, 10 000, 100 000
+//priemerny pripad
+int test_trees_insert_random() { //test vkladania random cisel
     int num_of_nodes = MUL10;
     int *rand_arr = malloc(num_of_nodes * sizeof(int));
 
@@ -85,12 +98,16 @@ int test_trees_insert_random() { //random cisla v mnozinach 10, 100, 1000, 10 00
     double exe_time;
 
     while (num_of_nodes != MAX_NUM_NODES) {
-        printf("//---------------------------------------------------------------------//\n"
-               "                                   %d                                 \n"
-               "//---------------------------------------------------------------------//\n", num_of_nodes);
         for (int j = 0; j < num_of_nodes; j++) {
             rand_arr[j] = get_random();
         }
+
+        printf("//---------------------------------------------------------------------//\n"
+               "                            TEST TREE RANDOM                            \n"
+               "//---------------------------------------------------------------------//\n");
+        printf("//---------------------------------------------------------------------//\n"
+               "                                   %d                                 \n"
+               "//---------------------------------------------------------------------//\n", num_of_nodes);
 
         printf("\n.........................Insert.........................\n");
 
@@ -131,7 +148,6 @@ int test_trees_insert_random() { //random cisla v mnozinach 10, 100, 1000, 10 00
         reset_clock(&start, &end, &exe_time);
 
         //SEARCH-----------------------------------------------
-            printf(".........................Search.........................\n");
             test_trees_search(num_of_nodes, rand_arr);
         //SEARCH-----------------------------------------------
 
@@ -144,227 +160,233 @@ int test_trees_insert_random() { //random cisla v mnozinach 10, 100, 1000, 10 00
     return 0;
 }
 
+//optimalny pripad
+int test_trees_insert_left_right() { //test striedaveho vkladania dolava a doprava
+    int num_of_nodes = MUL10;
+    int *rand_arr = malloc(num_of_nodes * sizeof(int));
+    int index = 1, last_left = 0, last_right = 0;
 
-void BVS_main() {
-    char input = ' ';
-    int data;
+    clock_t start, end;
+    double exe_time;
 
-    while (input != 'e') {
-        printf("\n>Insert (i)\t>Search (s)\t>Print (p)\t>End (e)\nChoose action: ");
-        scanf("\n%c", &input);
+    while (num_of_nodes != MAX_NUM_NODES) {
+        rand_arr[0] = get_random();
 
-        switch (input) {
-            case 'i': //vlozenie hodnoty do stromu
-                printf("\nEnter data: ");
-                scanf("%d", &data);
-                BVS_root = BVS_insert(BVS_root, NULL, data);
+        while (index < num_of_nodes) {
+            rand_arr[index] = get_random_range(0, rand_arr[0]-1);
+            ++index;
+
+            if (index == num_of_nodes) {
                 break;
+            }
 
-            case 's': //vyhladanie hodnoty v strome
-                printf("\nEnter searched data: ");
-                scanf("%d", &data);
+            rand_arr[index] = get_random_range(rand_arr[0], UPPER);
+            ++index;
 
-//                clock_t stopwatch;
-//                stopwatch = clock();
-
-                BVS_search(BVS_root, data);
-
-//                stopwatch = clock() - stopwatch;
-//                double time_taken = ((double)stopwatch) / CLOCKS_PER_SEC; //v sekundach
-//                printf("Search for '%d' took %f s to find \n", data, time_taken);
+            if (index == num_of_nodes) {
                 break;
+            }
 
-            case 'p': //vypis jednotlivych uzlov stromu
-                BVS_print(BVS_root);
-                printf("\n");
-                break;
-
-            case 'e': //ukoncenie prace s BVS
-                if (BVS_root != NULL) {
-                    char x = input;
-
-                    //uzivatel si moze vybrat, ci v strome ponecha hodnoty alebo sa cely premaze
-                    printf("\nDo you want to delete whole tree?\n\tyes (y) / no (n)\n");
-                    scanf("\n%c", &input);
-
-                    if (input == 'y') {
-                        printf("\tTree was deleted\n");
-                        free(BVS_root);
-                        BVS_root = NULL;
-                    }
-
-                    input = x;
-                }
-                break;
-
-            default:
-                break;
         }
+
+        printf("//---------------------------------------------------------------------//\n"
+               "                            TEST TREE L-R                            \n"
+               "//---------------------------------------------------------------------//\n");
+        printf("//---------------------------------------------------------------------//\n"
+               "                                   %d                                 \n"
+               "//---------------------------------------------------------------------//\n", num_of_nodes);
+
+        printf("\n.........................Insert.........................\n");
+
+        //BVS---------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            BVS_root = BVS_insert(BVS_root, NULL, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("BVS insert took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+        //BVS---------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //AVL---------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            AVL_root = AVL_insert(AVL_root, NULL, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("AVL insert took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+        //AVL---------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //RB----------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            insert(&RB_root, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("RB insert took %f seconds for %d nodes\n\n", exe_time, num_of_nodes);
+        //RB----------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //SEARCH-----------------------------------------------
+        test_trees_search(num_of_nodes, rand_arr);
+        //SEARCH-----------------------------------------------
+
+        num_of_nodes *= MUL10;
+        rand_arr = realloc(rand_arr, num_of_nodes * sizeof(int));
+
+        delete_whole_trees();
     }
+
+    return 0;
 }
 
-void AVL_main() {
-    char input = ' ';
-    int data;
+//najhorsi pripad
+int test_trees_insert_sequence() { //test vkladania random cisel
+    int num_of_nodes = MUL10;
+    int *rand_arr = malloc(num_of_nodes * sizeof(int));
 
-    while (input != 'e') {
-        printf("\n>Insert (i)\t>Search (s)\t>Print (p)\t>End (e)\nChoose action: ");
-        scanf("\n%c", &input);
+    clock_t start, end;
+    double exe_time;
 
-        switch (input) {
-            case 'i': //vlozenie hodnoty do stromu
-                printf("\nEnter data: ");
-                scanf("%d", &data);
-                AVL_root = AVL_insert(AVL_root, NULL, data);
-                break;
+    while (num_of_nodes != MAX_NUM_NODES) {
+        int seq_start = get_random();
 
-            case 's': //vyhladanie hodnoty v strome
-                printf("\nEnter searched data: ");
-                scanf("%d", &data);
-                AVL_search(AVL_root, data);
-                break;
-
-            case 'p': //vypis jednotlivych uzlov stromu
-                AVL_print(AVL_root);
-                printf("\n");
-                break;
-
-            case 'e': //ukoncenie prace s AVL BVS
-                if (AVL_root != NULL) {
-                    char x = input;
-
-                    //uzivatel si moze vybrat, ci v strome ponecha hodnoty alebo sa cely premaze
-                    printf("\nDo you want to delete whole tree?\n\tyes (y) / no (n)\n");
-                    scanf("\n%c", &input);
-
-                    if (input == 'y') {
-                        printf("\tTree was deleted\n");
-                        free(AVL_root);
-                        AVL_root = NULL;
-                    }
-
-                    input = x;
-                }
-                break;
-
-            default:
-                break;
+        for (int j = 0; j < num_of_nodes; j++) {
+            rand_arr[j] = seq_start + j;
         }
+
+        printf("//---------------------------------------------------------------------//\n"
+               "                            TEST TREE SEQUENCE                            \n"
+               "//---------------------------------------------------------------------//\n");
+        printf("//---------------------------------------------------------------------//\n"
+               "                                   %d                                 \n"
+               "//---------------------------------------------------------------------//\n", num_of_nodes);
+
+        printf("\n.........................Insert.........................\n");
+
+        //BVS---------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            BVS_root = BVS_insert(BVS_root, NULL, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("BVS insert took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+        //BVS---------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //AVL---------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            AVL_root = AVL_insert(AVL_root, NULL, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("AVL insert took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+        //AVL---------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //RB----------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            insert(&RB_root, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("RB insert took %f seconds for %d nodes\n\n", exe_time, num_of_nodes);
+        //RB----------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //SEARCH-----------------------------------------------
+        test_trees_search(num_of_nodes, rand_arr);
+        //SEARCH-----------------------------------------------
+
+        num_of_nodes *= MUL10;
+        rand_arr = realloc(rand_arr, num_of_nodes * sizeof(int));
+
+        delete_whole_trees();
     }
+
+    return 0;
 }
 
-void RB_main() {
-    char input = ' ';
-    int data;
 
-    while (input != 'e') {
-        printf("\n>Insert (i)\t>Search (s)\t>Print (p)\t>End (e)\nChoose action: ");
-        scanf("\n%c", &input);
 
-        switch (input) {
-            case 'i': //vlozenie hodnoty do stromu
-                printf("\nEnter data: ");
-                scanf("%d", &data);
-                insert(&RB_root, data);
-                break;
+int test_hash_insert_random() { //test vkladania random cisel
+    int num_of_nodes = MUL10;
+    int *rand_arr = malloc(num_of_nodes * sizeof(int));
 
-            case 's': //vyhladanie hodnoty v strome
-                break;
+    clock_t start, end;
+    double exe_time;
 
-            case 'p': //vypis jednotlivych uzlov stromu
-                printf("BLACK: 0\t RED: 1\n");
-                RB_print(RB_root);
-                printf("\n");
-                break;
-
-            case 'e': //skoncenie s RB BVS
-                if (RB_root != NULL) {
-                    char x = input;
-                    printf("\nDo you want to delete whole tree?\n\tyes (y) / no (n)\n");
-                    scanf("\n%c", &input);
-                    if (input == 'y') {
-                        printf("\tTree was deleted\n");
-                        free(RB_root);
-                        RB_root = NULL;
-                    }
-                    input = x;
-                }
-                break;
-
-            default:
-                break;
+    while (num_of_nodes != MAX_NUM_NODES) {
+        for (int j = 0; j < num_of_nodes; j++) {
+            rand_arr[j] = get_random();
         }
+
+        printf("//---------------------------------------------------------------------//\n"
+               "                            TEST HASH RANDOM                            \n"
+               "//---------------------------------------------------------------------//\n");
+        printf("//---------------------------------------------------------------------//\n"
+               "                                   %d                                 \n"
+               "//---------------------------------------------------------------------//\n", num_of_nodes);
+
+        printf("\n.........................Insert.........................\n");
+
+        //BVS---------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            BVS_root = BVS_insert(BVS_root, NULL, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("BVS insert took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+        //BVS---------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //AVL---------------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            AVL_root = AVL_insert(AVL_root, NULL, rand_arr[i]);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("AVL insert took %f seconds for %d nodes\n", exe_time, num_of_nodes);
+        //AVL---------------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
+
+        //SEARCH-----------------------------------------------
+        test_trees_search(num_of_nodes, rand_arr);
+        //SEARCH-----------------------------------------------
+
+        num_of_nodes *= MUL10;
+        rand_arr = realloc(rand_arr, num_of_nodes * sizeof(int));
+
+        delete_whole_trees();
     }
+
+    return 0;
 }
 
 
 int main() {
     srand(time(0));
-    test_trees_insert_random();
 
-    //AVL_main();
+//    test_trees_insert_random();
+//    test_trees_insert_left_right();
+//    test_trees_insert_sequence();
 
-/*
-    char search_select, input = ' ';
-    int data;
-
-    do {
-        printf("\n>Binary search tree (b)\n>Hashing (h)\n>End (e)\n\nSelect: ");
-        scanf("\n%c", &search_select);
-
-        switch (search_select) {
-            case 'b': //binarne vyhladavacie stromy
-                printf("\nThis search algorithms are for storing integers.");
-
-                while (input != 'e') {
-                    printf("\n>My BVS tree (b)\t>My AVL tree (a)\t>Red-black tree (r)\t>End (e)\nChoose tree: ");
-                    scanf("\n%c", &input);
-
-                    switch (input) {
-                        case 'b': //moj nevyvazeny BVS
-                            BVS_main();
-                            break;
-
-                        case 'a': //moj AVL BVS
-                            AVL_main();
-                            break;
-
-                        case 'r': //prevzaty cerveno-cierny strom
-                            RB_main();
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-
-                input = ' ';
-                break;
-
-            case 'h':
-                printf("\nThis search algorithms are for storing strings.");
-
-                while (input != 'e') {
-                    printf("\n>My hash (1)\t>Not my hash (2)\t>End (e)\nChoose tree: ");
-                    scanf("\n%c", &input);
-
-                    switch (input) {
-                        case '1': //moj hash
-                            break;
-
-                        case '2': //nie moj hash
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-                break;
-
-            default:
-                break;
-        }
-    } while (search_select != 'e');
-*/
     return 0;
 }

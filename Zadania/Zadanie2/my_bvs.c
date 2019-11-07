@@ -4,10 +4,19 @@ typedef struct BVSnode {
     int lh, rh; //vyska lavej vetvy (lh), vyska pravej vetvy (rh)
 } BVSnode;
 
+int count_lvl = 1;
+
+int BVS_get_lvl_count() {
+    int temp = count_lvl;
+    count_lvl = 1;
+    return  temp;
+}
+
 //funkcia, ktora vypisuje jednotlive uzly stromu
 void BVS_search(BVSnode *tree, int wanted_data) {
     if (wanted_data < tree->data) {
         if (tree->left != NULL) {
+            count_lvl++;
             BVS_search(tree->left, wanted_data);
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
@@ -16,6 +25,7 @@ void BVS_search(BVSnode *tree, int wanted_data) {
 
     } else if (wanted_data > tree->data) {
         if (tree->right != NULL) {
+            count_lvl++;
             BVS_search(tree->right, wanted_data);
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
@@ -88,31 +98,53 @@ int BVS_height(BVSnode *tree, char ch) {
 }
 
 //funckia na vytvaranie noveho uzla
-BVSnode *BVS_new_node(BVSnode *tree, BVSnode *parent, int data) {
-    tree = (BVSnode *)malloc(sizeof(BVSnode));
+BVSnode *BVS_new_node(BVSnode *parent, int data) {
+    BVSnode *tree = (BVSnode *)malloc(sizeof(BVSnode));
     tree->data = data;
     tree->parent = parent;
     tree->left = NULL;
     tree->right = NULL;
     //vypocet vysky pre lavy a pravy podstrom
-    tree->lh = BVS_height(tree, 'l');
-    tree->rh = BVS_height(tree, 'r');
+//    tree->lh = BVS_height(tree, 'l');
+//    tree->rh = BVS_height(tree, 'r');
     return tree;
 }
 
 //funckia na vkladanie noveho uzla do stromu
-BVSnode *BVS_insert(BVSnode *tree, BVSnode *parent, int new_data) {
-    if (tree == NULL) { //ak dany uzol je NULL, vytvori sa novy uzol
-        tree = BVS_new_node(tree, parent, new_data);
+//BVSnode *BVS_insert(BVSnode *tree, BVSnode *parent, int new_data) {
+//    if (tree == NULL) { //ak dany uzol je NULL, vytvori sa novy uzol
+//        tree = BVS_new_node(tree, parent, new_data);
+//
+//    } else if (new_data < tree->data) { //ak vlozena hodnota new_data je mensia ako hodnota aktualneho uzla...
+//        tree->left = BVS_insert(tree->left, tree, new_data); //...novy uzol bude v lavej vetve aktualneho uzla
+//        tree->lh = BVS_height(tree, 'l'); //prepocitanie vysky pre lavy podstrom aktualneho uzla
+//
+//    } else { //ak vlozena hodnota new_data je vacsia alebo rovna ako hodnota aktualneho uzla...
+//        tree->right = BVS_insert(tree->right, tree, new_data); //...novy uzol bude v pravej vetve aktualneho uzla
+//        tree->rh = BVS_height(tree, 'r'); //prepocitanie vysky pre pravy podstrom aktualneho uzla
+//    }
+//
+//    return(tree);
+//}
 
-    } else if (new_data < tree->data) { //ak vlozena hodnota new_data je mensia ako hodnota aktualneho uzla...
-        tree->left = BVS_insert(tree->left, tree, new_data); //...novy uzol bude v lavej vetve aktualneho uzla
-        tree->lh = BVS_height(tree, 'l'); //prepocitanie vysky pre lavy podstrom aktualneho uzla
+BVSnode *BVS_insert(BVSnode *tree, int new_data) {
+    BVSnode **root = &tree;
+    BVSnode *parent = NULL;
 
-    } else { //ak vlozena hodnota new_data je vacsia alebo rovna ako hodnota aktualneho uzla...
-        tree->right = BVS_insert(tree->right, tree, new_data); //...novy uzol bude v pravej vetve aktualneho uzla
-        tree->rh = BVS_height(tree, 'r'); //prepocitanie vysky pre pravy podstrom aktualneho uzla
+    while (1) {
+        if (*root == NULL) {
+            *root = BVS_new_node(parent, new_data);
+            break;
+
+        } else if (new_data > (*root)->data) {
+            parent = *root;
+            root = &(*root)->right;
+
+        } else {
+            parent = *root;
+            root = &(*root)->left;
+        }
     }
 
-    return(tree);
+    return tree;
 }

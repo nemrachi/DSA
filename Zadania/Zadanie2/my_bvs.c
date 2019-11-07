@@ -4,19 +4,13 @@ typedef struct BVSnode {
     int lh, rh; //vyska lavej vetvy (lh), vyska pravej vetvy (rh)
 } BVSnode;
 
-int count_lvl = 1;
-
-int BVS_get_lvl_count() {
-    int temp = count_lvl;
-    count_lvl = 1;
-    return  temp;
-}
+int BVS_count_lvl = 1;
 
 //funkcia, ktora vypisuje jednotlive uzly stromu
 void BVS_search(BVSnode *tree, int wanted_data) {
     if (wanted_data < tree->data) {
         if (tree->left != NULL) {
-            count_lvl++;
+            BVS_count_lvl++;
             BVS_search(tree->left, wanted_data);
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
@@ -25,7 +19,7 @@ void BVS_search(BVSnode *tree, int wanted_data) {
 
     } else if (wanted_data > tree->data) {
         if (tree->right != NULL) {
-            count_lvl++;
+            BVS_count_lvl++;
             BVS_search(tree->right, wanted_data);
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
@@ -34,7 +28,8 @@ void BVS_search(BVSnode *tree, int wanted_data) {
 
     } else if (wanted_data == tree->data) {
         //printf("Tree contains value '%d'\n", wanted_data);
-        printf("contains\t");
+        printf("contains at lvl: %d\t", BVS_count_lvl);
+        BVS_count_lvl = 1;
 
     } else {
         printf("Tree doesn't contain value '%d'\n", wanted_data);

@@ -1,21 +1,29 @@
+//-----------------------------------------------------------------------------//
+//                                                                             //
+//source: https://www2.informatik.hu-berlin.de/~weber/slipOff/hashmap_c.html   //
+//        https://www2.informatik.hu-berlin.de/~weber/slipOff/hashmap_h.html   //
+//                                                                             //
+//-----------------------------------------------------------------------------//
+
 #include <stdio.h>
 #include <stdlib.h>
 
 /** Hashmap structure (forward declaration) */
 struct s_hashmap;
 typedef struct s_hashmap hashmap;
+
 /** Creates a new hashmap near the given size. */
-extern hashmap* hashmapCreate(int startsize);
+hashmap* hashmapCreate(int startsize);
 /** Inserts a new element into the hashmap. */
-extern void hashmapInsert(hashmap*, const void* data, unsigned long key);
+void hashmapInsert(hashmap*, const void* data, unsigned long key);
 /** Removes the storage for the element of the key and returns the element. */
-extern void* hashmapRemove(hashmap*, unsigned long key);
+void* hashmapRemove(hashmap*, unsigned long key);
 /** Returns the element for the key. */
-extern void* hashmapGet(hashmap*, unsigned long key);
+void* hashmapGet(hashmap*, unsigned long key);
 /** Returns the number of saved elements. */
-extern long hashmapCount(hashmap*);
+long hashmapCount(hashmap*);
 /** Removes the hashmap structure. */
-extern void hashmapDelete(hashmap*);
+void hashmapDelete(hashmap*);
 
 /* this should be prime */
 #define TABLE_STARTSIZE 1021
@@ -32,6 +40,14 @@ struct s_hashmap{
     hEntry* table;
     long size, count;
 };
+
+//mnou pridana funkcia, kvoli kontrole vkladania dat
+void NM_print(struct s_hashmap *hash) {
+    for (int i = 0; i < hash->size; i++)
+    {
+        printf("%d. %s\n", i, (char*)hash->table[i].data);
+    }
+}
 
 static unsigned long isPrime(unsigned long val)
 {

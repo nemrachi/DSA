@@ -4,10 +4,13 @@ typedef struct AVLnode {
     int lh, rh; //vyska lavej vetvy (lh), vyska pravej vetvy (rh)
 } AVLnode;
 
+int AVL_count_lvl = 1;
+
 //funkcia, ktora vypisuje jednotlive uzly stromu
 void AVL_search(AVLnode *tree, int wanted_data) {
     if (wanted_data < tree->data) {
         if (tree->left != NULL) {
+            AVL_count_lvl++;
             AVL_search(tree->left, wanted_data);
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
@@ -16,6 +19,7 @@ void AVL_search(AVLnode *tree, int wanted_data) {
 
     } else if (wanted_data > tree->data) {
         if (tree->right != NULL) {
+            AVL_count_lvl++;
             AVL_search(tree->right, wanted_data);
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
@@ -24,7 +28,8 @@ void AVL_search(AVLnode *tree, int wanted_data) {
 
     } else if (wanted_data == tree->data) {
         //printf("Tree contains value '%d'\n", wanted_data);
-        printf("contains\t");
+        printf("contains at lvl: %d\t", AVL_count_lvl);
+        AVL_count_lvl = 1;
 
     } else {
         printf("Tree doesn't contain value '%d'\n", wanted_data);

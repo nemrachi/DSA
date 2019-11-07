@@ -40,12 +40,14 @@ struct node{
 /* Global, since all function will access them */
 struct node *ROOT;
 struct node *NILL;
+int RB_count_lvl = 1;
 
 //mnou pridane funkcie
+void RB_search(struct node *tree, int wanted_data);
+void RB_print(struct node *tree);
 void RB_set_root();
 struct node *RB_get_root();
 void RB_delete_whole();
-void RB_print(struct node *tree);
 
 void left_rotate(struct node *x);
 void right_rotate(struct node *x);
@@ -63,6 +65,7 @@ void red_black_delete_fixup(struct node *x);
 void RB_search(struct node *tree, int wanted_data) {
     if (wanted_data < tree->key) {
         if (tree->left != NULL) {
+            RB_count_lvl++;
             RB_search(tree->left, wanted_data);
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
@@ -71,6 +74,7 @@ void RB_search(struct node *tree, int wanted_data) {
 
     } else if (wanted_data > tree->key) {
         if (tree->right != NULL) {
+            RB_count_lvl++;
             RB_search(tree->right, wanted_data);
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
@@ -79,7 +83,8 @@ void RB_search(struct node *tree, int wanted_data) {
 
     } else if (wanted_data == tree->key) {
         //printf("Tree contains value '%d'\n", wanted_data);
-        printf("contains\t");
+        printf("contains at lvl: %d\t", RB_count_lvl);
+        RB_count_lvl = 1;
 
     } else {
         printf("Tree doesn't contain value '%d'\n", wanted_data);

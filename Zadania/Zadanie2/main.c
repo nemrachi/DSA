@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <math.h>
 
 //files with trees
 #include "my_bvs.c"
@@ -57,10 +58,10 @@ int get_random_range(int lower, int upper) {
     return (rand() % (upper + 1 - lower)) + lower;
 }
 
-int ascii_sum(char *str) { //suma ascii hodnot stringu
+int generate_key(char *str) { //suma ascii hodnot stringu, ktore su vynasobene 2^pozicia
     int sum = 0;
     for (int i = 0; i < (int)strlen(str); ++i) {
-        sum += str[i];
+        sum += (int)pow(2, i+1)*str[i];
     }
     return sum;
 }
@@ -426,14 +427,14 @@ void not_my_hash_main() {
                 printf("\nEnter string: ");
                 fgets(data, MAX_STR, stdin);
                 strtok(data, "\n");
-                key = ascii_sum(data);
+                key = generate_key(data);
                 hashmapInsert(NM_hashmap, data, key);
                 break;
 
             case 's': //vyhladanie hodnoty v strome
                 printf("\nEnter searched data: ");
                 fgets(data, MAX_STR, stdin);
-                key = ascii_sum(data);
+                key = generate_key(data);
                 char *hm_data = hashmapGet(NM_hashmap, key);
                 if (hm_data != NULL) {
                     printf("searched %s", hm_data);
@@ -473,10 +474,10 @@ void not_my_hash_main() {
 
 void my_hash_main() {
     char input = ' ';
-    char data[MAX_STR];
     int key;
 
     while (input != 'e') {
+        char *data = (char*) malloc(MAX_STR);
         printf("\n>Insert (i)\t>Search (s)\t>Print (p)\t>End (e)\nChoose action: ");
         input = (char)getchar();
         getchar();
@@ -486,20 +487,16 @@ void my_hash_main() {
                 printf("\nEnter string: ");
                 fgets(data, MAX_STR, stdin);
                 strtok(data, "\n");
-                key = ascii_sum(data);
+                key = generate_key(data);
                 MY_hash_table = MY_insert(MY_hash_table, data, key);
                 break;
 
             case 's': //vyhladanie hodnoty v strome
                 printf("\nEnter searched data: ");
                 fgets(data, MAX_STR, stdin);
-                key = ascii_sum(data);
-                char *hm_data = hashmapGet(NM_hashmap, key);
-                if (hm_data != NULL) {
-                    printf("searched %s", hm_data);
-                } else {
-                    printf("find nothing");
-                }
+                strtok(data, "\n");
+                key = generate_key(data);
+                MY_search(MY_hash_table, data, key);
                 break;
 
             case 'p': //vypis jednotlivych uzlov stromu

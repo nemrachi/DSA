@@ -21,7 +21,7 @@
 //---------------------------------------------------------------------//
 
 #define MAX_STR 100
-#define HASH_START_SIZE 7
+#define HASH_START_SIZE 11
 #define MUL10 10
 #define MAX_NUM_NODES 100000
 #define UPPER 100000
@@ -31,7 +31,7 @@ BVSnode *BVS_root = NULL; //smernik pre BVS strom bez vyvazenia (moja implementa
 AVLnode *AVL_root = NULL; //smernik pre BVS strom s vyvazenim AVL (moja implementacia)
 struct node *RB_root = NULL; //smernik pre cerveno-cierny strom (cudzia implementacia)
 struct s_hashmap *NM_hashmap = NULL; //smernik na hash mapu (cudzia implementacia)
-HASH_TABLE *MY_hash_table = NULL; //smernik na hash mapu (moja implementacia)
+HASHMAP *MY_hashmap = NULL; //smernik na hash mapu (moja implementacia)
 
 
 void delete_whole_trees() {
@@ -42,6 +42,13 @@ void delete_whole_trees() {
     free(RB_root);
     RB_root = NULL;
     RB_delete_whole();
+}
+
+void delete_whole_hashmaps() {
+    MY_delete_hashmap(MY_hashmap);
+    MY_hashmap = NULL;
+//    hashmapDelete(NM_hashmap);
+//    NM_hashmap = NULL;
 }
 
 void reset_clock(clock_t *start, clock_t *end, double *exe_time) {
@@ -56,6 +63,24 @@ int get_random() {
 
 int get_random_range(int lower, int upper) {
     return (rand() % (upper + 1 - lower)) + lower;
+}
+
+void get_random_char_arr(char **arr, int num_of_nodes) {
+    int num, rand_size;
+    for (int i = 0; i < num_of_nodes; ++i) {
+        rand_size = get_random_range(1, 10);
+        for (int j = 0; j < rand_size; ++j) {
+            num = rand() % 3;
+            if (num == 0) {
+                arr[i][j] = (char)('0' + (rand() % 10));
+            } else if (num == 1) {
+                arr[i][j] = (char)('a' + (rand() % 26));
+            } else {
+                arr[i][j] = (char)('A' + (rand() % 26));
+            }
+        }
+        arr[i][rand_size] = '\0';
+    }
 }
 
 int generate_key(char *str) { //suma ascii hodnot stringu, ktore su vynasobene 2^pozicia
@@ -358,13 +383,20 @@ int test_trees_insert_sequence() { //test vkladania random cisel
     return 0;
 }
 
-int test_hash_insert_same(int *rand_arr) { //test vkladania random cisel
-    int num_of_nodes = MUL10;
+int test_hash_insert_random() { //test vkladania random stringov
+    int num_of_nodes = MUL10, key;
+    char **rand_char_arr;
+
+    rand_char_arr = malloc(num_of_nodes * sizeof(char*));
+    for (int i = 0; i < num_of_nodes; i++) {
+        rand_char_arr[i] = malloc(MAX_STR);
+    }
 
     clock_t start, end;
     double exe_time;
 
     while (num_of_nodes <= MAX_NUM_NODES) {
+        get_random_char_arr(rand_char_arr, num_of_nodes);
         printf("//---------------------------------------------------------------------//\n"
                "                            TEST HASH RANDOM                            \n"
                "//---------------------------------------------------------------------//\n");
@@ -372,40 +404,50 @@ int test_hash_insert_same(int *rand_arr) { //test vkladania random cisel
                "                                   %d                                 \n"
                "//---------------------------------------------------------------------//\n", num_of_nodes);
 
+//        NM_hashmap = hashmapCreate(num_of_nodes);
+        MY_hashmap = MY_init(num_of_nodes);
+
         printf("\nHash Insert..............................................\n\n");
 
-        //BVS---------------------------------------------------
+        //MY-HASH---------------------------------------------------
         start = clock();
         for (int i = 0; i < num_of_nodes; i++) {
-            BVS_root = BVS_insert(BVS_root, rand_arr[i]);
+            key = generate_key(rand_char_arr[i]);
+            MY_hashmap = MY_insert(MY_hashmap, rand_char_arr[i], key);
         }
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
-        printf("BVS insert took %f seconds\n", exe_time);
-        //BVS---------------------------------------------------
+        printf("My hash insert took %f seconds\n", exe_time);
+        //MY-HASH---------------------------------------------------
 
         reset_clock(&start, &end, &exe_time);
 
-        //AVL---------------------------------------------------
-        start = clock();
-        for (int i = 0; i < num_of_nodes; i++) {
-            AVL_root = AVL_insert(AVL_root, NULL, rand_arr[i]);
-        }
-        end = clock();
-        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
-        printf("AVL insert took %f seconds\n", exe_time);
-        //AVL---------------------------------------------------
-
-        reset_clock(&start, &end, &exe_time);
+//        //NOT-MY-HASH-----------------------------------------------
+//        start = clock();
+//        for (int i = 0; i < num_of_nodes; i++) {
+//            key = generate_key(rand_char_arr[i]);
+//            hashmapInsert(NM_hashmap, rand_char_arr[i], key);
+//        }
+//        end = clock();
+//        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+//        printf("Not my hash insert took %f seconds\n", exe_time);
+//        //NOT-MY-HASH-----------------------------------------------
+//
+//        reset_clock(&start, &end, &exe_time);
 
         //SEARCH-----------------------------------------------
 
         //SEARCH-----------------------------------------------
 
         num_of_nodes *= MUL10;
-        rand_arr = realloc(rand_arr, num_of_nodes * sizeof(int));
 
-        delete_whole_trees();
+        free(rand_char_arr);
+        rand_char_arr = malloc(num_of_nodes * sizeof(char*));
+        for (int i = 0; i < num_of_nodes; i++) {
+            rand_char_arr[i] = malloc(MAX_STR);
+        }
+
+        delete_whole_hashmaps();
     }
 
     return 0;
@@ -488,7 +530,7 @@ void my_hash_main() {
                 fgets(data, MAX_STR, stdin);
                 strtok(data, "\n");
                 key = generate_key(data);
-                MY_hash_table = MY_insert(MY_hash_table, data, key);
+                MY_hashmap = MY_insert(MY_hashmap, data, key);
                 break;
 
             case 's': //vyhladanie hodnoty v strome
@@ -496,16 +538,16 @@ void my_hash_main() {
                 fgets(data, MAX_STR, stdin);
                 strtok(data, "\n");
                 key = generate_key(data);
-                MY_search(MY_hash_table, data, key);
+                MY_search(MY_hashmap, data, key);
                 break;
 
             case 'p': //vypis jednotlivych uzlov stromu
-                MY_print(MY_hash_table);
+                MY_print(MY_hashmap);
                 printf("\n");
                 break;
 
             case 'e': //ukoncenie prace s BVS
-                if (MY_hash_table != NULL) {
+                if (MY_hashmap != NULL) {
                     char x = input;
 
                     //uzivatel si moze vybrat, ci v strome ponecha hodnoty alebo sa cely premaze
@@ -514,7 +556,7 @@ void my_hash_main() {
 
                     if (input == 'y') {
                         printf("\tHash was deleted\n");
-                        MY_delete_hashmap(MY_hash_table);
+                        MY_delete_hashmap(MY_hashmap);
                         NM_hashmap = NULL;
                     }
 
@@ -531,12 +573,7 @@ void my_hash_main() {
 int main() {
     srand(time(0));
 
-    NM_hashmap = hashmapCreate(HASH_START_SIZE);
-    MY_hash_table = MY_init(HASH_START_SIZE);
-
-
-    //not_my_hash_main();
-    my_hash_main();
+    test_hash_insert_random();
 //    test_trees_insert_random();
 //    test_trees_insert_left_right();
 //    test_trees_insert_sequence();

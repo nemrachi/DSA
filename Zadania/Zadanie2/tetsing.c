@@ -3,33 +3,34 @@
 #include <string.h>
 #define MAX_LIMIT 100
 
-int get_next_prime(int size) {
-    int is_prime = 1;
-    size += 1;
+int get_random_range(int lower, int upper) {
+    return (rand() % (upper + 1 - lower)) + lower;
+}
 
-    while (size < 100) {
-        for(int i = 2; i <= size/2; ++i) {
-            if(size % i == 0) {
-                is_prime = 0;
-                break;
+
+void get_random_char(char **arr, int num_of_nodes) {
+    int num, rand_size;
+    for (int i = 0; i < num_of_nodes; ++i) {
+        rand_size = get_random_range(1, 10);
+        for (int j = 0; j < rand_size; ++j) {
+            num = rand() % 3;
+            if (num == 0) {
+                arr[i][j] = (char)('0' + (rand() % 10));
+            } else if (num == 1) {
+                arr[i][j] = (char)('a' + (rand() % 26));
+            } else {
+                arr[i][j] = (char)('A' + (rand() % 26));
             }
         }
-
-        if (is_prime) {
-            return size;
-        }
-
-        size += 1;
-        is_prime = 1;
+        arr[i][rand_size] = '\0';
     }
-
-    return 0;
 }
 
 int main()
 {
-    printf("%d\n", get_next_prime(20));
+    char str[6];
+    sprintf(str, "%d", 100000);
 
-
+    printf("%d", strlen(str));
     return 0;
 }

@@ -112,6 +112,7 @@ hashmap* hashmapCreate(int startsize)
     else
         startsize = findPrimeGreaterThan(startsize-2);
 
+
     hm->table = (hEntry*)calloc(sizeof(hEntry), startsize);
     hm->size = startsize;
     hm->count = 0;

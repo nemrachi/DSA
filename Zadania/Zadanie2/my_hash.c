@@ -21,7 +21,9 @@ int get_next_prime(int size) {
 
     printf("\tbefore prime %d\n", size);
 
-    size++;
+    if (size > MAX_TABLE_SIZE) {
+        return MAX_TABLE_SIZE;
+    }
 
     while (size <= MAX_TABLE_SIZE) {
         for(int i = 2; i <= size/2; ++i) {
@@ -68,8 +70,7 @@ int get_prev_prime(int size) {
 }
 
 HASHMAP *MY_init(int size) {
-
-    size = get_next_prime(size + (size / 7));
+    size = get_next_prime(size);
     HASHMAP *hash_table = malloc(sizeof(HASHMAP));
     hash_table->size = size;
     hash_table->fullness = 0;
@@ -91,10 +92,10 @@ int hash_fun2(int key, int prev_prime){
 }
 
 HASHMAP *MY_resize(HASHMAP *hash_table) {
-    printf("\n\tRESIZE\n");
+    printf("\tRESIZE\n");
 
     collision_count = 1;
-    int new_size = get_next_prime(hash_table->size);
+    int new_size = get_next_prime((hash_table->size * MUL10));
     int index1;
     int index2;
     ELEMENT *old_table = hash_table->table;
@@ -118,6 +119,11 @@ HASHMAP *MY_resize(HASHMAP *hash_table) {
                 } else {
                     index2 = (index1 + ((collision_count % 2000) * hash_fun2(old_table[i].key, hash_table->size))) % new_size;
                     collision_count++;
+                    if (collision_count > 100000) {
+                        hash_table->size = hash_table->size + 1;
+                        hash_table = MY_resize(hash_table);
+                        break;
+                    }
                 }
             }
         }
@@ -136,6 +142,8 @@ HASHMAP *MY_insert(HASHMAP *hash_table, char *data, int key) {
         hash_table = MY_resize(hash_table);
     }
 
+    int count = collision_count;
+
     int index1 = hash_fun1(key, hash_table->size);
     int index2 = index1;
     ELEMENT *table = hash_table->table;
@@ -146,10 +154,11 @@ HASHMAP *MY_insert(HASHMAP *hash_table, char *data, int key) {
             table[index2].data = data;
             table[index2].key = key;
             hash_table->fullness += 1;
+            collision_count = count;
             return hash_table;
         } else {
-            index2 = (index1 + ((collision_count % 2000) * hash_fun2(key, prev_prime))) % hash_table->size;
-            collision_count++;
+            index2 = (index1 + ((count % 2000) * hash_fun2(key, prev_prime))) % hash_table->size;
+            count++;
         }
     }
 }
@@ -157,16 +166,17 @@ HASHMAP *MY_insert(HASHMAP *hash_table, char *data, int key) {
 void MY_search(HASHMAP *hash_table, char *data, int wanted_key) {
     int index1 = hash_fun1(wanted_key, hash_table->size);
     int index2;
+    int prev_prime = get_prev_prime(hash_table->size);
 
     if (hash_table->table[index1].key == wanted_key) {
-        printf("Data '%s' is on index %d\n", data, index1);
+        printf("MY_HASH Data '%s' is on index %d\n", data, index1);
         printf("O(1)\n");
         return;
     } else {
-        for (int i = 1; i < collision_count; ++i) {
-            index2 = index1 + (i * hash_fun2(wanted_key, hash_table->size));
+        for (int i = 1; i <= collision_count; i++) {
+            index2 = (index1 + ((i % 2000) * hash_fun2(wanted_key, prev_prime))) % hash_table->size;
             if (hash_table->table[index2].key == wanted_key) {
-                printf("Data '%s' is on index %d\n", data, index1);
+                printf("MY_HASH Data '%s' is on index %d\n", data, index2);
                 printf("O(%d)\n", i + 1);
                 return;
             }

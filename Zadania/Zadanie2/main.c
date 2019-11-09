@@ -47,8 +47,8 @@ void delete_whole_trees() {
 void delete_whole_hashmaps() {
     MY_delete_hashmap(MY_hashmap);
     MY_hashmap = NULL;
-//    hashmapDelete(NM_hashmap);
-//    NM_hashmap = NULL;
+    hashmapDelete(NM_hashmap);
+    NM_hashmap = NULL;
 }
 
 void reset_clock(clock_t *start, clock_t *end, double *exe_time) {
@@ -383,6 +383,38 @@ int test_trees_insert_sequence() { //test vkladania random cisel
     return 0;
 }
 
+void test_hash_search(int num_of_nodes, char **rand_arr) {  // search
+    int key;
+    clock_t start, end;
+    double exe_time;
+    int rand_index = get_random();
+    rand_index = rand_index % num_of_nodes;
+
+    printf("\nSearch   '%s'\n", rand_arr[rand_index]);
+
+    //MY-HASH---------------------------------------------------
+    start = clock();
+    key = generate_key(rand_arr[rand_index]);
+    MY_search(MY_hashmap, rand_arr[rand_index], key);
+    end = clock();
+    exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("My hash search took %f seconds\n\n", exe_time);
+    //MY-HASH---------------------------------------------------
+
+    reset_clock(&start, &end, &exe_time);
+
+    //NOT-MY-HASH-----------------------------------------------
+    start = clock();
+    key = generate_key(rand_arr[rand_index]);
+    hashmapGet(NM_hashmap, key);
+    end = clock();
+    exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Not my hash search took %f seconds\n", exe_time);
+    //NOT-MY-HASH-----------------------------------------------
+
+    reset_clock(&start, &end, &exe_time);
+}
+
 int test_hash_insert_random() { //test vkladania random stringov
     int num_of_nodes = MUL10, key;
     char **rand_char_arr;
@@ -404,10 +436,10 @@ int test_hash_insert_random() { //test vkladania random stringov
                "                                   %d                                 \n"
                "//---------------------------------------------------------------------//\n", num_of_nodes);
 
-//        NM_hashmap = hashmapCreate(num_of_nodes);
-        MY_hashmap = MY_init(num_of_nodes);
+        NM_hashmap = hashmapCreate(HASH_START_SIZE);
+        MY_hashmap = MY_init(HASH_START_SIZE);
 
-        printf("\nHash Insert..............................................\n\n");
+        printf("\nHash Insert..............................................\n");
 
         //MY-HASH---------------------------------------------------
         start = clock();
@@ -422,21 +454,21 @@ int test_hash_insert_random() { //test vkladania random stringov
 
         reset_clock(&start, &end, &exe_time);
 
-//        //NOT-MY-HASH-----------------------------------------------
-//        start = clock();
-//        for (int i = 0; i < num_of_nodes; i++) {
-//            key = generate_key(rand_char_arr[i]);
-//            hashmapInsert(NM_hashmap, rand_char_arr[i], key);
-//        }
-//        end = clock();
-//        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
-//        printf("Not my hash insert took %f seconds\n", exe_time);
-//        //NOT-MY-HASH-----------------------------------------------
-//
-//        reset_clock(&start, &end, &exe_time);
+        //NOT-MY-HASH-----------------------------------------------
+        start = clock();
+        for (int i = 0; i < num_of_nodes; i++) {
+            key = generate_key(rand_char_arr[i]);
+            hashmapInsert(NM_hashmap, rand_char_arr[i], key);
+        }
+        end = clock();
+        exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("Not my hash insert took %f seconds\n", exe_time);
+        //NOT-MY-HASH-----------------------------------------------
+
+        reset_clock(&start, &end, &exe_time);
 
         //SEARCH-----------------------------------------------
-
+        test_hash_search(num_of_nodes, rand_char_arr);
         //SEARCH-----------------------------------------------
 
         num_of_nodes *= MUL10;

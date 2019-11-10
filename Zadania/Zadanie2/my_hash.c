@@ -12,14 +12,11 @@ typedef struct{
 } HASHMAP;
 
 #define MAX_TABLE_SIZE 115211
-#define MUL10 10
 
 int collision_count = 1;
 
 int get_next_prime(int size) {
     int is_prime = 1;
-
-    printf("\tbefore prime %d\n", size);
 
     if (size > MAX_TABLE_SIZE) {
         return MAX_TABLE_SIZE;
@@ -95,9 +92,10 @@ HASHMAP *MY_resize(HASHMAP *hash_table) {
     printf("\tRESIZE\n");
 
     collision_count = 1;
-    int new_size = get_next_prime((hash_table->size * MUL10));
+    int new_size = get_next_prime((hash_table->size * 10));
     int index1;
     int index2;
+    int count = collision_count;
     ELEMENT *old_table = hash_table->table;
     ELEMENT *new_table = malloc(new_size * sizeof(ELEMENT));
 
@@ -117,13 +115,13 @@ HASHMAP *MY_resize(HASHMAP *hash_table) {
                     new_table[index2].key = old_table[i].key;
                     break;
                 } else {
-                    index2 = (index1 + ((collision_count % 2000) * hash_fun2(old_table[i].key, hash_table->size))) % new_size;
-                    collision_count++;
-                    if (collision_count > 100000) {
-                        hash_table->size = hash_table->size + 1;
-                        hash_table = MY_resize(hash_table);
-                        break;
-                    }
+                    index2 = (index1 + ((count % 2000) * hash_fun2(old_table[i].key, hash_table->size))) % new_size;
+                    count++;
+//                    if (count > 100000) {
+//                        hash_table->size = hash_table->size + 1;
+//                        hash_table = MY_resize(hash_table);
+//                        break;
+//                    }
                 }
             }
         }
@@ -132,6 +130,7 @@ HASHMAP *MY_resize(HASHMAP *hash_table) {
     hash_table->table = new_table;
     free(old_table);
     hash_table->size = new_size;
+    collision_count = count;
 
     return hash_table;
 }

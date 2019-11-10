@@ -502,10 +502,10 @@ int test_hash_insert_random() {
 int main() {
     srand(time(0));
 
-    test_hash_insert_random();
-//    test_trees_insert_random();
-//    test_trees_insert_left_right();
-//    test_trees_insert_sequence();
+//   test_hash_insert_random();
+    test_trees_insert_random();
+    test_trees_insert_left_right();
+    test_trees_insert_sequence();
 
     return 0;
 }

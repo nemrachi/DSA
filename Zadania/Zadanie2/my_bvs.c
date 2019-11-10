@@ -10,7 +10,7 @@ void BVS_search(BVSnode *tree, int wanted_data) {
     if (wanted_data < tree->data) { //ak su hladane data mensie ako aktualny uzol...
         if (tree->left != NULL) { //...a je na lavo prvok
             BVS_count_lvl++;
-            BVS_search(tree->left, wanted_data); //posuvame sa dolava
+            BVS_search(tree->left, wanted_data); //posuva sa dolava
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
             return;
@@ -19,7 +19,7 @@ void BVS_search(BVSnode *tree, int wanted_data) {
     } else if (wanted_data > tree->data) { //ak su hladane data vacsie ako aktualny uzol...
         if (tree->right != NULL) { //...a je na pravo prvok
             BVS_count_lvl++;
-            BVS_search(tree->right, wanted_data); //posuvame sa doprava
+            BVS_search(tree->right, wanted_data); //posuva sa doprava
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
             return;
@@ -81,7 +81,7 @@ BVSnode *BVS_insert(BVSnode *tree, int new_data) {
     BVSnode *parent = NULL; //rodic aktualneho prvku
 
     while (1) {
-        if (*root == NULL) { //ak nie je na danom mieste prvok, vyrvori novy prvok
+        if (*root == NULL) { //ak nie je na danom mieste prvok, vyrvori novy prvok a vlozi ho tam
             *root = BVS_new_node(parent, new_data);
             return tree;
 

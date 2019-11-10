@@ -3,39 +3,40 @@ typedef struct BVSnode {
     struct BVSnode *parent, *left, *right; //smerniky na rodica a lave a prave dieta
 } BVSnode;
 
-int BVS_count_lvl = 1;
+int BVS_count_lvl = 1; //premenna na zistenie urovne stromu
 
-//funkcia, ktora vypisuje jednotlive uzly stromu
+//vyhladavacia funkcia
 void BVS_search(BVSnode *tree, int wanted_data) {
-    if (wanted_data < tree->data) {
-        if (tree->left != NULL) {
+    if (wanted_data < tree->data) { //ak su hladane data mensie ako aktualny uzol...
+        if (tree->left != NULL) { //...a je na lavo prvok
             BVS_count_lvl++;
-            BVS_search(tree->left, wanted_data);
+            BVS_search(tree->left, wanted_data); //posuvame sa dolava
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
             return;
         }
 
-    } else if (wanted_data > tree->data) {
-        if (tree->right != NULL) {
+    } else if (wanted_data > tree->data) { //ak su hladane data vacsie ako aktualny uzol...
+        if (tree->right != NULL) { //...a je na pravo prvok
             BVS_count_lvl++;
-            BVS_search(tree->right, wanted_data);
+            BVS_search(tree->right, wanted_data); //posuvame sa doprava
         } else {
             printf("Tree doesn't contain value '%d'\n", wanted_data);
             return;
         }
 
-    } else if (wanted_data == tree->data) {
-        //printf("Tree contains value '%d'\n", wanted_data);
+    } else if (wanted_data == tree->data) { //ak najde hladany prvok, vypise aj jeho uroven v strome
         printf("contains at lvl: %d\t", BVS_count_lvl);
         BVS_count_lvl = 1;
+        return;
 
     } else {
         printf("Tree doesn't contain value '%d'\n", wanted_data);
+        return;
     }
 }
 
-//funkcia, ktora vypisuje jednotlive uzly stromu
+//funkcia, ktora vypisuje jednotlive prvky stromu a udaje s nim spojene (data, rodic, deti)
 void BVS_print(BVSnode *tree) {
     if(tree != NULL) {
         if (tree->parent == NULL) {
@@ -64,35 +65,33 @@ void BVS_print(BVSnode *tree) {
     }
 }
 
-//funckia na vytvaranie noveho uzla
+//funckia na vytvaranie noveho prvku stromu
 BVSnode *BVS_new_node(BVSnode *parent, int data) {
-    BVSnode *tree = (BVSnode *)malloc(sizeof(BVSnode));
+    BVSnode *tree = malloc(sizeof(BVSnode));
     tree->data = data;
     tree->parent = parent;
     tree->left = NULL;
     tree->right = NULL;
-    //vypocet vysky pre lavy a pravy podstrom
     return tree;
 }
 
+//funkcia na vkladanie prvkov do stromu
 BVSnode *BVS_insert(BVSnode *tree, int new_data) {
-    BVSnode **root = &tree;
-    BVSnode *parent = NULL;
+    BVSnode **root = &tree; //aktualny prvok
+    BVSnode *parent = NULL; //rodic aktualneho prvku
 
     while (1) {
-        if (*root == NULL) {
+        if (*root == NULL) { //ak nie je na danom mieste prvok, vyrvori novy prvok
             *root = BVS_new_node(parent, new_data);
-            break;
+            return tree;
 
-        } else if (new_data > (*root)->data) {
-            parent = *root;
-            root = &(*root)->right;
-
-        } else {
+        } else if (new_data < (*root)->data) { //ak vkladane data su mensie ako aktualny prvok, posuva sa dolava
             parent = *root;
             root = &(*root)->left;
+
+        } else { //ak vkladane data su vacsie alebo rovne ako aktualny prvok, posuva sa doprava
+            parent = *root;
+            root = &(*root)->right;
         }
     }
-
-    return tree;
 }

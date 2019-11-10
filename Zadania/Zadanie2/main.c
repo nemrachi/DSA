@@ -488,12 +488,12 @@ int test_hash_insert_random() {
         test_hash_search(num_of_nodes, rand_char_arr);
         //SEARCH-----------------------------------------------
 
-//        for (int i = 0; i < num_of_nodes; i++) {
-//            free(rand_char_arr[i]);
-//        }
+        for (int i = 0; i < num_of_nodes; i++) {
+            free(rand_char_arr[i]);
+        }
+        free(rand_char_arr);
 
         num_of_nodes *= 10;
-        free(rand_char_arr);
         delete_whole_hash_tables();
     }
     return 0;

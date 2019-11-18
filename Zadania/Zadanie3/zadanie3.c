@@ -15,7 +15,7 @@
 #define D 68 //drak
 #define P 80 //princezna
 //teleporty su cisla od 0-9
-int teleport_num = 0;
+int teleport_id = 0;
 #define G 71
 
 #define PRINCESS_NUM 2
@@ -27,16 +27,20 @@ int get_random_range(int lower, int upper)
 }
 
 int get_percentage(int num, int perc) 
-{
-    return ceil((perc / 100) * num); // zaokruhly nahor
+{   
+    float div = (float)perc / 100;
+    printf("%.2f\n", div);
+    float result = div * num;
+    printf("%.2f\n", result);
+    return ceil(result); // zaokruhly nahor
 }
 
-int **allocate_map(int m, int n)
+int **allocate_map(int width, int height)
 {
-    int **map = (int **)malloc(m * SIZE_P_INT);
-    for (int i = 0; i < m; i++)
+    int **map = (int **)malloc(width * SIZE_P_INT);
+    for (int i = 0; i < width; i++)
     {
-        map[i] = (int *)malloc(n * SIZE_INT);
+        map[i] = (int *)malloc(height * SIZE_INT);
     }
     return map;
 }
@@ -66,7 +70,7 @@ int get_element(int element)
             break;
 
         case 5: //teleporty
-            return teleport_num;
+            return teleport_id;
             break;
 
         case 6:
@@ -79,9 +83,9 @@ int get_element(int element)
 }
 
 void print_map(int **map, int m, int n) {
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < m; j++)
         {
             switch (map[i][j])
             {
@@ -122,10 +126,10 @@ void print_map(int **map, int m, int n) {
 }
 
 //kvoli testovaniu
-int **generate_map(int m, int n, int princess_num)
+int **generate_map(int width, int height, int princess_num)
 {    
     //alokovanie mapy
-    int **map = allocate_map(m, n);
+    int **map = allocate_map(width, height);
 
     /*
     urcenie poctu jednotlivych prvkov na mape
@@ -141,7 +145,7 @@ int **generate_map(int m, int n, int princess_num)
     int dragon_num = 1;
     int teleport_num = 4; //teleporty su len 2 potom
     int generator_num = 1;
-    int remainder = (m * n) - dragon_num - princess_num - teleport_num - generator_num;
+    int remainder = (width * height) - dragon_num - princess_num - teleport_num - generator_num; //27
     int trail_num = get_percentage(remainder, 65);
     remainder -= trail_num;
     int undergrowth_num = get_percentage(remainder, 70);
@@ -150,11 +154,20 @@ int **generate_map(int m, int n, int princess_num)
 
     int elements_arr[] = {trail_num, undergrowth_num, impassable_num,
                             dragon_num, princess_num, teleport_num, generator_num};
+    
+    printf("Num of element ");
+    for (int i = 0; i < 7; i++)
+    {
+        printf("%d ", elements_arr[i]);
+    }
+    printf("\n");
+    
+
     int element_index, teleport_count = 0;
 
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < width; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < height; j++)
         {
             while (1)
             {
@@ -168,7 +181,7 @@ int **generate_map(int m, int n, int princess_num)
                     {
                         if (1 == teleport_count++)
                         {
-                            teleport_num++;
+                            teleport_id++;
                             teleport_count = 0;
                         }
                     }
@@ -178,7 +191,7 @@ int **generate_map(int m, int n, int princess_num)
         }
     }
 
-    print_map(map, m, n);
+    print_map(map, width, height);
 
     return map;
 }

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <limits.h> 
 
 #define WIDTH 7 //m
 #define HEIGHT 5 //n

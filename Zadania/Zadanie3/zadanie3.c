@@ -1,3 +1,4 @@
+//C:\Users\emari\CLionProjects\DSA\Zadania\Zadanie3
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -29,18 +30,16 @@ int get_random_range(int lower, int upper)
 int get_percentage(int num, int perc) 
 {   
     float div = (float)perc / 100;
-    printf("%.2f\n", div);
     float result = div * num;
-    printf("%.2f\n", result);
     return ceil(result); // zaokruhly nahor
 }
 
 int **allocate_map(int width, int height)
 {
-    int **map = (int **)malloc(width * SIZE_P_INT);
-    for (int i = 0; i < width; i++)
+    int **map = (int **)malloc(height * SIZE_P_INT);
+    for (int i = 0; i < height; i++)
     {
-        map[i] = (int *)malloc(height * SIZE_INT);
+        map[i] = (int *)malloc(width * SIZE_INT);
     }
     return map;
 }
@@ -118,6 +117,7 @@ void print_map(int **map, int m, int n) {
                 break;
             
             default:
+                printf("%d ", map);
                 break;
             }
         }
@@ -155,23 +155,41 @@ int **generate_map(int width, int height, int princess_num)
     int elements_arr[] = {trail_num, undergrowth_num, impassable_num,
                             dragon_num, princess_num, teleport_num, generator_num};
     
+    //30
+    int propability_arr[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //11 - C
+                            1, 1, 1, 1, 1, 1, 1, //7 - H
+                            2, 2, 2, //3 - N
+                            3, //1 - D
+                            4, 4, //2 - P
+                            5, 5, 5, 5, //4 - 0-9
+                            6, 6}; //2 - G
+    
+    /*
     printf("Num of element ");
     for (int i = 0; i < 7; i++)
     {
         printf("%d ", elements_arr[i]);
     }
     printf("\n");
-    
+    */
 
-    int element_index, teleport_count = 0;
+    int element_index, propability_index, teleport_count = 0;
 
-    for (int i = 0; i < width; i++)
+    for (int i = 0; i < height; i++)
     {
-        for (int j = 0; j < height; j++)
+        for (int j = 0; j < width; j++)
         {
             while (1)
-            {
-                element_index = get_random_range(0, 6);
+            {   
+                if (i == 0 && j == 0)
+                {
+                    element_index = get_random_range(0, 1);
+                     map[i][j] = get_element(element_index);
+                     elements_arr[element_index]--;
+                     break;
+                }
+                propability_index = get_random_range(0, 29);
+                element_index = propability_arr[propability_index];
                 if (elements_arr[element_index]) 
                 {
                     map[i][j] = get_element(element_index);

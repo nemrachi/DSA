@@ -6,6 +6,7 @@
 #include <limits.h> 
 
 typedef char BOOL;
+#define true 1
 #define WIDTH 7 //m
 #define HEIGHT 5 //n
 #define SIZE_INT sizeof(int)

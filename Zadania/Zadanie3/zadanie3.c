@@ -4,6 +4,7 @@
 #include <time.h>
 #include <math.h>
 #include <limits.h> 
+#include <stdint.h>
 
 typedef char BOOL;
 #define true 1

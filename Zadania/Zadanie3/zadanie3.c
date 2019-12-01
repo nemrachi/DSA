@@ -41,7 +41,13 @@ int get_dist(char ch);
 int get_max(int a, int b);
 int get_random_range(int lower, int upper);
 int get_percentage(int num, int perc);
+void add_min_heap(MAP_I **min_heap, MAP_I relaxed, int *heap_size);
+MAP_I pop(MAP_I **min_heap, int *heap_size);
+void min_heapify(MAP_I **arr, int size, int i);
+void swap(MAP_I *a, MAP_I *b);
 int get_parent_index(int num);
+int left(int parent_index);
+int right(int parent_index);
 int32_t change_state(int32_t state, int new_val, int val_size, int offset);
 unsigned int count_bits(int num);
 void dec_to_binary(int n);
@@ -79,8 +85,9 @@ int *zachran_princezne(char **map, int n, int m, int t, int *dlzka_cesty) //n - 
     int *shortest_path_0 = malloc(SIZE_INT * 2 * n * m); //bez G
     int *shortest_path_1 = malloc(SIZE_INT * 2 * n * m); //s G
     int path_index = 0;
-    MAP_I *relaxed_min_heap = malloc(sizeof(MAP_I) * m * n);
-    MAP_I right, down;
+    int heap_size = sizeof(MAP_I) * m * n;
+    MAP_I *relaxed_min_heap = malloc(heap_size);
+    MAP_I right, down, chosen_one;
     int x, y;
 
     //x a y su v binarnej sustave \/ (x a y su suradnicove hodnoty aktualnej polohy)
@@ -124,6 +131,13 @@ int *zachran_princezne(char **map, int n, int m, int t, int *dlzka_cesty) //n - 
             if (down.element != 'N')
                 down.dist = map_info[x][y].dist + get_dist(down.element); //relax
 
+            //hodim ich do min heapu
+            add_min_heap(&relaxed_min_heap, right, &heap_size);
+            add_min_heap(&relaxed_min_heap, down, &heap_size);
+
+            chosen_one = relaxed_min_heap[0];
+
+            //shortest_path_0[path_index++] = 
         }
         
     }
@@ -370,37 +384,96 @@ int get_percentage(int num, int perc)
     float result = div * num;
     return ceil(result); //zaokruhly nahor
 }
-//funkcie k min heapu________________________________
-void add_min_heap(MAP_I **min_heap, MAP_I relaxed)
-{
-    static int last_index = 0;
-    int act_index = last_index, parent_index = get_parent_index(last_index);
-    MAP_I temp;
-    (*min_heap)[last_index] = relaxed;
 
-    while (true)
+
+//*************************************************//
+//              Funckie - min heap                 //
+//*************************************************//
+void add_min_heap(MAP_I **min_heap, MAP_I relaxed, int *heap_size)
+{
+    (*heap_size)++;  
+     if ((*heap_size) == 11) 
     {
-        if (parent_index >= 0 && (*min_heap)[parent_index].dist > relaxed.dist)
-        {
-            temp = (*min_heap)[parent_index];
-            (*min_heap)[parent_index] = relaxed;
-            (*min_heap)[act_index] = temp;
-            act_index = parent_index;
-            parent_index = get_parent_index(parent_index);
-            continue;
-        }
-        break;
+        (*heap_size) == 10;
+        return;
+    } 
+
+    (*min_heap)[((*heap_size) - 1)] = relaxed;
+
+    if ((*heap_size) == 1)
+        return;
+
+    int i = (*heap_size) - 1; //posledne cislo v heape
+
+    while ((i != 0) && ((*min_heap)[get_parent(i)].dist > relaxed.dist)) 
+    {
+        swap(&(*min_heap)[i], &(*min_heap)[get_parent(i)]);
+        i = get_parent(i);
     }
-    last_index++;    
+}
+
+//funkcia vyhodi najmensie cislo z min heapu
+MAP_I pop(MAP_I **min_heap, int *heap_size)
+{
+
+    if ((*heap_size) <= 0)
+        return;
+    if ((*heap_size) == 1)
+    {
+        (*heap_size)--;
+        return (*min_heap)[0];
+    }
+
+    MAP_I popped = (*min_heap)[0];
+    (*min_heap)[0] = (*min_heap)[((*heap_size)-1)];
+    (*heap_size)--;
+    min_heapify(min_heap, *heap_size, 0);
+
+    return popped;
+}
+
+void min_heapify(MAP_I **min_heap, int size, int i)
+{
+    int l = left(i);
+    int r = right(i);
+    int smallest = i;
+    if ((l < size) && ((*min_heap)[l].dist < (*min_heap)[smallest].dist))
+        smallest = l;
+    if ((r < size) && ((*min_heap)[r].dist < (*min_heap)[smallest].dist))
+        smallest = r;
+    if (smallest != i)
+    {
+        swap(&(*min_heap)[i], &(*min_heap)[smallest]);
+        min_heapify(min_heap, size, smallest);
+    }
+}
+
+void swap(MAP_I *a, MAP_I *b)
+{
+    MAP_I temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
 int get_parent_index(int num)
 {
     return ((int)ceil((double)((double)num/(double)2)) - 1);
 }
-//funkcie k min heapu________________________________
 
-//funkcie k binarnim operaciam_______________________
+int left(int parent_index)
+{
+    return (2*parent_index + 1);
+}
+
+int right(int parent_index)
+{
+    return (2*parent_index + 2);
+}
+//*************************************************//
+
+//*************************************************//
+//         Funckie na binarne operacie             //
+//*************************************************//
 int32_t change_state(int32_t state, int new_val, int val_size, int offset)
 {
     new_val <<= (val_size - count_bits(new_val));
@@ -430,9 +503,11 @@ void dec_to_binary(int n)
         printf("%d\n",  binaryNum[j]);
     printf("\n");
 } 
-//funkcie k binarnim operaciam_______________________
+//*************************************************//
 
-//stavove funkcie___________________________________
+//*************************************************//
+//      Funckie na upravu stavu Popolvara          //
+//*************************************************//
 int get_x(int32_t state)
 {
     return (state >> 21);
@@ -452,4 +527,4 @@ int32_t change_y(int32_t state, int y)
 {
     return change_state(state, y, 10, 21);
 }
-//stavove funkcie___________________________________
+//*************************************************//

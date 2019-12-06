@@ -6,53 +6,81 @@
 #include <stdint.h>
 
 //dlzka hrany sa odvija od toho, kam nasledujem
+
 //"definovanie" bool typu
 typedef char BOOL;
 #define true 1
 #define false 0
 
+//minheap spravit s pointrami, tak si ulozim o ktore konkretne pole ide
+
 //struktura pre mapu, ktora uchovava informacie o jednotlivych poliach
 typedef struct MAP_I
 {
-    char element; //prvok v poli
-    BOOL visited; //ci bolo pole relaxovane
     unsigned short int dist; //dlzka od zaciatocneho bodu //max +65,535
     //z akeho pola sme pristupovali do aktualeho pola
-    unsigned short int x_p;
-    unsigned short int y_p;
+    unsigned short int x_p : 10;
+    unsigned short int y_p : 10;
 } MAP_I;
 
-#define WIDTH 7 //m (sirka)
-#define HEIGHT 5 //n (vyska)
+typedef struct RELAXED
+{
+    unsigned short int x : 10;
+    unsigned short int y : 10;
+} RELAXED;
+
+#define WIDTH 7 //m (sirka mapy)
+#define HEIGHT 5 //n (vyska mapy)
+//konstatny spojene s bitovymi stavmi
+#define POS_SIZE 10 //velkost x a y v bitoch
+#define BIT_SIZE 1
+#define X_OFF 23
+#define Y_OFF 13
+#define G_OFF 12
+#define D_OFF 11
+#define P1_OFF 10
+#define P2_OFF 9
+#define P3_OFF 8
+#define P4_OFF 7
+#define P5_OFF 6
+
 #define SIZE_INT sizeof(int)
 #define SIZE_P_INT sizeof(int *)
 #define SIZE_CHAR sizeof(char)
 #define SIZE_P_CHAR sizeof(char *)
+#define UNVISITED 1023
+
 #define PRINCESS_NUM 2
 
 int *zachran_princezne(char **map, int n, int m, int t, int *dlzka_cesty);
-char **generate_map(int width, int height, int princess_num);
-char **allocate_char_map(int width, int height);
-MAP_I **allocate_map(int width, int height);
 MAP_I **set_map_info(int n, int m, char **map);
-void print_map(char **map, int width, int height);
+char **allocate_char_map(int width, int height);
+char **generate_map(int width, int height, int princess_num);
+MAP_I **allocate_map(int width, int height);
+void free_map(void **map);
 char get_element(int element);
+void print_map(char **map, int width, int height);
 int get_dist(char ch);
 int get_max(int a, int b);
 int get_random_range(int lower, int upper);
 int get_percentage(int num, int perc);
-void add_min_heap(MAP_I **min_heap, MAP_I relaxed, int *heap_size);
-MAP_I pop(MAP_I **min_heap, int *heap_size);
-void min_heapify(MAP_I **arr, int size, int i);
+void add_min_heap(MAP_I **map, RELAXED **min_heap, RELAXED relaxed, int *heap_size);
+RELAXED pop(RELAXED **min_heap, int *heap_size);
+void min_heapify(RELAXED **min_heap, int size, int i);
 void swap(MAP_I *a, MAP_I *b);
 int get_parent_index(int num);
 int left(int parent_index);
 int right(int parent_index);
-int32_t change_state(int32_t state, int new_val, int val_size, int offset);
+int32_t change_state(int32_t state, int new_val, int offset, int bit_size);
 unsigned int count_bits(int num);
 void dec_to_binary(int n);
 int get_x(int32_t state);
 int get_y(int32_t state);
+int32_t change_x(int32_t state, int x);
+int32_t change_y(int32_t state, int y);
+int32_t change_G(int32_t state, int G);
+int32_t change_D(int32_t state, int D);
+int32_t change_P(int32_t state, int P, int num);
 
 int main() 
 {
@@ -69,36 +97,33 @@ int main()
     // for (int i = 0;i<dlzka_cesty;++i)
     //      printf("%d %d\n", cesta[i*2], cesta[i*2+1]);
 
-    for (int i = 0; i < WIDTH; i++)
-    {
-        free(map[i]);
-    }
-    free(map);
-
     return 0;
 }
 
 //int dijskstra(MAP_I **map, int width, int height, )
 
-int *zachran_princezne(char **map, int n, int m, int t, int *dlzka_cesty) //n - vyska, m - sirka
+int *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty) //n - vyska, m - sirka
 {
     int *shortest_path_0 = malloc(SIZE_INT * 2 * n * m); //bez G
     int *shortest_path_1 = malloc(SIZE_INT * 2 * n * m); //s G
     int path_index = 0;
-    int heap_size = sizeof(MAP_I) * m * n;
-    MAP_I *relaxed_min_heap = malloc(heap_size);
-    MAP_I right, down, chosen_one;
+
+    //min-heap
+    int heap_size = sizeof(RELAXED) * m * n;
+    RELAXED *relaxed_min_heap = malloc(heap_size);
+    heap_size = 0;
+
+    //susedia pola
+    RELAXED up, right, down, left, chosen_one; //aj hore a aj dole sa musim pozerat
     int x, y;
 
     //x a y su v binarnej sustave \/ (x a y su suradnicove hodnoty aktualnej polohy)
-    //                          x          y    GDPPPPP         
-    //                     |         |         ||||||||              
-    //     char state[] = "0000000000000000000000000000000"; //32 bitov
+    //                          x          y      G D P P P P P         
+    //     char state[] = "|0000000000|0000000000|0|0|0|0|0|0|0|00000"; //32 bitov (5 nevyuzitych)
     static int32_t state = 0;
 
     //druha mapa, ktora udrziava extra informacie o kazdom poli
-    MAP_I **map_info = set_map_info(n, m, map);
-
+    MAP_I **map_info = set_map_info(n, m, mapa);
     //        |x
     //        |
     // y______|________ y
@@ -106,39 +131,58 @@ int *zachran_princezne(char **map, int n, int m, int t, int *dlzka_cesty) //n - 
     //        |x
     x = get_x(state);
     y = get_y(state);
-    map_info[x][y].visited = true;
+    map_info[x][y].x_p = 0;
+    map_info[x][y].y_p = 0;
     map_info[x][y].dist = 0;
     shortest_path_0[path_index++] = x;
     shortest_path_0[path_index++] = y;
+
     //dijkstra_____________________________________________________________________
     while (true)
     {
-        if (((x + 1) >= m))
+        //look up
+        if (((x - 1) >= 0) && (mapa[x-1][y] != 'N'))
         {
-            //len na y pozeram
-        } 
-        else if (((y + 1) >= n))
-        {
-            //len na x pozeram
+            up.x = x - 1;
+            up.y = y;
+            map_info[x-1][y].x_p = x;
+            map_info[x-1][y].y_p = y;
+            map_info[x-1][y].dist = map_info[x][y].dist + get_dist(mapa[x-1][y]);
+            add_min_heap(map_info, relaxed_min_heap, up, heap_size);
         }
-        else
+        //look right
+        if (((y + 1) <= m) && (mapa[x][y+1] != 'N'))
         {
-            //ak by platili 2 predosle podmienky, to este neviem co
-            right = map_info[x][y+1];
-            if (right.element != 'N')
-                right.dist = map_info[x][y].dist + get_dist(right.element); //relax
-            down = map_info[x+1][y];
-            if (down.element != 'N')
-                down.dist = map_info[x][y].dist + get_dist(down.element); //relax
-
-            //hodim ich do min heapu
-            add_min_heap(&relaxed_min_heap, right, &heap_size);
-            add_min_heap(&relaxed_min_heap, down, &heap_size);
-
-            chosen_one = relaxed_min_heap[0];
-
-            //shortest_path_0[path_index++] = 
+            right.x = x;
+            right.y = y + 1;
+            map_info[x][y+1].x_p = x;
+            map_info[x][y+1].y_p = y;
+            map_info[x][y+1].dist = map_info[x][y].dist + get_dist(mapa[x][y+1]);
+            add_min_heap(map_info, relaxed_min_heap, right, heap_size);
         }
+        //look down
+        if (((x + 1) <= n) && (mapa[x+1][y] != 'N'))
+        {
+            down.x = x + 1;
+            down.y = y;
+            map_info[x+1][y].x_p = x;
+            map_info[x+1][y].y_p = y;
+            map_info[x+1][y].dist = map_info[x][y].dist + get_dist(mapa[x+1][y]);
+            add_min_heap(map_info, relaxed_min_heap, down, heap_size);
+        }
+        //look left
+        if (((y - 1) >= 0) && (mapa[x][y-1] != 'N'))
+        {
+            left.x = x;
+            left.y = y - 1;
+            map_info[x][y-1].x_p = x;
+            map_info[x][y-1].y_p = y;
+            map_info[x][y-1].dist = map_info[x][y].dist + get_dist(mapa[x][y-1]);
+            add_min_heap(map_info, relaxed_min_heap, left, heap_size);
+        }
+
+        chosen_one = pop(relaxed_min_heap, heap_size);
+
         
     }
     
@@ -157,9 +201,9 @@ MAP_I **set_map_info(int height, int width, char **map)
     {
         for (int j = 0; j < width; j++)
         {
-            map_info[i][j].element = map[i][j];
-            map_info[i][j].visited = false;
             map_info[i][j].dist = USHRT_MAX; //"nekonecna" vzdialenost od zaciatocneho bodu
+            map_info[i][j].x_p = UNVISITED;
+            map_info[i][j].y_p = UNVISITED;
         }
     }
     return map_info;
@@ -253,6 +297,15 @@ char **allocate_char_map(int width, int height)
     return map;
 }
 
+void free_map(void **map)
+{
+    for (int i = 0; i < WIDTH; i++)
+    {
+        free(map[i]);
+    }
+    free(map);
+}
+
 //funkcia vrati element podla cisla, ktore je vlozene do funkcie
 char get_element(int element) 
 {
@@ -299,36 +352,7 @@ void print_map(char **map, int width, int height)
     {
         for (int j = 0; j < width; j++)
         {
-            switch (map[i][j])
-            {
-            case 'C':
-                printf("C ");
-                break;
-            
-            case 'H':
-                printf("H ");
-                break;
-            
-            case 'N':
-                printf("N ");
-                break;
-            
-            case 'D':
-                printf("D ");
-                break;
-            
-            case 'P':
-                printf("P ");
-                break;
-            
-            case 'G':
-                printf("G ");
-                break;
-            
-            default:
-                printf("%c ", map[i][j]);
-                break;
-            }
+            printf("%c ", map[i][j]);
         }
         printf("\n");
     }
@@ -389,31 +413,36 @@ int get_percentage(int num, int perc)
 //*************************************************//
 //              Funckie - min heap                 //
 //*************************************************//
-void add_min_heap(MAP_I **min_heap, MAP_I relaxed, int *heap_size)
+void add_min_heap(MAP_I **map, RELAXED **min_heap, RELAXED relaxed, int *heap_size)
 {
-    (*heap_size)++;  
-     if ((*heap_size) == 11) 
-    {
-        (*heap_size) == 10;
-        return;
-    } 
-
+    (*heap_size)++;
     (*min_heap)[((*heap_size) - 1)] = relaxed;
 
     if ((*heap_size) == 1)
         return;
 
     int i = (*heap_size) - 1; //posledne cislo v heape
+    int parent_i = get_parent(i);
 
-    while ((i != 0) && ((*min_heap)[get_parent(i)].dist > relaxed.dist)) 
+    int parent_x = (*min_heap)[parent_i].x;
+    int parent_y = (*min_heap)[parent_i].y;
+    int curr_x = (*min_heap)[i].x;
+    int curr_y = (*min_heap)[i].y;
+
+    while ((i != 0) && (map[parent_x][parent_y].dist > map[curr_x][curr_y].dist)) 
     {
-        swap(&(*min_heap)[i], &(*min_heap)[get_parent(i)]);
+        swap(&(*min_heap)[i], &(*min_heap)[parent_i]);
         i = get_parent(i);
+        parent_i = get_paren(i);
+        parent_x = (*min_heap)[parent_i].x;
+        parent_y = (*min_heap)[parent_i].y;
+        curr_x = (*min_heap)[i].x;
+        curr_y = (*min_heap)[i].y;
     }
 }
 
 //funkcia vyhodi najmensie cislo z min heapu
-MAP_I pop(MAP_I **min_heap, int *heap_size)
+RELAXED pop(RELAXED **min_heap, int *heap_size)
 {
 
     if ((*heap_size) <= 0)
@@ -424,7 +453,7 @@ MAP_I pop(MAP_I **min_heap, int *heap_size)
         return (*min_heap)[0];
     }
 
-    MAP_I popped = (*min_heap)[0];
+    RELAXED popped = (*min_heap)[0];
     (*min_heap)[0] = (*min_heap)[((*heap_size)-1)];
     (*heap_size)--;
     min_heapify(min_heap, *heap_size, 0);
@@ -432,11 +461,17 @@ MAP_I pop(MAP_I **min_heap, int *heap_size)
     return popped;
 }
 
-void min_heapify(MAP_I **min_heap, int size, int i)
+void min_heapify(RELAXED **min_heap, int size, int i)
 {
     int l = left(i);
     int r = right(i);
+    int parent_i = get_parent(i);
+    int parent_x = (*min_heap)[parent_i].x;
+    int parent_y = (*min_heap)[parent_i].y;
+    int curr_x = (*min_heap)[i].x;
+    int curr_y = (*min_heap)[i].y;
     int smallest = i;
+    
     if ((l < size) && ((*min_heap)[l].dist < (*min_heap)[smallest].dist))
         smallest = l;
     if ((r < size) && ((*min_heap)[r].dist < (*min_heap)[smallest].dist))
@@ -474,14 +509,13 @@ int right(int parent_index)
 //*************************************************//
 //         Funckie na binarne operacie             //
 //*************************************************//
-int32_t change_state(int32_t state, int new_val, int val_size, int offset)
+int32_t change_state(int32_t state, int new_val, int offset, int bit_size)
 {
-    new_val <<= (val_size - count_bits(new_val));
-    offset -= val_size; //nie je to osetrene, lebo nemoze sa stat ituacia, ze to bude <0
-    int reset_mask = ~(((1 << val_size) - 1) << offset);
+    int val_size = count_bits(new_val);
+    new_val <<= offset;
+    int reset_mask = ~(((1 << bit_size) - 1) << offset); // 3 - rozdiel medzi offsetmi
     state &= reset_mask; //nastavi na 0 tam, kde bude davat nove bity
-    int bit_mask = (new_val << offset);
-    return (state & (~bit_mask)) | bit_mask;
+    return (state & (~new_val)) | new_val;
 }
 
 unsigned int count_bits(int num) 
@@ -503,28 +537,63 @@ void dec_to_binary(int n)
         printf("%d\n",  binaryNum[j]);
     printf("\n");
 } 
-//*************************************************//
 
-//*************************************************//
-//      Funckie na upravu stavu Popolvara          //
-//*************************************************//
 int get_x(int32_t state)
 {
-    return (state >> 21);
+    return (state >> X_OFF);
 }
 
 int get_y(int32_t state)
 {
-    return ((state << 9) >> 20);
+    return (state & (~(((1 << POS_SIZE) - 1) << X_OFF))) >> Y_OFF;
 }
 
 int32_t change_x(int32_t state, int x)
 {
-    return change_state(state, x, 10, 31);
+    return change_state(state, x, X_OFF, POS_SIZE);
 }
 
 int32_t change_y(int32_t state, int y)
 {
-    return change_state(state, y, 10, 21);
+    return change_state(state, y, Y_OFF, POS_SIZE);
+}
+
+int32_t change_G(int32_t state, int G)
+{
+    return change_state(state, G, G_OFF, BIT_SIZE);
+}
+
+int32_t change_D(int32_t state, int D)
+{
+    return change_state(state, D, D_OFF, BIT_SIZE);
+} 
+
+int32_t change_P(int32_t state, int P, int num)
+{
+    switch (num)
+    {
+    case 1:
+        return change_state(state, P, P1_OFF, BIT_SIZE);
+        break;
+
+    case 2:
+        return change_state(state, P, P2_OFF, BIT_SIZE);
+    break;
+
+    case 3:
+        return change_state(state, P, P3_OFF, BIT_SIZE);
+    break;
+
+    case 4:
+        return change_state(state, P, P4_OFF, BIT_SIZE);
+    break;
+
+    case 5:
+        return change_state(state, P, P5_OFF, BIT_SIZE);
+    break;
+    
+    default:
+        break;
+    }
 }
 //*************************************************//

@@ -53,21 +53,24 @@ typedef struct RELAXED
 #define PRINCESS_NUM 2
 
 int *zachran_princezne(char **map, int n, int m, int t, int *dlzka_cesty);
+int *get_short_path_dragon(char **mapa, MAP_I **map_info, int *dlzka_cesty);
+RELAXED get_pos_dragon(char **mapa);
 MAP_I **set_map_info(int n, int m, char **map);
 char **allocate_char_map(int width, int height);
 char **generate_map(int width, int height, int princess_num);
 MAP_I **allocate_map(int width, int height);
 void free_map(void **map);
 char get_element(int element);
+void print_map_info(MAP_I **map, int width, int height);
 void print_map(char **map, int width, int height);
 int get_dist(char ch);
 int get_max(int a, int b);
 int get_random_range(int lower, int upper);
 int get_percentage(int num, int perc);
 void add_min_heap(MAP_I **map, RELAXED **min_heap, RELAXED relaxed, int *heap_size);
-RELAXED pop(RELAXED **min_heap, int *heap_size);
-void min_heapify(RELAXED **min_heap, int size, int i);
-void swap(MAP_I *a, MAP_I *b);
+RELAXED pop(MAP_I **map, RELAXED **min_heap, int *heap_size);
+void min_heapify(MAP_I **map, RELAXED **min_heap, int size, int i);
+void swap(RELAXED *a, RELAXED *b);
 int get_parent_index(int num);
 int left(int parent_index);
 int right(int parent_index);
@@ -86,16 +89,31 @@ int main()
 {
     srand(time(0));
 
-    char **map = generate_map(WIDTH, HEIGHT, PRINCESS_NUM); //generovanie mapy (testovanie)
-    unsigned short int dlzka_cesty;
+    //char **map = generate_map(WIDTH, HEIGHT, PRINCESS_NUM); //generovanie mapy (testovanie)
+    char mapa[5][7] = {'H', 'H', 'H', 'C', 'N', 'N', 'H',
+                    'C', 'P', 'D', 'C', 'C', 'H', 'C',
+                    'H', 'H', 'P', 'C', 'H', 'C', 'C',
+                    'N', 'C', 'C', 'C', 'C', 'C', 'C',
+                    'C', 'C', 'C', 'C', 'C', 'C', 'C'};
+    char **map = allocate_char_map(WIDTH, HEIGHT);
+    for (int i = 0; i < HEIGHT; i++)
+    {
+        for (int j = 0; j < WIDTH; j++)
+        {
+            map[i][j] = mapa[i][j];
+        }
+    }
+    
+    int dlzka_cesty = 0;
 
     print_map(map, WIDTH, HEIGHT);
 
     //zachrana
     //t - cas, kedy sa drak zobudi (3. argument funkcie)
     int *cesta = zachran_princezne(map, HEIGHT, WIDTH, 35, &dlzka_cesty);
-    // for (int i = 0;i<dlzka_cesty;++i)
-    //      printf("%d %d\n", cesta[i*2], cesta[i*2+1]);
+    printf("\n");
+    for (int i = 0;i<dlzka_cesty;++i)
+          printf("%d %d\n", cesta[i*2], cesta[i*2+1]);
 
     return 0;
 }
@@ -124,6 +142,7 @@ int *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty) //n -
 
     //druha mapa, ktora udrziava extra informacie o kazdom poli
     MAP_I **map_info = set_map_info(n, m, mapa);
+    
     //        |x
     //        |
     // y______|________ y
@@ -134,64 +153,133 @@ int *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty) //n -
     map_info[x][y].x_p = 0;
     map_info[x][y].y_p = 0;
     map_info[x][y].dist = 0;
-    shortest_path_0[path_index++] = x;
-    shortest_path_0[path_index++] = y;
 
     //dijkstra_____________________________________________________________________
     while (true)
     {
+        shortest_path_0[path_index++] = x;
+        shortest_path_0[path_index++] = y;
         //look up
         if (((x - 1) >= 0) && (mapa[x-1][y] != 'N'))
         {
-            up.x = x - 1;
-            up.y = y;
-            map_info[x-1][y].x_p = x;
-            map_info[x-1][y].y_p = y;
-            map_info[x-1][y].dist = map_info[x][y].dist + get_dist(mapa[x-1][y]);
-            add_min_heap(map_info, relaxed_min_heap, up, heap_size);
+            if ((map_info[x-1][y].x_p == UNVISITED) || (map_info[x-1][y].dist > (map_info[x][y].dist + get_dist(mapa[x-1][y]))))
+            {
+                up.x = x - 1;
+                up.y = y;
+                map_info[x-1][y].x_p = x;
+                map_info[x-1][y].y_p = y;
+                map_info[x-1][y].dist = map_info[x][y].dist + get_dist(mapa[x-1][y]);
+                add_min_heap(map_info, &relaxed_min_heap, up, &heap_size);
+            }
         }
         //look right
         if (((y + 1) <= m) && (mapa[x][y+1] != 'N'))
         {
-            right.x = x;
-            right.y = y + 1;
-            map_info[x][y+1].x_p = x;
-            map_info[x][y+1].y_p = y;
-            map_info[x][y+1].dist = map_info[x][y].dist + get_dist(mapa[x][y+1]);
-            add_min_heap(map_info, relaxed_min_heap, right, heap_size);
+            if ((map_info[x][y+1].x_p == UNVISITED) || (map_info[x][y+1].dist > (map_info[x][y].dist + get_dist(mapa[x][y+1]))))
+            {
+                right.x = x;
+                right.y = y + 1;
+                map_info[x][y+1].x_p = x;
+                map_info[x][y+1].y_p = y;
+                map_info[x][y+1].dist = map_info[x][y].dist + get_dist(mapa[x][y+1]);
+                add_min_heap(map_info, &relaxed_min_heap, right, &heap_size);
+            }
         }
         //look down
-        if (((x + 1) <= n) && (mapa[x+1][y] != 'N'))
+        if (((x + 1) < n) && (mapa[x+1][y] != 'N'))
         {
-            down.x = x + 1;
-            down.y = y;
-            map_info[x+1][y].x_p = x;
-            map_info[x+1][y].y_p = y;
-            map_info[x+1][y].dist = map_info[x][y].dist + get_dist(mapa[x+1][y]);
-            add_min_heap(map_info, relaxed_min_heap, down, heap_size);
+            if ((map_info[x+1][y].x_p == UNVISITED) || (map_info[x+1][y].dist > (map_info[x][y].dist + get_dist(mapa[x+1][y]))))
+            {
+                down.x = x + 1;
+                down.y = y;
+                map_info[x+1][y].x_p = x;
+                map_info[x+1][y].y_p = y;
+                map_info[x+1][y].dist = map_info[x][y].dist + get_dist(mapa[x+1][y]);
+                add_min_heap(map_info, &relaxed_min_heap, down, &heap_size);
+            }
         }
         //look left
         if (((y - 1) >= 0) && (mapa[x][y-1] != 'N'))
         {
-            left.x = x;
-            left.y = y - 1;
-            map_info[x][y-1].x_p = x;
-            map_info[x][y-1].y_p = y;
-            map_info[x][y-1].dist = map_info[x][y].dist + get_dist(mapa[x][y-1]);
-            add_min_heap(map_info, relaxed_min_heap, left, heap_size);
+            if ((map_info[x][y-1].x_p == UNVISITED) || (map_info[x][y-1].dist > (map_info[x][y].dist + get_dist(mapa[x][y-1]))))
+            {
+                left.x = x;
+                left.y = y - 1;
+                map_info[x][y-1].x_p = x;
+                map_info[x][y-1].y_p = y;
+                map_info[x][y-1].dist = map_info[x][y].dist + get_dist(mapa[x][y-1]);
+                add_min_heap(map_info, &relaxed_min_heap, left, &heap_size);
+            }
         }
 
-        chosen_one = pop(relaxed_min_heap, heap_size);
+        chosen_one = pop(map_info, &relaxed_min_heap, &heap_size);
+        x = chosen_one.x;
+        y = chosen_one.y;
 
-        
-    }
-    
-
-    
-  
-
-    
+        if(heap_size == 0)
+            break;
+    }    
     //dijkstra_____________________________________________________________________
+    print_map_info(map_info, WIDTH, HEIGHT);
+    free(shortest_path_0);
+    free(shortest_path_1);
+    free(relaxed_min_heap);
+  
+    return get_short_path_dragon(mapa, map_info, dlzka_cesty);
+}
+
+int *get_short_path_dragon(char **mapa, MAP_I **map_info, int *dlzka_cesty)
+{
+    RELAXED dragon_pos = get_pos_dragon(mapa);
+    (*dlzka_cesty) += map_info[dragon_pos.x][dragon_pos.y].dist; 
+    int counter = 0, i = 0;
+    int x = dragon_pos.x, y = dragon_pos.y, temp_x;
+    int *short_path = malloc(SIZE_INT * WIDTH * HEIGHT * 2);
+    while (true)
+    {
+        short_path[i++] = x;
+        short_path[i++] = y;
+        if ((x == 0) && (y == 0))
+            break;
+        temp_x = map_info[x][y].x_p;
+        y = map_info[x][y].y_p;
+        x = temp_x;
+    }
+
+    return short_path;
+}
+
+RELAXED get_pos_dragon(char **mapa)
+{
+    RELAXED pos;
+    for (int i = 0; i < HEIGHT; i++)
+    {
+        for (int j = 0; j < WIDTH; j++)
+        {
+            if(mapa[i][j] == 'D')
+            {
+                pos.x = i;
+                pos.y = j;
+                return pos;
+            }
+        }
+    }
+}
+
+void print_map_info(MAP_I **map, int width, int height) 
+{
+    printf("====================\n");
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            if(map[i][j].dist == USHRT_MAX)
+                printf("X ");
+            else
+                printf("%d ", map[i][j].dist);
+        }
+        printf("\n");
+    }
 }
 
 MAP_I **set_map_info(int height, int width, char **map) 
@@ -422,7 +510,7 @@ void add_min_heap(MAP_I **map, RELAXED **min_heap, RELAXED relaxed, int *heap_si
         return;
 
     int i = (*heap_size) - 1; //posledne cislo v heape
-    int parent_i = get_parent(i);
+    int parent_i = get_parent_index(i);
 
     int parent_x = (*min_heap)[parent_i].x;
     int parent_y = (*min_heap)[parent_i].y;
@@ -432,8 +520,8 @@ void add_min_heap(MAP_I **map, RELAXED **min_heap, RELAXED relaxed, int *heap_si
     while ((i != 0) && (map[parent_x][parent_y].dist > map[curr_x][curr_y].dist)) 
     {
         swap(&(*min_heap)[i], &(*min_heap)[parent_i]);
-        i = get_parent(i);
-        parent_i = get_paren(i);
+        i = get_parent_index(i);
+        parent_i = get_parent_index(i);
         parent_x = (*min_heap)[parent_i].x;
         parent_y = (*min_heap)[parent_i].y;
         curr_x = (*min_heap)[i].x;
@@ -442,11 +530,8 @@ void add_min_heap(MAP_I **map, RELAXED **min_heap, RELAXED relaxed, int *heap_si
 }
 
 //funkcia vyhodi najmensie cislo z min heapu
-RELAXED pop(RELAXED **min_heap, int *heap_size)
+RELAXED pop(MAP_I **map, RELAXED **min_heap, int *heap_size)
 {
-
-    if ((*heap_size) <= 0)
-        return;
     if ((*heap_size) == 1)
     {
         (*heap_size)--;
@@ -454,38 +539,36 @@ RELAXED pop(RELAXED **min_heap, int *heap_size)
     }
 
     RELAXED popped = (*min_heap)[0];
-    (*min_heap)[0] = (*min_heap)[((*heap_size)-1)];
+    (*min_heap)[0] = (*min_heap)[((*heap_size)-1)]; //posledne cislo dam na prve
     (*heap_size)--;
-    min_heapify(min_heap, *heap_size, 0);
+    min_heapify(map, min_heap, *heap_size, 0);
 
     return popped;
 }
 
-void min_heapify(RELAXED **min_heap, int size, int i)
+void min_heapify(MAP_I **map, RELAXED **min_heap, int size, int i)
 {
     int l = left(i);
     int r = right(i);
-    int parent_i = get_parent(i);
-    int parent_x = (*min_heap)[parent_i].x;
-    int parent_y = (*min_heap)[parent_i].y;
-    int curr_x = (*min_heap)[i].x;
-    int curr_y = (*min_heap)[i].y;
+    int l_x = (*min_heap)[l].x, l_y = (*min_heap)[l].y;
+    int r_x = (*min_heap)[r].x, r_y = (*min_heap)[r].y;
+    int curr_x = (*min_heap)[i].x, curr_y = (*min_heap)[i].y;
     int smallest = i;
-    
-    if ((l < size) && ((*min_heap)[l].dist < (*min_heap)[smallest].dist))
+
+    if ((l < size) && (map[l_x][l_y].dist < map[curr_x][curr_y].dist))
         smallest = l;
-    if ((r < size) && ((*min_heap)[r].dist < (*min_heap)[smallest].dist))
+    if ((r < size) && (map[r_x][r_y].dist < map[curr_x][curr_y].dist))
         smallest = r;
     if (smallest != i)
     {
         swap(&(*min_heap)[i], &(*min_heap)[smallest]);
-        min_heapify(min_heap, size, smallest);
+        min_heapify(map, min_heap, size, smallest);
     }
 }
 
-void swap(MAP_I *a, MAP_I *b)
+void swap(RELAXED *a, RELAXED *b)
 {
-    MAP_I temp = *a;
+    RELAXED temp = *a;
     *a = *b;
     *b = temp;
 }
@@ -545,7 +628,7 @@ int get_x(int32_t state)
 
 int get_y(int32_t state)
 {
-    return (state & (~(((1 << POS_SIZE) - 1) << X_OFF))) >> Y_OFF;
+    return (state & (~(((1 << POS_SIZE) - 1) << POS_SIZE))) >> Y_OFF;
 }
 
 int32_t change_x(int32_t state, int x)

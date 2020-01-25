@@ -240,11 +240,11 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
                 map_info[x-1][y].y_p = y;
                 map_info[x-1][y].dist = map_info[x][y].dist + get_dist(mapa[x-1][y]);
                 add_min_heap(map_info, &min_heap, neighbour, &heap_size);
-                if (get_D(state) == 1)
-                {
-                    printf("up\tx:%d  y:%d\n", neighbour.x, neighbour.y);
-                    print_min_heap(map_info, min_heap, heap_size);
-                }
+                // if (get_D(state) == 1)
+                // {
+                //     printf("up\tx:%d  y:%d\n", neighbour.x, neighbour.y);
+                //     print_min_heap(map_info, min_heap, heap_size);
+                // }
             }
         }
 
@@ -261,11 +261,11 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
                 map_info[x][y+1].y_p = y;
                 map_info[x][y+1].dist = map_info[x][y].dist + get_dist(mapa[x][y+1]);
                 add_min_heap(map_info, &min_heap, neighbour, &heap_size);
-                if (get_D(state) == 1)
-                {
-                    printf("right\tx:%d  y:%d\n", neighbour.x, neighbour.y);
-                    print_min_heap(map_info, min_heap, heap_size);
-                }
+                // if (get_D(state) == 1)
+                // {
+                //     printf("right\tx:%d  y:%d\n", neighbour.x, neighbour.y);
+                //     print_min_heap(map_info, min_heap, heap_size);
+                // }
             }
         }
         
@@ -282,11 +282,11 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
                 map_info[x+1][y].y_p = y;
                 map_info[x+1][y].dist = map_info[x][y].dist + get_dist(mapa[x+1][y]);
                 add_min_heap(map_info, &min_heap, neighbour, &heap_size);
-                if (get_D(state) == 1)
-                {
-                    printf("down\tx:%d  y:%d\n", neighbour.x, neighbour.y);
-                    print_min_heap(map_info, min_heap, heap_size);
-                }
+                // if (get_D(state) == 1)
+                // {
+                //     printf("down\tx:%d  y:%d\n", neighbour.x, neighbour.y);
+                //     print_min_heap(map_info, min_heap, heap_size);
+                // }
             }
         }
 
@@ -303,11 +303,11 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
                 map_info[x][y-1].y_p = y;
                 map_info[x][y-1].dist = map_info[x][y].dist + get_dist(mapa[x][y-1]);
                 add_min_heap(map_info, &min_heap, neighbour, &heap_size);
-                if (get_D(state) == 1)
-                {
-                    printf("left\tx:%d  y:%d\n", neighbour.x, neighbour.y);
-                    print_min_heap(map_info, min_heap, heap_size);
-                }
+                // if (get_D(state) == 1)
+                // {
+                //     printf("left\tx:%d  y:%d\n", neighbour.x, neighbour.y);
+                //     print_min_heap(map_info, min_heap, heap_size);
+                // }
             }
         }
 

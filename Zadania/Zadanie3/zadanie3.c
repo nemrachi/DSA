@@ -9,26 +9,22 @@
 
 //V MIN HEAPE MOZEM MAT ROVNAKE POLIA - TREBA ICH DETEKOVAT a updatnut
 
-typedef unsigned short USHRT;
-
 //struktura pre mapu, ktora uchovava informacie o jednotlivych poliach
 typedef struct MAP_I
 {
     unsigned dist; //dlzka od zaciatocneho bodu //max +65,535
     //pozicia pola, z akeho sme pristupovali do aktualeho pola
-    USHRT x_p;
-    USHRT y_p;
+    uint32_t xy_p;
 } MAP_I;
 
 //struktura pre poziciu
 typedef struct POSITION
 {
-    USHRT x : 10;
-    USHRT y : 10;
+    uint32_t xy;
 } POSITION;
 
 //konstatny pre pracu so stavom Popolvara (pre bitove operacie)
-#define POS_SIZE 10
+#define POS_SIZE 12
 #define BIT_SIZE 1
 #define X_OFF 22
 #define Y_OFF 12
@@ -56,6 +52,8 @@ typedef struct POSITION
 //*************************************************//
 int *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty);
 MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int width, int **shortest_path, int *path_index);
+void change_xy_POS(POSITION *neighbour, int new_x, int new_y);
+void change_map_info(MAP_I ***map_info, int new_x, int new_y, int x, int y, unsigned actual_dist, unsigned neighbour_dist);
 void find_positions(char **mapa, int height, int width, POSITION *dragon_pos, POSITION **princess_pos, int *princess_counter);
 void set_path(int **path, int size);
 void get_path(int **path, int path_size, MAP_I **map_info, POSITION last_pos);
@@ -96,17 +94,17 @@ void print_min_heap(MAP_I **map_info, POSITION *min_heap, int heap_size);
 //         Funckie na binarne operacie             //
 //*************************************************//
 uint32_t change_state(uint32_t state, unsigned new_val, unsigned offset, unsigned bit_size);
-USHRT get_x(uint32_t state);
-uint32_t change_x(uint32_t state, USHRT x);
-USHRT get_y(uint32_t state);
-uint32_t change_y(uint32_t state, USHRT y);
-USHRT get_G(uint32_t state);
-uint32_t change_G(uint32_t state, USHRT G);
-USHRT get_D(uint32_t state);
-uint32_t change_D(uint32_t state, USHRT D);
-USHRT get_P(uint32_t state, USHRT num);
-uint32_t change_P(uint32_t state, USHRT num, USHRT P);
-USHRT print_bin32(uint32_t num, int bit);
+unsigned get_x(uint32_t state);
+uint32_t change_x(uint32_t state, unsigned x);
+unsigned get_y(uint32_t state);
+uint32_t change_y(uint32_t state, unsigned y);
+unsigned get_G(uint32_t state);
+uint32_t change_G(uint32_t state, unsigned G);
+unsigned get_D(uint32_t state);
+uint32_t change_D(uint32_t state, unsigned D);
+unsigned get_P(uint32_t state, unsigned num);
+uint32_t change_P(uint32_t state, unsigned num, unsigned P);
+unsigned print_bin32(uint32_t num, int bit);
 
 int main()
 {
@@ -126,7 +124,7 @@ int main()
         }
     }
 
-    //zachrana
+    //*************zachrana*************
     int dlzka_cesty = 0;
     //t - cas, kedy sa drak zobudi (3. argument funkcie)
     int *cesta = zachran_princezne(map, HEIGHT, WIDTH, 100, &dlzka_cesty);
@@ -164,8 +162,8 @@ int *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty)
     MAP_I **map_info = set_map_info(n, m);
 
     //(x a y su suradnicove hodnoty polohy zaciatku cesty)
-    //              x          y      G D P P P P P
-    //state = "|0000000000|0000000000|0|0|0|0|0|0|0|00000";
+    //              x          y          G D P P P P P
+    //state = "|000000000000|000000000000|0|0|0|0|0|0|0|0";
     uint32_t state = 0;
 
     //        |x
@@ -173,7 +171,7 @@ int *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty)
     // y______|________ y
     //        |
     //        |x
-    //ulozene dolezite pozicie v mape
+    //ulozene dolezite pozicie v mape //potom pridat aj generator
     POSITION dragon_pos, *princess_pos = malloc(5 * sizeof(POSITION));
     int princess_counter = 0;
     find_positions(mapa, n, m, &dragon_pos, &princess_pos, &princess_counter);
@@ -181,12 +179,12 @@ int *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty)
     //zabi draka
     map_info = dijkstra(mapa, map_info, state, n, m, &shortest_path, &path_index);
     //drak zabity
-    (*dlzka_cesty) += map_info[dragon_pos.x][dragon_pos.y].dist;
+    (*dlzka_cesty) += map_info[get_x(dragon_pos.xy)][get_y(dragon_pos.xy)].dist;
     state = change_D(state, 1);
-    state = change_x(state, dragon_pos.x);
-    state = change_y(state, dragon_pos.y);
-    printf("\npos p1 x:%d  y:%d\npos p2 x:%d  y:%d\n", princess_pos[0].x, princess_pos[0].y, princess_pos[1].x, princess_pos[1].y);
-    printf("DRAK %d(%d) %d(%d) \tdlzka cesty: %d _____________________________________________\n", get_x(state), dragon_pos.x, get_y(state), dragon_pos.y,(*dlzka_cesty));
+    state = change_x(state, get_x(dragon_pos.xy));
+    state = change_y(state, get_y(dragon_pos.xy));
+    printf("\npos p1 x:%d  y:%d\npos p2 x:%d  y:%d\n", get_x(princess_pos[0].xy), get_y(princess_pos[0].xy), get_x(princess_pos[1].xy), get_y(princess_pos[1].xy));
+    printf("DRAK %d(%d) %d(%d) \tdlzka cesty: %d _____________________________________________\n", get_x(state), get_x(dragon_pos.xy), get_y(state), get_y(dragon_pos.xy), (*dlzka_cesty));
     get_path(&shortest_path, path_size, map_info, dragon_pos);
     print_path(shortest_path);
     print_map_info(map_info, n, m, 'a');
@@ -229,16 +227,13 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
 
         if (((x - 1) >= 0) && ((x - 1) < height))
         {
-             //look up
-            if (((count == 1) || ((x - 1) != map_info[x][y].x_p))
+            //look up
+            if (((count == 1) || ((x - 1) != get_x(map_info[x][y].xy_p)))
                 && ((x - 1) != get_x(state)) && (mapa[x-1][y] != 'N') &&
                 (map_info[x-1][y].dist > (map_info[x][y].dist + get_dist(mapa[x-1][y]))))
             {
-                neighbour.x = x - 1;
-                neighbour.y = y;
-                map_info[x-1][y].x_p = x;
-                map_info[x-1][y].y_p = y;
-                map_info[x-1][y].dist = map_info[x][y].dist + get_dist(mapa[x-1][y]);
+                change_xy_POS(&neighbour, x - 1, y);
+                change_map_info(&map_info, x - 1, y, x, y, map_info[x][y].dist, get_dist(mapa[x-1][y]));
                 add_min_heap(map_info, &min_heap, neighbour, &heap_size);
                 // if (get_D(state) == 1)
                 // {
@@ -251,69 +246,45 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
         if (((y + 1) < width) && ((y + 1) >= 0))
         {
             //look right
-            if (((count == 1) || ((y + 1) != map_info[x][y].y_p))
+            if (((count == 1) || ((y + 1) != get_y(map_info[x][y].xy_p)))
                 && (mapa[x][(y+1)] != 'N') && ((y+1) != get_y(state)) &&
                 (map_info[x][(y+1)].dist > (map_info[x][y].dist + get_dist(mapa[x][y+1]))))
             {
-                neighbour.x = x;
-                neighbour.y = y + 1;
-                map_info[x][y+1].x_p = x;
-                map_info[x][y+1].y_p = y;
-                map_info[x][y+1].dist = map_info[x][y].dist + get_dist(mapa[x][y+1]);
+                change_xy_POS(&neighbour, x, y + 1);
+                change_map_info(&map_info, x, y + 1, x, y, map_info[x][y].dist, get_dist(mapa[x][y+1]));             
                 add_min_heap(map_info, &min_heap, neighbour, &heap_size);
-                // if (get_D(state) == 1)
-                // {
-                //     printf("right\tx:%d  y:%d\n", neighbour.x, neighbour.y);
-                //     print_min_heap(map_info, min_heap, heap_size);
-                // }
             }
         }
         
         if (((x + 1) < height) && ((x + 1) >= 0))
         {
             //look down
-            if (((count == 1) || ((x + 1) != map_info[x][y].x_p))
+            if (((count == 1) || ((x + 1) != get_x(map_info[x][y].xy_p)))
                 && (mapa[x+1][y] != 'N') && ((x+1) != get_x(state)) &&
                 (map_info[(x+1)][y].dist > (map_info[x][y].dist + get_dist(mapa[x+1][y]))))
             {
-                neighbour.x = x + 1;
-                neighbour.y = y;
-                map_info[x+1][y].x_p = x;
-                map_info[x+1][y].y_p = y;
-                map_info[x+1][y].dist = map_info[x][y].dist + get_dist(mapa[x+1][y]);
+                change_xy_POS(&neighbour, x + 1, y);
+                change_map_info(&map_info, x + 1, y, x, y, map_info[x][y].dist, get_dist(mapa[x+1][y]));
                 add_min_heap(map_info, &min_heap, neighbour, &heap_size);
-                // if (get_D(state) == 1)
-                // {
-                //     printf("down\tx:%d  y:%d\n", neighbour.x, neighbour.y);
-                //     print_min_heap(map_info, min_heap, heap_size);
-                // }
             }
         }
 
         if (((y - 1) >= 0) && ((y - 1) < width))
         {
             //look left
-            if (((count == 1) || ((y - 1) != map_info[x][y].y_p))
+            if (((count == 1) || ((y - 1) != get_y(map_info[x][y].xy_p)))
                 && (mapa[x][y-1] != 'N') && ((y-1) != get_y(state)) &&
                 (map_info[x][(y-1)].dist > (map_info[x][y].dist + get_dist(mapa[x][y-1]))))
             {
-                neighbour.x = x;
-                neighbour.y = y - 1;
-                map_info[x][y-1].x_p = x;
-                map_info[x][y-1].y_p = y;
-                map_info[x][y-1].dist = map_info[x][y].dist + get_dist(mapa[x][y-1]);
+                change_xy_POS(&neighbour, x, y - 1);
+                change_map_info(&map_info, x, y - 1, x, y, map_info[x][y].dist, get_dist(mapa[x][y-1]));
                 add_min_heap(map_info, &min_heap, neighbour, &heap_size);
-                // if (get_D(state) == 1)
-                // {
-                //     printf("left\tx:%d  y:%d\n", neighbour.x, neighbour.y);
-                //     print_min_heap(map_info, min_heap, heap_size);
-                // }
             }
         }
 
         chosen_one = pop(map_info, &min_heap, &heap_size);
-        x = chosen_one.x;
-        y = chosen_one.y;
+        x = get_x(chosen_one.xy);
+        y = get_y(chosen_one.xy);
 
         if (get_D(state) == 1)
         {
@@ -322,13 +293,25 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
             printf("\n\n");
         }
 
-
         if((heap_size == 0) && (count > ((height * width) / 2)))
             break;
     }
-    free(min_heap);
 
+    free(min_heap);
     return map_info;
+}
+
+void change_xy_POS(POSITION *neighbour, int new_x, int new_y)
+{
+    (*neighbour).xy = change_x((*neighbour).xy, new_x);
+    (*neighbour).xy = change_y((*neighbour).xy, new_y);
+}
+
+void change_map_info(MAP_I ***map_info, int new_x, int new_y, int x, int y, unsigned actual_dist, unsigned neighbour_dist)
+{
+    (*map_info)[new_x][new_y].xy_p = change_x((*map_info)[new_x][new_y].xy_p, x);
+    (*map_info)[new_x][new_y].xy_p = change_y((*map_info)[new_x][new_y].xy_p, y);
+    (*map_info)[new_x][new_y].dist = actual_dist + neighbour_dist;
 }
 
 void find_positions(char **mapa, int height, int width, POSITION *dragon_pos, POSITION **princess_pos, int *princess_counter)
@@ -338,13 +321,13 @@ void find_positions(char **mapa, int height, int width, POSITION *dragon_pos, PO
         for (int j = 0; j < width; j++)
             if(mapa[i][j] == 'D')
             {
-                (*dragon_pos).x = i;
-                (*dragon_pos).y = j;
+                (*dragon_pos).xy = change_x((*dragon_pos).xy, i);
+                (*dragon_pos).xy = change_y((*dragon_pos).xy, i);
             }
             else if (mapa[i][j] == 'P')
             {
-                (*princess_pos)[(*princess_counter)].x = i;
-                (*princess_pos)[(*princess_counter)].y = j;
+                (*princess_pos)[(*princess_counter)].xy = change_x((*princess_pos)[(*princess_counter)].xy, i);
+                (*princess_pos)[(*princess_counter)].xy = change_y((*princess_pos)[(*princess_counter)].xy, j);
                 (*princess_counter)++;
             }
 }
@@ -358,7 +341,7 @@ void set_path(int **path, int size)
 void get_path(int **path, int path_size, MAP_I **map_info, POSITION last_pos)
 {
     //printf("\tget path\n");
-    int tmp_x, tmp_y, x = last_pos.x, y = last_pos.y, i = 0;
+    int tmp_x, tmp_y, x = get_x(last_pos.xy), y = get_y(last_pos.xy), i = 0;
     while (map_info[x][y].dist != 0)
     {
         (*path)[i] = x;
@@ -367,8 +350,8 @@ void get_path(int **path, int path_size, MAP_I **map_info, POSITION last_pos)
         (*path)[i] = y;
         //printf("%d\n", (*path)[i]);
         i++;
-        tmp_x = map_info[x][y].x_p;
-        tmp_y = map_info[x][y].y_p;
+        tmp_x = get_x(map_info[x][y].xy_p);
+        tmp_y = get_y(map_info[x][y].xy_p);
         x = tmp_x;
         y = tmp_y;
     }
@@ -388,7 +371,7 @@ void get_path(int **path, int path_size, MAP_I **map_info, POSITION last_pos)
 
 void reverse_path(int **path, int path_size)
 {
-    printf("%d\n", path_size);
+    printf("REVERZUJEM %d\n", path_size);
     int end_x = (path_size/SIZE_INT) - 2, end_y = (path_size/SIZE_INT) - 1, i = 0, temp;
     while (i < end_x) 
     { 
@@ -410,7 +393,6 @@ void print_path(int *path)
 {
     printf("x  y\n");
     int i = 0;
-
     while (path[i] != INT_MAX)
     {
         printf("%d  %d\n", path[i], path[i+1]);
@@ -425,7 +407,7 @@ void shortest_princess_path(MAP_I **map_info, uint32_t *state, POSITION **prince
     int best_i = 0, i;
 
     for (i = 0; i < princess_counter; i++)
-        if (get_P((*state), i) == (USHRT) 0)
+        if (get_P((*state), i) == (unsigned) 0)
         {
             best = (*princess_pos)[i];
             break;
@@ -434,7 +416,7 @@ void shortest_princess_path(MAP_I **map_info, uint32_t *state, POSITION **prince
     for (i = 0; i < princess_counter; i++)
     {
         temp = (*princess_pos)[i];
-        if ((map_info[temp.x][temp.y].dist < map_info[best.x][best.y].dist) && (get_P((*state), i) == 0))
+        if ((map_info[get_x(temp.xy)][get_x(temp.xy)].dist < map_info[get_x(best.xy)][get_y(best.xy)].dist) && (get_P((*state), i) == 0))
         {
             best = temp;
             best_i = i;
@@ -442,9 +424,9 @@ void shortest_princess_path(MAP_I **map_info, uint32_t *state, POSITION **prince
     }
 
     (*state) = change_P((*state), 1, best_i);
-    (*state) = change_x((*state), (*princess_pos)[best_i].x);
-    (*state) = change_y((*state), (*princess_pos)[best_i].y);
-    (**dlzka_cesty) += map_info[(*princess_pos)[best_i].x][(*princess_pos)[best_i].y].dist;
+    (*state) = change_x((*state), get_x((*princess_pos)[best_i].xy));
+    (*state) = change_y((*state), get_y((*princess_pos)[best_i].xy));
+    (**dlzka_cesty) += map_info[get_x((*princess_pos)[best_i].xy)][get_y((*princess_pos)[best_i].xy)].dist;
 }
 
 //*************************************************//
@@ -635,15 +617,14 @@ MAP_I **reset(MAP_I **map_info, int height, int width)
         for (int j = 0; j < width; j++)
         {
             map_info[i][j].dist = UNRELAXED; //"nekonecna" vzdialenost od zaciatocneho bodu
-            map_info[i][j].x_p = 0;
-            map_info[i][j].y_p = 0;
+            map_info[i][j].xy_p = 0;
         }
     return map_info;
 }
 
 void print_map_info(MAP_I **map_info, int height, int width, char ch)
 {
-    if (ch == 'd')
+    if (ch == 'd') //print distance
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
@@ -654,15 +635,14 @@ void print_map_info(MAP_I **map_info, int height, int width, char ch)
 
             printf("\n");
         }
-    else
+    else //print position of field from which was actual field accessed
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)    
-                printf("%d.%d | ", map_info[i][j].x_p, map_info[i][j].y_p);
+                printf("%d.%d | ", get_x(map_info[i][j].xy_p), get_y(map_info[i][j].xy_p));
 
             printf("\n");
         }
-    
 }
 
 //funkcia vrati nahodne cisla z rozmedzia urceneho pouzivatelom
@@ -685,8 +665,8 @@ int get_percentage(int num, int percentage)
 //*************************************************//
 void add_min_heap(MAP_I **map_info, POSITION **min_heap, POSITION relaxed, int *heap_size)
 {
+    (*min_heap)[*heap_size] = relaxed;
     (*heap_size)++;
-    (*min_heap)[(*heap_size) - 1] = relaxed;
 
     if ((*heap_size) == 1)
         return;
@@ -694,20 +674,20 @@ void add_min_heap(MAP_I **map_info, POSITION **min_heap, POSITION relaxed, int *
     int i = (*heap_size) - 1; //posledne cislo v heape - jeho index
     int parent_i = get_parent_index(i);
 
-    int parent_x = (*min_heap)[parent_i].x;
-    int parent_y = (*min_heap)[parent_i].y;
-    int curr_x = (*min_heap)[i].x;
-    int curr_y = (*min_heap)[i].y;
+    int parent_x = get_x((*min_heap)[parent_i].xy);
+    int parent_y = get_y((*min_heap)[parent_i].xy);
+    int curr_x = get_x((*min_heap)[i].xy);
+    int curr_y = get_y((*min_heap)[i].xy);
 
     while ((i != 0) && (map_info[parent_x][parent_y].dist > map_info[curr_x][curr_y].dist))
     {
         swap(&(*min_heap)[i], &(*min_heap)[parent_i]);
         i = get_parent_index(i);
         parent_i = get_parent_index(i);
-        parent_x = (*min_heap)[parent_i].x;
-        parent_y = (*min_heap)[parent_i].y;
-        curr_x = (*min_heap)[i].x;
-        curr_y = (*min_heap)[i].y;
+        parent_x = get_x((*min_heap)[parent_i].xy);
+        parent_y = get_y((*min_heap)[parent_i].xy);
+        curr_x = get_x((*min_heap)[i].xy);
+        curr_y = get_y((*min_heap)[i].xy);
     }
 }
 
@@ -736,16 +716,16 @@ void min_heapify(MAP_I **map_info, POSITION **min_heap, int heap_size, int i)
     unsigned int l = left(i), r = right(i);
     unsigned int l_x = USHRT_MAX, l_y = USHRT_MAX, r_x = USHRT_MAX, r_y = USHRT_MAX;
     if (l < heap_size) {
-        l_x = (*min_heap)[l].x;
-        l_y = (*min_heap)[l].y;
+        l_x = get_x((*min_heap)[l].xy);
+        l_y = get_y((*min_heap)[l].xy);
     }
     if (r < heap_size)
     {
-        r_x = (*min_heap)[r].x;
-        r_y = (*min_heap)[r].y;
+        r_x = get_x((*min_heap)[r].xy);
+        r_y = get_y((*min_heap)[r].xy);
     }
 
-    unsigned int curr_x = (*min_heap)[i].x, curr_y = (*min_heap)[i].y;
+    unsigned int curr_x = get_x((*min_heap)[i].xy), curr_y = get_y((*min_heap)[i].xy);
     unsigned int smallest = i;
 
     if ((l < heap_size) && (map_info[l_x][l_y].dist < map_info[curr_x][curr_y].dist))
@@ -786,8 +766,8 @@ void print_min_heap(MAP_I **map_info, POSITION *min_heap, int heap_size)
     printf("MIN-HEAP\n");
     for (int i = 0; i < heap_size; i++)
     {
-        printf("dist:%d ", map_info[min_heap[i].x][min_heap[i].y].dist);
-        printf("x:%d y:%d\n", min_heap[i].x, min_heap[i].y);
+        printf("dist:%d ", map_info[get_x(min_heap[i].xy)][get_y(min_heap[i].xy)].dist);
+        printf("x:%d y:%d\n", get_x(min_heap[i].xy), get_y(min_heap[i].xy));
     }
 }
 //*************************************************//
@@ -803,22 +783,22 @@ uint32_t change_state(uint32_t state, unsigned new_val, unsigned offset, unsigne
     return (state | new_val);
 }
 
-USHRT get_x(uint32_t state)
+unsigned get_x(uint32_t state)
 {
     return (state >> X_OFF);
 }
 
-uint32_t change_x(uint32_t state, USHRT x)
+uint32_t change_x(uint32_t state, unsigned x)
 {
     return change_state(state, x, X_OFF, POS_SIZE);
 }
 
-USHRT get_y(uint32_t state)
+unsigned get_y(uint32_t state)
 {
     return (state & (~(((1 << POS_SIZE) - 1) << X_OFF))) >> Y_OFF;
 }
 
-uint32_t change_y(uint32_t state, USHRT y)
+uint32_t change_y(uint32_t state, unsigned y)
 {
     return change_state(state, y, Y_OFF, POS_SIZE);
 }
@@ -833,17 +813,17 @@ uint32_t change_y(uint32_t state, USHRT y)
 //     return change_state(state, G, G_OFF, BIT_SIZE);
 // }
 
-USHRT get_D(uint32_t state)
+unsigned get_D(uint32_t state)
 {
     return (state & (~(((1 << ((2*POS_SIZE)+1)) - 1) << (POS_SIZE+1)))) >> D_OFF;
 }
 
-uint32_t change_D(uint32_t state, USHRT D)
+uint32_t change_D(uint32_t state, unsigned D)
 {
     return change_state(state, D, D_OFF, BIT_SIZE);
 }
 
-USHRT get_P(uint32_t state, USHRT num)
+unsigned get_P(uint32_t state, unsigned num)
 {
     num++;
     printf("get P... num %d\n", num);
@@ -869,7 +849,7 @@ USHRT get_P(uint32_t state, USHRT num)
     }
 }
 
-uint32_t change_P(uint32_t state, USHRT num, USHRT P)
+uint32_t change_P(uint32_t state, unsigned num, unsigned P)
 {
     num++;
     printf("chagne P... num %d\n", num);
@@ -896,7 +876,7 @@ uint32_t change_P(uint32_t state, USHRT num, USHRT P)
 }
 
 //iba pre kontrolu - vypise cislo v 2 sustave (32 bitov)
-USHRT print_bin32(uint32_t num, int bit)
+unsigned print_bin32(uint32_t num, int bit)
 {
     if (bit >= 8 * sizeof(num))
         return USHRT_MAX;

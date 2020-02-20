@@ -14,9 +14,9 @@ void sucet_k_najvacsich(int cena[], int n, int k) {
     }
 
     for (int j = max-1; j >= 0; ++j) {
-        for (int i = 0; i < ; ++i) {
+        // for (int i = 0; i < ; ++i) {
             
-        }
+        // }
     }
 }
 

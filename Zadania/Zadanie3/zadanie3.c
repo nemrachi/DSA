@@ -5,9 +5,42 @@
 #include <math.h>
 #include <limits.h> 
 
+<<<<<<< HEAD
 typedef char BOOL;
 #define true 1
 #define false 0
+=======
+//V MIN HEAPE MOZEM MAT ROVNAKE POLIA - TREBA ICH DETEKOVAT a updatnut
+
+//struktura pre mapu, ktora uchovava informacie o jednotlivych poliach
+typedef struct MAP_I
+{
+    unsigned dist; //dlzka od zaciatocneho bodu //max +65,535
+    //pozicia pola, z akeho sme pristupovali do aktualeho pola
+    uint32_t xy_p;
+} MAP_I;
+
+//00000000 00000000 00000000 00000000
+
+//struktura pre poziciu
+typedef struct POSITION
+{
+    uint32_t xy;
+} POSITION;
+
+//konstatny pre pracu so stavom Popolvara (pre bitove operacie)
+#define POS_SIZE 12
+#define BIT_SIZE 1
+#define X_OFF 20
+#define Y_OFF 8
+#define G_OFF 7
+#define D_OFF 6
+#define P1_OFF 5
+#define P2_OFF 4
+#define P3_OFF 3
+#define P4_OFF 2
+#define P5_OFF 1
+>>>>>>> 5ace942... cleaning after clion
 
 #define WIDTH 7 //m
 #define HEIGHT 5 //n

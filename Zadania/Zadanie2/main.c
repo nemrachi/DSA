@@ -48,7 +48,8 @@ void delete_whole_trees() {
     AVL_root = NULL;
     free(RB_root);
     RB_root = NULL;
-    RB_delete_whole();
+    free(NILL);
+    free(ROOT);
 }
 
 void delete_whole_hash_tables() {
@@ -72,25 +73,6 @@ int get_random() {
 //funkcia vrati nahodne cisla z rozmedzia urceneho pouzivatelom
 int get_random_range(int lower, int upper) {
     return (rand() % (upper + 1 - lower)) + lower;
-}
-
-//funkcia vrati pole nahodnych stringov nahodnej dlzky
-void get_random_char_arr(char **arr, int num_of_nodes) {
-    int option, rand_size;
-    for (int i = 0; i < num_of_nodes; ++i) {
-        rand_size = get_random_range(2, MAX_STR);
-        for (int j = 0; j < (rand_size-1); j++) {
-            option = rand() % 3;
-            if (option == 0) {
-                arr[i][j] = (char)('0' + (rand() % 10));
-            } else if (option == 1) {
-                arr[i][j] = (char)('a' + (rand() % 26));
-            } else {
-                arr[i][j] = (char)('A' + (rand() % 26));
-            }
-        }
-        arr[i][rand_size-1] = '\0';
-    }
 }
 
 //funkcia vrati pole nahodnych cisel
@@ -133,6 +115,25 @@ int generate_key(char *str) {
         sum += ((int)pow(2, i+1) * (int)str[i]);
     }
     return sum;
+}
+
+//funkcia vrati pole nahodnych stringov nahodnej dlzky
+void get_random_char_arr(char **arr, int num_of_nodes) {
+    int option, rand_size;
+    for (int i = 0; i < num_of_nodes; ++i) {
+        rand_size = get_random_range(2, MAX_STR);
+        for (int j = 0; j < (rand_size-1); j++) {
+            option = rand() % 3;
+            if (option == 0) {
+                arr[i][j] = (char)('0' + (rand() % 10));
+            } else if (option == 1) {
+                arr[i][j] = (char)('a' + (rand() % 26));
+            } else {
+                arr[i][j] = (char)('A' + (rand() % 26));
+            }
+        }
+        arr[i][rand_size-1] = '\0';
+    }
 }
 
 //---------------------------------------------------------------------//
@@ -241,7 +242,7 @@ int test_trees_insert_random() {
         reset_clock(&start, &end, &exe_time);
 
         //SEARCH-----------------------------------------------
-            test_trees_search(rand_arr, num_of_nodes);
+        test_trees_search(rand_arr, num_of_nodes);
         //SEARCH-----------------------------------------------
 
         num_of_nodes *= 10;
@@ -502,7 +503,7 @@ int test_hash_insert_random() {
 int main() {
     srand(time(0));
 
-//   test_hash_insert_random();
+    test_hash_insert_random();
     test_trees_insert_random();
     test_trees_insert_left_right();
     test_trees_insert_sequence();

@@ -37,17 +37,14 @@ struct node{
     struct node *right;
 };
 
-/* Global, since all function will access them */
 struct node *ROOT;
 struct node *NILL;
-int RB_count_lvl = 1;
+int RB_count_lvl = 1; //premenna na zistenie urovne stromu
 
-//mnou pridane funkcie
+//mnou pridane funkcie (pri funkciach je popisany dovod implementacie)
 void RB_search(struct node *tree, int wanted_data);
-void RB_print(struct node *tree);
 void RB_set_root();
 struct node *RB_get_root();
-void RB_delete_whole();
 
 void left_rotate(struct node *x);
 void right_rotate(struct node *x);
@@ -60,8 +57,89 @@ void red_black_transplant(struct node *u, struct node *v);
 void red_black_delete(struct node *z);
 void red_black_delete_fixup(struct node *x);
 
+//int main(){
+//
+//    NILL = malloc(sizeof(struct node));
+//
+//    NILL->color = BLACK;
+//
+//
+//
+//    ROOT = NILL;
+//
+//
+//
+//    printf("### RED-BLACK TREE INSERT ###\n\n");
+//
+//
+//
+//    int tcase, key;
+//
+//    printf("Number of key: ");
+//
+//    scanf("%d", &tcase);
+//
+//    while(tcase--){
+//
+//        printf("Enter key: ");
+//
+//        scanf("%d", &key);
+//
+//        red_black_insert(key);
+//
+//    }
+//
+//
+//
+//    printf("### TREE PRINT ###\n\n");
+//
+//    tree_print(ROOT);
+//
+//    printf("\n");
+//
+//
+//
+//    printf("### KEY SEARCH ###\n\n");
+//
+//    printf("Enter key: ");
+//
+//    scanf("%d", &key);
+//
+//    printf((tree_search(key) == NILL) ? "NILL\n" : "%p\n", tree_search(key));
+//
+//
+//
+//    printf("### MIN TEST ###\n\n");
+//
+//    printf("MIN: %d\n", (tree_minimum(ROOT))->key);
+//
+//
+//
+//    printf("### TREE DELETE TEST ###\n\n");
+//
+//    printf("Enter key to delete: ");
+//
+//    scanf("%d", &key);
+//
+//    red_black_delete(tree_search(key));
+//
+//
+//
+//    printf("### TREE PRINT ###\n\n");
+//
+//    tree_print(ROOT);
+//
+//    printf("\n");
+//
+//
+//
+//    return 0;
+//
+//}
 
-
+//rovnaka funkcia search, ako je implementovana v mojom nevyvazenom a vyvazenom strome
+//aj ked dana implementacia ma funkciu search, chcela som implementovat moju funkciu search, kvoli
+//zjednoteniu vypisov pri testoch, aby sa mi lepsie spracovavali udaje pri analyze testov
 void RB_search(struct node *tree, int wanted_data) {
     if (wanted_data < tree->key) {
         if (tree->left != NULL) {
@@ -82,56 +160,33 @@ void RB_search(struct node *tree, int wanted_data) {
         }
 
     } else if (wanted_data == tree->key) {
-        //printf("Tree contains value '%d'\n", wanted_data);
         printf("contains at lvl: %d\t", RB_count_lvl);
         RB_count_lvl = 1;
+        return;
 
     } else {
         printf("Tree doesn't contain value '%d'\n", wanted_data);
+        return;
     }
 }
-void RB_print(struct node *tree) {
-    if(tree != NULL) {
-        if (tree->key != 0) {
-            if (tree->parent == NULL) {
-                if ((tree->left == NULL) && (tree->right == NULL)) {
-                    printf("\ndata:%d\tparent:NONE left:NONE right:NONE\tcolor:%d", tree->key, tree->color);
-                } else if (tree->left == NULL) {
-                    printf("\ndata:%d\tparent:NONE left:NONE right:%d\tcolor:%d", tree->key, tree->right->key, tree->color);
-                } else if (tree->right == NULL) {
-                    printf("\ndata:%d\tparent:NONE left:%d right:NONE\tcolor:%d", tree->key, tree->left->key, tree->color);
-                } else {
-                    printf("\ndata:%d\tparent:NONE left:%d right:%d\tcolor:%d", tree->key, tree->left->key, tree->right->key,tree->color);
-                }
-            } else {
-                if ((tree->left == NULL) && (tree->right == NULL)) {
-                    printf("\ndata:%d\tparent:%d left:NONE right:NONE\tcolor:%d", tree->key, tree->parent->key, tree->color);
-                } else if (tree->left == NULL) {
-                    printf("\ndata:%d\tparent:%d left:NONE right:%d\tcolor:%d", tree->key, tree->parent->key, tree->right->key, tree->color);
-                } else if (tree->right == NULL) {
-                    printf("\ndata:%d\tparent:%d left:%d right:NONE\tcolor:%d", tree->key, tree->parent->key, tree->left->key, tree->color);
-                } else {
-                    printf("\ndata:%d\tparent:%d left:%d right:%d\tcolor:%d", tree->key, tree->parent->key, tree->left->key, tree->right->key, tree->color);
-                }
-            }
-            RB_print(tree->left);
-            RB_print(tree->right);
-        }
-    }
-}
+
+//povodne sa danu kus kodu nachadzal v maine (ktory viete najst hore odkomentovany)
+//ale aby som vedela pracovat danou implementaciou, musela som dany kod osamostatnit do funkcie,
+//aby som ho vedela aplikovat v mojich testoch
 void RB_set_root() {
     NILL = malloc(sizeof(struct node));
     NILL->color = BLACK;
 
     ROOT = NILL;
 }
+
+//tato funkcia sluzi len na to, aby som vedela ziskat adresu, kde sa dana stromova struktura nachadza, mala ju ulozenu
+//v mojom main file a vedela ju vlozit do mojej search funkcie, ktoru som nechcela upravovat
 struct node *RB_get_root() {
     return ROOT;
 }
-void RB_delete_whole() {
-    free(NILL);
-    free(ROOT);
-}
+
+
 
 /* Print tree keys by inorder tree walk */
 void tree_print(struct node *x){

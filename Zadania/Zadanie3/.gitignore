@@ -1,2 +1,7 @@
 *.exe
+<<<<<<< HEAD
 *.json
+=======
+*.json
+testing*
+>>>>>>> 5ace942... cleaning after clion

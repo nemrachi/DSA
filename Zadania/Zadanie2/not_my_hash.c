@@ -41,36 +41,6 @@ struct s_hashmap{
     long size, count;
 };
 
-//mnou pridana funkcia, kvoli kontrole vkladania dat
-void NM_print(struct s_hashmap *hash) {
-    for (int i = 0; i < hash->size; i++)
-    {
-        printf("%d. %s\n", i, (char*)hash->table[i].data);
-    }
-}
-
-void NM_search(HASHMAP *hash_table, char *data, int wanted_key) {
-    int index1 = hash_fun1(wanted_key, hash_table->size);
-    int index2;
-    int prev_prime = get_prev_prime(hash_table->size);
-
-    if (hash_table->table[index1].key == wanted_key) {
-        printf("Data '%s' is on index %d\n", data, index1);
-        printf("O(1)\n");
-        return;
-    } else {
-        for (int i = 1; i < collision_count; ++i) {
-            index2 = index1 + (i * hash_fun2(wanted_key, prev_prime));
-            if (hash_table->table[index2].key == wanted_key) {
-                printf("Data '%s' is on index %d\n", data, index1);
-                printf("O(%d)\n", i + 1);
-                return;
-            }
-        }
-        printf("Find nothing");
-    }
-}
-
 static unsigned long isPrime(unsigned long val)
 {
     int i, p, exp, a;
@@ -111,7 +81,6 @@ static int findPrimeGreaterThan(int val)
 
 static void rehash(hashmap* hm)
 {
-    printf("\tREHASH\n");
     long size = hm->size;
     hEntry* table = hm->table;
 
@@ -229,6 +198,7 @@ void* hashmapGet(hashmap* hash, unsigned long key)
             if (hash->table[index].key == key)
             {
                 if (hash->table[index].flags & ACTIVE)
+                    //mnou pridany vypis, kvoli analyze testov
                     printf("NM_HASH Data '%s' is on index %ld\n", hash->table[index].data, index);
                     printf("O(%ld)\n", i+1);
                     return hash->table[index].data;

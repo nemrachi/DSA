@@ -1,9 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 typedef struct BVSnode {
     int data;
-    struct BVSnode *parent, *left, *right; //smerniky na rodica a lave a prave dieta
+    struct BVSnode *parent, *left, *right;
 } BVSnode;
 
-int BVS_count_lvl = 1; //premenna na zistenie urovne stromu
+int BVS_count_lvl = 1;
 
 //vyhladavacia funkcia
 void BVS_search(BVSnode *tree, int wanted_data) {
@@ -85,11 +88,11 @@ BVSnode *BVS_insert(BVSnode *tree, int new_data) {
             *root = BVS_new_node(parent, new_data);
             return tree;
 
-        } else if (new_data < (*root)->data) { //ak vkladane data su mensie ako aktualny prvok, posuva sa dolava
+        } else if (new_data <= (*root)->data) { //ak vkladane data su mensie alebo rovne ako aktualny prvok, posuva sa dolava
             parent = *root;
             root = &(*root)->left;
 
-        } else { //ak vkladane data su vacsie alebo rovne ako aktualny prvok, posuva sa doprava
+        } else { //ak vkladane data su vacsie ako aktualny prvok, posuva sa doprava
             parent = *root;
             root = &(*root)->right;
         }

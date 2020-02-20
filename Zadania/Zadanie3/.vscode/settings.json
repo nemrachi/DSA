@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "time.h": "c"
-    }
+        "time.h": "c",
+        "limits": "c",
+        "*.tcc": "c"
+    },
+    "workbench.colorTheme": "_inkSea Theme",
+    "workbench.iconTheme": "vscode-icons"
 }

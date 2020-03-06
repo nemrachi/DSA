@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <time.h>
-#include "zadanie1.c"
+#include "zadanie1_L.c"
+#include "zadanie1_S.c"
 
 //testovanie fungovania spajania pri free
 
@@ -105,10 +106,11 @@ void test_memory_different_free_blocks() {
 //---------------------------------------------------------------------//
 
 int main() {
-    printf("Size of MEM_HEAD: %d\n", sizeof(MEM_HEAD));
-    printf("Size of BLOCK_HEAD: %d\n", sizeof(BLOCK_HEAD));
-    printf("Size of ALLOC_HEAD: %d\n\n", sizeof(ALLOC_HEAD));
-    srand(time(0));
-    test_memory_same_free_blocks();
+
+    // printf("Size of MEM_HEAD: %d\n", sizeof(MEM_HEAD));
+    // printf("Size of BLOCK_HEAD: %d\n", sizeof(BLOCK_HEAD));
+    // printf("Size of ALLOC_HEAD: %d\n\n", sizeof(ALLOC_HEAD));
+    // srand(time(0));
+    // test_memory_same_free_blocks();
     return 0;
 }

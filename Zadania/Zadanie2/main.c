@@ -4,12 +4,12 @@
 #include <string.h>
 #include <math.h>
 
-//files with trees
+//subory so stromovymi algoritmami
 #include "my_bvs.c"
 #include "my_AVL_tree.c"
 #include "red-black_tree.c"
 
-//files with hash
+//subory s hash funkciami
 #include "my_hash.c"
 #include "not_my_hash.c"
 
@@ -24,7 +24,7 @@
 //Konstanty                                                            //
 //---------------------------------------------------------------------//
 #define MAX_STR 10 //maximalna velkost stringu vkladana do hashovacej tabulky
-#define HASH_START_SIZE 11 //zaciatocna velkost tabulky
+#define HASH_START_SIZE 11 //zaciatocna velkost hash tabulky
 #define MAX_ELEMENTS 100000 //maximalny pocet vkladanych prvkov do tabulky
 #define UPPER 100000
 #define LOWER 0
@@ -37,6 +37,12 @@ AVLnode *AVL_root = NULL; //smernik na BVS strom s vyvazovacim algoritmom AVL (m
 struct node *RB_root = NULL; //smernik na cerveno-cierny strom (cudzia implementacia)
 struct s_hashmap *NM_hashmap = NULL; //smernik na hashovaciu tabulku (cudzia implementacia)
 HASHMAP *MY_hash_tab = NULL; //smernik na hashovacou tabulku (moja implementacia)
+
+//premenne kvoli zapisovaniu vyledkov do txt suboru
+FILE *file_out;
+char *tmp_str;
+
+int counter = 0;
 
 //---------------------------------------------------------------------//
 //Pomocne funkcie                                                      //
@@ -65,6 +71,12 @@ void reset_clock(clock_t *start, clock_t *end, double *exe_time) {
     *exe_time = 0;
 }
 
+char *put_to_file(int num_elem, double sec, char *str) {
+    char *put_str = malloc(100);
+    sprintf(put_str, "%s%d %.4f\n", str, num_elem, sec);
+    return put_str;
+}
+
 //funkcia vrati nahodne cisla z rozmedzia urceneho konstantami
 int get_random() {
     return (rand() % (UPPER + 1 - LOWER)) + LOWER;
@@ -75,22 +87,22 @@ int get_random_range(int lower, int upper) {
     return (rand() % (upper + 1 - lower)) + lower;
 }
 
-//funkcia vrati pole nahodnych cisel
+//funkcia naplni pole nahodnymi cislami
 void get_arr_random(int *arr, int num) {
     for (int j = 0; j < num; j++) {
         arr[j] = get_random();
     }
 }
 
-//funkcia vrati pole, ktore obsahuje postupnost cisel
+//funkcia naplni pole postupnostou cisel
 void get_arr_seq(int *arr, int num) {
     for (int j = 0; j < num; j++) {
         arr[j] = j;
     }
 }
 
-//funkcia vrati pole, ktore obsahuje pole, v ktorom sa na prvom mieste nachadza cislo korena a potom na striedacku
-//su ulozene cisla mensie/vacsie od korenoveho cisla
+/*funkcia naplni pole, v ktorom sa na prvom mieste nachadza cislo korena a potom na striedacku
+su ulozene cisla mensie/vacsie od korenoveho cisla*/
 void get_arr_left_right(int *arr, int num) {
     int index = 1;
     arr[0] = get_random();
@@ -157,6 +169,7 @@ void test_trees_search(int *rand_arr, int num_of_nodes) {
     end = clock(); //"zastavenie" stopiek
     exe_time = ((double) (end - start)) / CLOCKS_PER_SEC; //vypocet casu vykonania funkcie v sekundach
     printf("BVS search took %f seconds\n", exe_time);
+    //fputs(put_to_file(num_of_nodes, exe_time, "search bvs"), file_out);
     //BVS---------------------------------------------------
 
     reset_clock(&start, &end, &exe_time); //resetovanie stopiek
@@ -167,6 +180,7 @@ void test_trees_search(int *rand_arr, int num_of_nodes) {
     end = clock();
     exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("AVL search took %f seconds\n", exe_time);
+    //fputs(put_to_file(num_of_nodes, exe_time, "search avl"), file_out);
     //AVL---------------------------------------------------
 
     reset_clock(&start, &end, &exe_time);
@@ -177,6 +191,7 @@ void test_trees_search(int *rand_arr, int num_of_nodes) {
     end = clock();
     exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("RB insert took %f seconds\n\n", exe_time);
+    //fputs(put_to_file(num_of_nodes, exe_time, "search rb"), file_out);
     //RB----------------------------------------------------
 
     reset_clock(&start, &end, &exe_time);
@@ -209,6 +224,7 @@ int test_trees_insert_random() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("BVS insert took %f seconds\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert bvs"), file_out);
         //BVS---------------------------------------------------
 
         reset_clock(&start, &end, &exe_time);
@@ -221,6 +237,7 @@ int test_trees_insert_random() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("AVL insert took %f seconds\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert avl"), file_out);
         //AVL---------------------------------------------------
 
         reset_clock(&start, &end, &exe_time);
@@ -235,6 +252,7 @@ int test_trees_insert_random() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("RB insert took %f seconds\n\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert rb"), file_out);
 
         RB_root = RB_get_root(); //ulozenie stromovej struktury
         //RB----------------------------------------------------
@@ -280,6 +298,7 @@ int test_trees_insert_left_right() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("BVS insert took %f seconds\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert bvs"), file_out);
         //BVS---------------------------------------------------
 
         reset_clock(&start, &end, &exe_time);
@@ -292,6 +311,7 @@ int test_trees_insert_left_right() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("AVL insert took %f seconds\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert avl"), file_out);
         //AVL---------------------------------------------------
 
         reset_clock(&start, &end, &exe_time);
@@ -306,6 +326,7 @@ int test_trees_insert_left_right() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("RB insert took %f seconds\n\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert rb"), file_out);
 
         RB_root = RB_get_root();
         //RB----------------------------------------------------
@@ -351,6 +372,7 @@ int test_trees_insert_sequence() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("BVS insert took %f seconds\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert bvs"), file_out);
         //BVS---------------------------------------------------
 
         reset_clock(&start, &end, &exe_time);
@@ -363,6 +385,7 @@ int test_trees_insert_sequence() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("AVL insert took %f seconds\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert avl"), file_out);
         //AVL---------------------------------------------------
 
         reset_clock(&start, &end, &exe_time);
@@ -377,6 +400,7 @@ int test_trees_insert_sequence() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("RB insert took %f seconds\n\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert rb"), file_out);
 
         RB_root = RB_get_root();
         //RB----------------------------------------------------
@@ -417,6 +441,7 @@ void test_hash_search(int num_of_nodes, char **rand_arr) {
     end = clock();
     exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("My hash search took %f seconds\n\n", exe_time);
+    //fputs(put_to_file(num_of_nodes, exe_time, "search my"), file_out);
     //MY-HASH---------------------------------------------------
 
     reset_clock(&start, &end, &exe_time);
@@ -428,6 +453,7 @@ void test_hash_search(int num_of_nodes, char **rand_arr) {
     end = clock();
     exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Not my hash search took %f seconds\n", exe_time);
+    //fputs(put_to_file(num_of_nodes, exe_time, "search not"), file_out);
     //NOT-MY-HASH-----------------------------------------------
 
     reset_clock(&start, &end, &exe_time);
@@ -467,7 +493,10 @@ int test_hash_insert_random() {
         }
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+
         printf("My hash insert took %f seconds\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert my"), file_out);
         //MY-HASH---------------------------------------------------
 
         reset_clock(&start, &end, &exe_time);
@@ -481,6 +510,7 @@ int test_hash_insert_random() {
         end = clock();
         exe_time = ((double) (end - start)) / CLOCKS_PER_SEC;
         printf("Not my hash insert took %f seconds\n", exe_time);
+        //fputs(put_to_file(num_of_nodes, exe_time, "insert not"), file_out);
         //NOT-MY-HASH-----------------------------------------------
 
         reset_clock(&start, &end, &exe_time);
@@ -501,12 +531,19 @@ int test_hash_insert_random() {
 }
 
 int main() {
+    //file_out = fopen("output.txt", "a");
     srand(time(0));
+    //fputs("Hashovanie- nahodne slova\n", file_out);
+    //fputs("STROMY- nahodne cisla\n", file_out);
+    //fputs("STROMY- Vkladanie na \"striedacku\"\n", file_out);
+    //fputs("STROMY- postupnosti\n", file_out);
 
-    test_hash_insert_random();
-    test_trees_insert_random();
-    test_trees_insert_left_right();
-    test_trees_insert_sequence();
-
+    for (int i = 0; i < 10; i++) {
+        test_hash_insert_random();
+        //test_trees_insert_random();
+        //test_trees_insert_left_right();
+        //test_trees_insert_sequence();
+    }
+    
     return 0;
 }

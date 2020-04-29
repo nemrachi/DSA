@@ -116,8 +116,10 @@ void hashmapInsert(hashmap* hash, const void* data, unsigned long key)
 {
     long index, i, step;
 
-    if (hash->size <= hash->count)
+    if (hash->size <= hash->count) {
+        printf("\t\tsize %d count %d", hash->size, hash->count);
         rehash(hash);
+    }
 
     do
     {

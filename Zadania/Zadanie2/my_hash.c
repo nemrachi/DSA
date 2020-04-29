@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 //struktura pre prvok v hashovacej tabulke
 typedef struct {
@@ -11,10 +12,11 @@ typedef struct {
 //struktura pre hashovaciu tabulku
 typedef struct{
     ELEMENT *table; //samotna hashovacia tabulka
-    int size, fullness; //udaje o tabulke - velkost tabulky, naplnenost tabulky
+    int size, number_of_elements;
+    double fullness; //udaje o tabulke - velkost tabulky, naplnenost tabulky
 } HASHMAP;
 
-#define MAX_TABLE_SIZE 115211  //maximalna velkost hashovacej tabulky
+#define MAX_TABLE_SIZE INT_MAX  //maximalna velkost hashovacej tabulky
 //vybrala som nahodne a o trochu vacsie prvocislo, ktore je vacsie ako 100 000
 
 int collision_count = 1; //pocitadlo pre kolizie - dany udaj je sucastou rovnice pre vypocet indexu prvku
@@ -76,7 +78,8 @@ HASHMAP *MY_init(int size) {
     size = get_next_prime(size); //ak bolo vlozene aj nie prvocislo, velkost bude prvocislo
     HASHMAP *hash_table = malloc(sizeof(HASHMAP));
     hash_table->size = size;
-    hash_table->fullness = 0;
+    hash_table->number_of_elements = 0;
+    hash_table->fullness = 0.9;
     hash_table->table = malloc(size * sizeof(ELEMENT));
     for (int i = 0; i < size; ++i) {
         hash_table->table[i].key = 0;
@@ -92,8 +95,8 @@ int hash_fun1(int key, int size) {
 
 //druha hashovacia funkcia
 //premenna prev_prime - prvocislo, ktore je najblizsie mensie k velkosti tabulky
-int hash_fun2(int key, int prev_prime){
-    return (prev_prime - (key % prev_prime));
+int hash_fun2(int index1, int count, int key, int prev_prime, int size){
+    return ((index1 + ((count % 2003) * ((prev_prime - (key % prev_prime))))) % size);
 }
 
 //funkcia, ktora zmeni velkost hashovacej tabulky a preusporiada vsetky hodnoty
@@ -101,15 +104,16 @@ HASHMAP *MY_resize(HASHMAP *hash_table) {
     collision_count = 1; //resetne danu premennu, kedze sa ide hashovat od zaciatku
     //nova velkost bude o 10 nasobok vacsia ako predosla
     int new_size = get_next_prime((hash_table->size * 10));
+    int prev_prime = get_prev_prime(new_size);
     int index1;
     int index2;
     int count = collision_count;
     ELEMENT *old_table = hash_table->table;
     ELEMENT *new_table = malloc(new_size * sizeof(ELEMENT));
 
-    for (int i = 0; i < new_size; ++i) { //inicializcia novej tabulky
-        new_table[i].key = 0;
-        new_table[i].data = NULL;
+    for (int j = 0; j < new_size; ++j) { //inicializcia novej tabulky
+        new_table[j].key = 0;
+        new_table[j].data = NULL;
     }
 
     for (int i = 0; i < hash_table->size; ++i) {
@@ -127,7 +131,7 @@ HASHMAP *MY_resize(HASHMAP *hash_table) {
                     //funkcie a vysledku z druhej hashovacej funkcie vynasobenim pocitadlom kolizii
                     //(pocitadlo kolizii je preto modulovane %2000, lebo pri vkladani 100 000 prvkov uz hodnota
                     // pocitadla bola moc vysoka na typ int)
-                    index2 = (index1 + ((count % 2000) * hash_fun2(old_table[i].key, hash_table->size))) % new_size;
+                    index2 = hash_fun2(index1, count, old_table[i].key, prev_prime, new_size);
                     count++;
                 }
             }
@@ -144,7 +148,7 @@ HASHMAP *MY_resize(HASHMAP *hash_table) {
 
 //funkcia na vkladanie prvku do hashovacej tabulky
 HASHMAP *MY_insert(HASHMAP *hash_table, char *data, int key) {
-    if (hash_table->size == hash_table->fullness) { //ak je tabulka plna, treba ju zvacsit
+    if ((double)((double)hash_table->number_of_elements / (double)hash_table->size) > hash_table->fullness) { //ak je tabulka plna, treba ju zvacsit
         hash_table = MY_resize(hash_table);
     }
 
@@ -158,7 +162,7 @@ HASHMAP *MY_insert(HASHMAP *hash_table, char *data, int key) {
         if (table[index2].key == 0) { //ak sa na danom indexe nic nenachadza, ulozi data tam
             table[index2].data = data;
             table[index2].key = key;
-            hash_table->fullness += 1;
+            hash_table->number_of_elements += 1;
             collision_count = count;
             return hash_table;
 
@@ -167,7 +171,7 @@ HASHMAP *MY_insert(HASHMAP *hash_table, char *data, int key) {
             //funkcie a vysledku z druhej hashovacej funkcie vynasobenim pocitadlom kolizii
             //(pocitadlo kolizii je preto modulovane %2000, lebo pri vkladani 100 000 prvkov uz hodnota
             // pocitadla bola moc vysoka na typ int)
-            index2 = (index1 + ((count % 2000) * hash_fun2(key, prev_prime))) % hash_table->size;
+            index2 = hash_fun2(index1, count, key, prev_prime, hash_table->size);
             count++;
         }
     }
@@ -188,7 +192,7 @@ void MY_search(HASHMAP *hash_table, char *data, int wanted_key) {
         //ak prvok nie je na danom indexe, tak musi byt ulozeny na nejakom indexe, ktory bol vypocitany druhou
         //hashovacou funkciou
         for (int i = 1; i <= collision_count; i++) {
-            index2 = (index1 + ((i % 2000) * hash_fun2(wanted_key, prev_prime))) % hash_table->size;
+            index2 = hash_fun2(index1, i, wanted_key, prev_prime, hash_table->size);
             if (hash_table->table[index2].key == wanted_key) {
                 //a kedze nevieme, pri akom pocte kolizii sa prvok ulozil do tabulky, musime hladat index pre
                 //cely pocet kolizii

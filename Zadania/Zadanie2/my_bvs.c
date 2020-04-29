@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef struct BVSnode {
-    int data;
+    int data; 
     struct BVSnode *parent, *left, *right;
 } BVSnode;
 

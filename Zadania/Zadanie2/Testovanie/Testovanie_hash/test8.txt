@@ -1,0 +1,161 @@
+2.pokus
+C:\Users\emari\CLionProjects\DSA\Zadania\Zadanie2\cmake-build-debug\main.exe
+//---------------------------------------------------------------------//
+                            TEST HASH RANDOM
+//---------------------------------------------------------------------//
+//---------------------------------------------------------------------//
+                                   10
+//---------------------------------------------------------------------//
+        new prime 11
+
+Hashing Insert..............................................
+
+My hash insert took 0.000000 seconds
+Not my hash insert took 0.000000 seconds
+
+..............................................Search for        hwK
+MY_HASH Data 'hwK' is on index 8
+O(1)
+My hash search took 0.000000 seconds
+
+NM_HASH Data 'hwK' is on index 8
+O(1)
+Not my hash search took 0.003000 seconds
+//---------------------------------------------------------------------//
+                            TEST HASH RANDOM
+//---------------------------------------------------------------------//
+//---------------------------------------------------------------------//
+                                   100
+//---------------------------------------------------------------------//
+        new prime 11
+
+Hashing Insert..............................................
+
+        RESIZE
+        new prime 113
+My hash insert took 0.000000 seconds
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+Not my hash insert took 0.004000 seconds
+
+..............................................Search for        c5GRz30
+MY_HASH Data 'c5GRz30' is on index 24
+O(18)
+My hash search took 0.000000 seconds
+
+NM_HASH Data 'c5GRz30' is on index 39
+O(1)
+Not my hash search took 0.000000 seconds
+//---------------------------------------------------------------------//
+                            TEST HASH RANDOM
+//---------------------------------------------------------------------//
+//---------------------------------------------------------------------//
+                                   1000
+//---------------------------------------------------------------------//
+        new prime 11
+
+Hashing Insert..............................................
+
+        RESIZE
+        new prime 113
+        RESIZE
+        new prime 1151
+My hash insert took 0.008000 seconds
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+Not my hash insert took 0.008000 seconds
+
+..............................................Search for        gfNkz7
+MY_HASH Data 'gfNkz7' is on index 15
+O(1)
+My hash search took 0.004000 seconds
+
+NM_HASH Data 'gfNkz7' is on index 792
+O(1)
+Not my hash search took 0.000000 seconds
+//---------------------------------------------------------------------//
+                            TEST HASH RANDOM
+//---------------------------------------------------------------------//
+//---------------------------------------------------------------------//
+                                   10000
+//---------------------------------------------------------------------//
+        new prime 11
+
+Hashing Insert..............................................
+
+        RESIZE
+        new prime 113
+        RESIZE
+        new prime 1151
+        RESIZE
+        new prime 11519
+My hash insert took 0.248000 seconds
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+Not my hash insert took 0.004000 seconds
+
+..............................................Search for        La
+MY_HASH Data 'La' is on index 540
+O(1)
+My hash search took 0.000000 seconds
+
+NM_HASH Data 'La' is on index 540
+O(1)
+Not my hash search took 0.000000 seconds
+//---------------------------------------------------------------------//
+                            TEST HASH RANDOM
+//---------------------------------------------------------------------//
+//---------------------------------------------------------------------//
+                                   100000
+//---------------------------------------------------------------------//
+        new prime 11
+
+Hashing Insert..............................................
+
+        RESIZE
+        new prime 113
+        RESIZE
+        new prime 1151
+        RESIZE
+        new prime 11519
+        RESIZE
+        new prime 115201
+My hash insert took 41.285000 seconds
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+        REHASH
+Not my hash insert took 0.032000 seconds
+
+..............................................Search for        Ws87ObZk
+MY_HASH Data 'Ws87ObZk' is on index 66531
+O(411)
+My hash search took 0.000000 seconds
+
+NM_HASH Data 'Ws87ObZk' is on index 49674
+O(1)
+Not my hash search took 0.000000 seconds
+
+Process finished with exit code 0

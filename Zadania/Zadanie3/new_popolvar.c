@@ -54,8 +54,8 @@ void change_xy_POS(POSITION *neighbour, int new_x, int new_y);
 void change_map_info(MAP_I ***map_info, int new_x, int new_y, int x, int y, unsigned actual_dist, unsigned neighbour_dist);
 void find_positions(char **mapa, int height, int width, POSITION *dragon_pos, POSITION **princess_pos, int *princess_counter);
 void set_path(POSITION **path, int size);
-void get_path(POSITION **path, int path_size, MAP_I **map_info, POSITION last_pos);
-void reverse_path(POSITION **path, int path_size);
+void get_path(POSITION **path, int *path_size, MAP_I **map_info, POSITION last_pos);
+void reverse_path(POSITION **path, int start, int end);
 void print_path(POSITION *path);
 void shortest_princess_path(MAP_I **map_info, uint32_t *state, POSITION **princess_pos, int princess_counter, int **dlzka_cesty);
 //*************************************************//
@@ -72,6 +72,7 @@ void free_map_info(MAP_I **map_info, int height);
 MAP_I **set_map_info(int height, int width);
 MAP_I **reset(MAP_I **map_info, int height, int width);
 void print_map_info(MAP_I **map_info, int height, int width, char ch);
+int get_obstacles_num(char **mapa, int height, int width);
 //*************************************************//
 //              Vedlajsie funckie                  //
 //*************************************************//
@@ -121,10 +122,10 @@ int main() {
 //                Hlavne funkcie                   //
 //*************************************************//
 POSITION *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty) {
-    int path_size = n * m * 3;
+    int path_size_init = n * m * 3, path_size;
     //zaznam najkratsej cesty (uchovava suradnice policok (x, y))
-    POSITION *shortest_path = malloc(SIZE_POSITION * path_size);
-    set_path(&shortest_path, path_size);
+    POSITION *shortest_path = malloc(SIZE_POSITION * path_size_init);
+    set_path(&shortest_path, path_size_init);
     int path_index = 0;
 
     //druha mapa, ktora udrziava extra informacie* o kazdom poli v povodnej mape
@@ -142,7 +143,7 @@ POSITION *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty) 
     //        |
     //        |x
     //ulozene dolezite pozicie v mape //potom pridat aj generator
-    POSITION dragon_pos, *princess_pos = malloc(5 * SIZE_POSITION);
+    POSITION dragon_pos, *princess_pos = malloc(5 * SIZE_POSITION), p_pos;
     int princess_counter = 0;
     find_positions(mapa, n, m, &dragon_pos, &princess_pos, &princess_counter);
 
@@ -150,27 +151,28 @@ POSITION *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty) 
     map_info = dijkstra(mapa, map_info, state, n, m, &shortest_path, &path_index);
     //drak zabity
     (*dlzka_cesty) += map_info[get_x(dragon_pos.xy)][get_y(dragon_pos.xy)].dist;
+    path_size = 0;
+    shortest_path[path_size++].xy = 0;
+    get_path(&shortest_path, &path_size, map_info, dragon_pos);
+    print_path(shortest_path);
     state = change_d(state, 1);
     state = change_x(state, get_x(dragon_pos.xy));
     state = change_y(state, get_y(dragon_pos.xy));
-    printf("\ndlzka cesty ku drakovi: %d\n\n", (*dlzka_cesty));
-    printf("princess positions\n");
-    for (int i = 0; i < princess_counter; i++)
-       printf("p%d:[%d,%d] ", i+1, get_x(princess_pos[i].xy), get_y(princess_pos[i].xy));
-    printf("\n");
-    printf("dragon positions:[%d,%d]\n", get_x(dragon_pos.xy), get_y(dragon_pos.xy));
-
-    get_path(&shortest_path, path_size, map_info, dragon_pos);
-    print_path(shortest_path);
+    print_map_info(map_info, n, m, 'a');
     //TUTO JE NIEKDE CHYBA
     //zachran princeze
     for (int i = princess_counter; i > 0; i--) {
         printf("\nprincezna %d\n\n", i);
         map_info = reset(map_info, n, m);
         map_info = dijkstra(mapa, map_info, state, n, m, &shortest_path, &path_index);
-        printf("shortest to princess\n");
+        print_map_info(map_info, n, m, 'a');
         shortest_princess_path(map_info, &state, &princess_pos, princess_counter, &dlzka_cesty);
+        printf("shortest to princess\n");
         printf("P x:%d y:%d\n", get_x(state), get_y(state));
+        p_pos.xy = change_x(p_pos.xy, get_x(state));
+        p_pos.xy = change_y(p_pos.xy, get_y(state));
+        get_path(&shortest_path, &path_size, map_info, p_pos);
+        print_path(shortest_path);
     }
 
     free_map_info(map_info, n);
@@ -181,8 +183,9 @@ POSITION *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty) 
 
 MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int width, POSITION **shortest_path, int *path_index) {
     //min-heap
-    POSITION *min_heap = malloc(sizeof(POSITION) * height * width);
-    int heap_size = 0;
+    POSITION *min_heap = malloc(SIZE_POSITION * height * width * 3);
+    int heap_size = 0, obstacles_num = get_obstacles_num(mapa, height, width);
+    uint32_t state_xy = 0;
 
     POSITION neighbour /*sused pola*/, chosen_one;
     int x, y;
@@ -191,6 +194,8 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
     //zaciatocna pozicia je ulozena v premennej state
     x = get_x(state);
     y = get_y(state);
+    state_xy = change_x(state, x);
+    state_xy = change_y(state, y);
     map_info[x][y].dist = 0;
 
     while (1) {
@@ -199,7 +204,7 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
         if (((x - 1) >= 0) && ((x - 1) < height)) {
             //look up
             if (((count == 1) || ((x - 1) != get_x(map_info[x][y].xy_p)))
-                && ((x - 1) != get_x(state)) && (mapa[x-1][y] != 'N') &&
+                && (mapa[x-1][y] != 'N') &&
                 (map_info[x-1][y].dist > (map_info[x][y].dist + get_dist(mapa[x-1][y])))) {
                 change_xy_POS(&neighbour, x - 1, y);
                 change_map_info(&map_info, x - 1, y, x, y, map_info[x][y].dist, get_dist(mapa[x-1][y]));
@@ -215,7 +220,7 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
         if (((y + 1) < width) && ((y + 1) >= 0)) {
             //look right
             if (((count == 1) || ((y + 1) != get_y(map_info[x][y].xy_p)))
-                && (mapa[x][(y+1)] != 'N') && ((y+1) != get_y(state)) &&
+                && (mapa[x][(y+1)] != 'N') &&
                 (map_info[x][(y+1)].dist > (map_info[x][y].dist + get_dist(mapa[x][y+1])))) {
                 change_xy_POS(&neighbour, x, y + 1);
                 change_map_info(&map_info, x, y + 1, x, y, map_info[x][y].dist, get_dist(mapa[x][y+1]));             
@@ -226,7 +231,7 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
         if (((x + 1) < height) && ((x + 1) >= 0)) {
             //look down
             if (((count == 1) || ((x + 1) != get_x(map_info[x][y].xy_p)))
-                && (mapa[x+1][y] != 'N') && ((x+1) != get_x(state)) &&
+                && (mapa[x+1][y] != 'N') &&
                 (map_info[(x+1)][y].dist > (map_info[x][y].dist + get_dist(mapa[x+1][y])))) {
                 change_xy_POS(&neighbour, x + 1, y);
                 change_map_info(&map_info, x + 1, y, x, y, map_info[x][y].dist, get_dist(mapa[x+1][y]));
@@ -236,8 +241,9 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
 
         if (((y - 1) >= 0) && ((y - 1) < width)) {
             //look left
+            //printf("%d %d\n", map_info[x][(y-1)].dist, (map_info[x][y].dist + get_dist(mapa[x][y-1])));
             if (((count == 1) || ((y - 1) != get_y(map_info[x][y].xy_p)))
-                && (mapa[x][y-1] != 'N') && ((y-1) != get_y(state)) &&
+                && (mapa[x][y-1] != 'N') &&
                 (map_info[x][(y-1)].dist > (map_info[x][y].dist + get_dist(mapa[x][y-1])))) {
                 change_xy_POS(&neighbour, x, y - 1);
                 change_map_info(&map_info, x, y - 1, x, y, map_info[x][y].dist, get_dist(mapa[x][y-1]));
@@ -245,17 +251,18 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
             }
         }
 
+        // if (get_d(state) == 1) {
+        //     printf("chosen x:%d  y:%d\n", x, y);
+        //     print_map_info(map_info, height, width, 'd');
+        //     // print_min_heap(map_info, min_heap, heap_size);
+        //     printf("heap size %d\n", heap_size);
+        // }
+
         chosen_one = pop(map_info, &min_heap, &heap_size);
         x = get_x(chosen_one.xy);
         y = get_y(chosen_one.xy);
 
-        if (get_d(state) == 1) {
-            printf("chosen x:%d  y:%d\n", x, y);
-            print_map_info(map_info, height, width, 'd');
-            printf("\n\n");
-        }
-
-        if((heap_size == 0) && (count > ((height * width) / 2)))
+        if((heap_size <= 0) && (count >= ((height * width) - obstacles_num)))
             break;
     }
 
@@ -294,37 +301,33 @@ void set_path(POSITION **path, int size) {
         (*path)[i].xy = INT_MAX;
 }
 
-void get_path(POSITION **path, int path_size, MAP_I **map_info, POSITION last_pos) {
+void get_path(POSITION **path, int *path_size, MAP_I **map_info, POSITION last_pos) {
     //printf("\tget path\n");
-    int tmp_x, tmp_y, x = get_x(last_pos.xy), y = get_y(last_pos.xy), i = 0;
+    int tmp_x, tmp_y, x = get_x(last_pos.xy), y = get_y(last_pos.xy), i = (*path_size), start_i = i;
+    POSITION *tmp_path = (*path);
     while (map_info[x][y].dist != 0) {
-        (*path)[i].xy = change_x((*path)[i].xy, x);
-        (*path)[i].xy = change_y((*path)[i].xy, y);
+        tmp_path[i].xy = change_x(tmp_path[i].xy, x);
+        tmp_path[i].xy = change_y(tmp_path[i].xy, y);
         i++;
         tmp_x = get_x(map_info[x][y].xy_p);
         tmp_y = get_y(map_info[x][y].xy_p);
         x = tmp_x;
         y = tmp_y;
     }
-    (*path)[i].xy = change_x((*path)[i].xy, x);
-    (*path)[i].xy = change_y((*path)[i].xy, y);
-    i++;
-    tmp_x = get_x(map_info[x][y].xy_p);
-    tmp_y = get_y(map_info[x][y].xy_p);
-    x = tmp_x;
-    y = tmp_y;
-    
-    reverse_path(path, i);
+    (*path_size) = i;
+    reverse_path(&tmp_path, start_i, (*path_size));
+    (*path) = tmp_path;
+    printf("path size %d\n", (*path_size));
 }
 
-void reverse_path(POSITION **path, int path_size) {
-    int i = 0, temp;
-    while (i < path_size) { 
-        temp = (*path)[i].xy;  
-        path_size--; 
-        (*path)[i].xy = (*path)[path_size].xy; 
-        (*path)[path_size].xy = temp; 
-        i++; 
+void reverse_path(POSITION **path, int start, int end) {
+    int temp;
+    while (start < end) { 
+        temp = (*path)[start].xy;  
+        end--; 
+        (*path)[start].xy = (*path)[end].xy; 
+        (*path)[end].xy = temp; 
+        start++; 
     }
 }
 
@@ -339,12 +342,11 @@ void print_path(POSITION *path) {
 }
 
 void shortest_princess_path(MAP_I **map_info, uint32_t *state, POSITION **princess_pos, int princess_counter, int **dlzka_cesty) {
-    printf("\nshortest p path\n");
     POSITION temp, best;
     int best_i = 0, i;
 
     for (i = 0; i < princess_counter; i++)
-        if (get_p((*state), i) == (unsigned) 0) {
+        if (get_p((*princess_pos)[i].xy, i) == (unsigned) 0) {
             best = (*princess_pos)[i];
             break;
         }
@@ -357,12 +359,20 @@ void shortest_princess_path(MAP_I **map_info, uint32_t *state, POSITION **prince
         }
     }
 
-    (*state) = change_p((*state), 1, best_i);
+    (*state) = change_p((*state), best_i, 1);
     (*state) = change_x((*state), get_x((*princess_pos)[best_i].xy));
     (*state) = change_y((*state), get_y((*princess_pos)[best_i].xy));
     (**dlzka_cesty) += map_info[get_x((*princess_pos)[best_i].xy)][get_y((*princess_pos)[best_i].xy)].dist;
 }
 
+int get_obstacles_num(char **mapa, int height, int width) {
+    int count = 0;
+    for (int i = 0; i < height; i++)
+        for (int j = 0; j < width; j++)
+            if (mapa[i][j] == 'N')
+                count++;
+    return count;
+}
 //*************************************************//
 //          Funckie pre pracu s mapami             //
 //*************************************************//
@@ -575,7 +585,7 @@ void add_min_heap(MAP_I **map_info, POSITION **min_heap, POSITION relaxed, int *
     (*min_heap)[*heap_size] = relaxed;
     (*heap_size)++;
 
-    if ((*heap_size) == 1)
+    if (((*heap_size) <= 1))
         return;
 
     int i = (*heap_size) - 1; //posledne cislo v heape - jeho index
@@ -602,7 +612,12 @@ POSITION pop(MAP_I **map_info, POSITION **min_heap, int *heap_size) {
     if ((*heap_size) == 1) {
         (*heap_size)--;
         return (*min_heap)[0];
+    } else if ((*heap_size) == 0) {
+        POSITION pos;
+        pos.xy = 0;
+        return pos;
     }
+    
 
     POSITION popped = (*min_heap)[0];
     (*min_heap)[0] = (*min_heap)[((*heap_size)-1)]; //posledne cislo dam na prve
@@ -693,7 +708,8 @@ uint32_t change_y(uint32_t state, unsigned y) {
 }
 
 unsigned get_d(uint32_t state) {
-    return (state & (~(((1 << (2*POS_SIZE)) - 1) << Y_OFF))) >> D_OFF;
+    int pos = (2 * POS_SIZE) + 1;
+    return (state & (~(((1 << pos) - 1) << Y_OFF))) >> D_OFF;
 }
 
 uint32_t change_d(uint32_t state, unsigned D) {
@@ -841,13 +857,9 @@ void main_zo_zadania() {
 
         //*************zachrana*************
         POSITION *cesta = zachran_princezne(map, height, width, time_to_kill, &dlzka_cesty);
-        printf("dlzka cesty: %d\n", dlzka_cesty);
+        printf("\ndlzka cesty: %d\n", dlzka_cesty);
 
-        for (int i = 0; i < dlzka_cesty; i++) {
-            printf("%d %d\n", get_x(cesta[i].xy), get_y(cesta[i].xy));
-            // if ((cesta[i*2] == 0) && (cesta[i*2+1] == 0))
-            //     break;
-        }
+        print_path(cesta);
 
         printf("KONIEC\n");
     }
@@ -856,15 +868,17 @@ void main_zo_zadania() {
 void test_bit_operations() {
     POSITION state;
     state.xy = 0;
-    int x = 5, y = 1, d = 0;
+    int x = 5, y = 1, d = 1;
     int p1 = 1, p2 = 0, p3 = 0, p4 = 1, p5 = 0;
     printf("x:%d, y:%d, d:%d, p1:%d, p2:%d, p3:%d, p4:%d, p5:%d\n", x, y, d, p1, p2, p3, p4, p5);
-    state.xy = change_x(state.xy, x);
-    state.xy = change_y(state.xy, y);
-    state.xy = change_d(state.xy, d);
-    state.xy = change_p(state.xy, 0, p1);
-    state.xy = change_p(state.xy, 3, p4);
-    state.xy = change_p(state.xy, 4, p5);
+    state.xy = change_d(state.xy, 1);
+    state.xy = change_x(state.xy, x++);
+    state.xy = change_y(state.xy, y++);
+    // state.xy = change_p(state.xy, 0, rand() % 2);
+    // state.xy = change_p(state.xy, 1, rand() % 2);
+    // state.xy = change_p(state.xy, 2, rand() % 2);
+    // state.xy = change_p(state.xy, 3, rand() % 2);
+    // state.xy = change_p(state.xy, 4, rand() % 2);
     printf("x:%d, y:%d, d:%d, p1:%d, p2:%d, p3:%d, p4:%d, p5:%d\n", get_x(state.xy), get_y(state.xy), get_d(state.xy), get_p(state.xy, 0), get_p(state.xy, 1), get_p(state.xy, 2), get_p(state.xy, 3), get_p(state.xy, 4));
 }
 

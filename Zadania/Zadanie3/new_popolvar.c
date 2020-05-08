@@ -7,8 +7,8 @@
 
 //struktura pre mapu, ktora uchovava informacie o jednotlivych poliach
 typedef struct MAP_I {
-    uint32_t dist; //dlzka od zaciatocneho bodu //max +65,535
-    uint32_t xy_p; //pozicia pola, z akeho sme pristupovali do aktualeho pola
+    uint32_t dist; //dlzka od zaciatocneho bodu
+    uint32_t xy_p; //suradnice pola, z akeho sme pristupovali do aktualeho pola
 } MAP_I;
 
 //struktura pre poziciu
@@ -16,12 +16,16 @@ typedef struct POSITION {
     uint32_t xy;
 } POSITION;
 
-//(x a y su suradnicove hodnoty polohy zaciatku cesty)
-//                x             y       D P P P P P
-//state = "|0000000000000|0000000000000|0|0|0|0|0|0";
+//        |x
+//        |
+// y______|________ y
+//        |
+//        |x
+//
+//x a y su suradnice polohy na mape
 
 //konstatny pre pracu so stavom Popolvara (pre bitove operacie)
-#define POS_SIZE 13
+#define POS_SIZE 13 //pocet bitov pre x, resp. y
 #define BIT_SIZE 1
 #define X_OFF 19
 #define Y_OFF 6
@@ -39,17 +43,17 @@ typedef struct POSITION {
 #define SIZE_P_MAP_I sizeof(MAP_I *)
 #define SIZE_POSITION sizeof(POSITION)
 
-#define WIDTH 6 //m (sirka mapy)
-#define HEIGHT 4 //n (vyska mapy)
+#define WIDTH 100 //m (sirka mapy)
+#define HEIGHT 100 //n (vyska mapy)
 #define TIME_TO_KILL 100
-#define UNRELAXED 1000 //"nekonecno" (USHRT_MAX)
-#define PRINCESS_NUM 2
+#define UNRELAXED 4294967 //"nekonecno"
+#define PRINCESS_NUM 5
 
 //*************************************************//
 //                Hlavne funkcie                   //
 //*************************************************//
-POSITION *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty);
-MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int width, POSITION **shortest_path, int *path_index);
+int *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty);
+MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int width, int time, POSITION **shortest_path);
 void change_xy_POS(POSITION *neighbour, int new_x, int new_y);
 void change_map_info(MAP_I ***map_info, int new_x, int new_y, int x, int y, unsigned actual_dist, unsigned neighbour_dist);
 void find_positions(char **mapa, int height, int width, POSITION *dragon_pos, POSITION **princess_pos, int *princess_counter);
@@ -57,7 +61,10 @@ void set_path(POSITION **path, int size);
 void get_path(POSITION **path, int *path_size, MAP_I **map_info, POSITION last_pos);
 void reverse_path(POSITION **path, int start, int end);
 void print_path(POSITION *path);
-void shortest_princess_path(MAP_I **map_info, uint32_t *state, POSITION **princess_pos, int princess_counter, int **dlzka_cesty);
+void print_int_path(int *path, int path_size);
+void swap_x_y_path(POSITION **path);
+int *convert_position_arr_to_int(POSITION *shortest_path, int *path_size);
+uint32_t shortest_princess_path(MAP_I **map_info, uint32_t state, POSITION **princess_pos, int princess_counter);
 //*************************************************//
 //          Funckie pre pracu s mapami             //
 //*************************************************//
@@ -66,7 +73,7 @@ void free_char_map(char **mapa, int height);
 char **generate_map(int height, int width, int princess_num);
 char get_element(int element);
 int get_dist(char element);
-void print_map(char **mapa, int height, int width);
+void print_map(char **mapa, int height, int width, int time);
 MAP_I **allocate_map_info(int height, int width);
 void free_map_info(MAP_I **map_info, int height);
 MAP_I **set_map_info(int height, int width);
@@ -106,96 +113,115 @@ unsigned print_bin32(uint32_t num, int bit);
 //                   Testovanie                    //
 //*************************************************//
 void main_zo_zadania();
+void main_zo_zadania_case_2(int *height, int *width, int *time_to_kill, char ***map);
 void test_bit_operations();
 void test_find_positions();
+void test_print_structure_size();
 
+//*************************************************//
+//                      MAIN                       //
+//*************************************************//
 int main() {
     main_zo_zadania();
     //test_bit_operations();
     //test_find_positions();
+    //test_print_structure_size();
     return 0;
 }
 
-//m (sirka mapy)
-//n (vyska mapy)
+//m (sirka mapy), n (vyska mapy)
 //*************************************************//
 //                Hlavne funkcie                   //
 //*************************************************//
-POSITION *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty) {
-    int path_size_init = n * m * 3, path_size;
-    //zaznam najkratsej cesty (uchovava suradnice policok (x, y))
-    POSITION *shortest_path = malloc(SIZE_POSITION * path_size_init);
-    set_path(&shortest_path, path_size_init);
-    int path_index = 0;
-
+int *zachran_princezne(char **mapa, int n, int m, int t, int *dlzka_cesty) {
+    int path_size_init = n * m * 2, princess_path_size = 0;
+    (*dlzka_cesty) = 0;
+    POSITION *cesta = (POSITION *)malloc(SIZE_POSITION * path_size_init);
+    POSITION best_princess;
+    set_path(&cesta, path_size_init);
     //druha mapa, ktora udrziava extra informacie* o kazdom poli v povodnej mape
     //*extra informacie: vzdialenost od zaciatocneho bodu a
     //suradnice predosleho policka, z ktoreho sme sa dostali na aktualne
     MAP_I **map_info = set_map_info(n, m);
-
-    //(x a y su suradnicove hodnoty polohy zaciatku cesty)
-    //              x          y          G D P P P P P
-    //state = "|000000000000|000000000000|0|0|0|0|0|0|0|0";
+    //ulozenie x,y zaciatku cesty a stavy, ci je drak zabity a princezne zachranene
+    //       x             y       D P P P P P
+    //|0000000000000|0000000000000|0|0|0|0|0|0 => state
     uint32_t state = 0;
-    //        |x
-    //        |
-    // y______|________ y
-    //        |
-    //        |x
-    //ulozene dolezite pozicie v mape //potom pridat aj generator
-    POSITION dragon_pos, *princess_pos = malloc(5 * SIZE_POSITION), p_pos;
+    //ulozene dolezite pozicie v mape
+    POSITION dragon_pos, *princess_pos = (POSITION *)malloc(5 * SIZE_POSITION), p_pos;
     int princess_counter = 0;
+
     find_positions(mapa, n, m, &dragon_pos, &princess_pos, &princess_counter);
 
+    if (mapa[0][0] == 'N') {
+        printf("\nPopolvar sa nevie dostat zo skaly dole.\n");
+        return NULL; //ak popolvar zacina na prekazke, konci
+    }
+
     //zabi draka
-    map_info = dijkstra(mapa, map_info, state, n, m, &shortest_path, &path_index);
+    map_info = dijkstra(mapa, map_info, state, n, m, t, &cesta);
+    if (map_info[get_x(dragon_pos.xy)][get_y(dragon_pos.xy)].dist == UNRELAXED) {
+        printf("\nPopolvar sa nevie dostat ku drakovi.\n");
+        return NULL; //ak sa Popolvar nedostal k drakovi 
+    }
+
+    if (t < map_info[get_x(dragon_pos.xy)][get_y(dragon_pos.xy)].dist) {
+        printf("\nDrak zjedol princezne. Smola.\n");
+        return NULL;
+    }
+
     //drak zabity
-    (*dlzka_cesty) += map_info[get_x(dragon_pos.xy)][get_y(dragon_pos.xy)].dist;
-    path_size = 0;
-    shortest_path[path_size++].xy = 0;
-    get_path(&shortest_path, &path_size, map_info, dragon_pos);
-    print_path(shortest_path);
+    cesta[(*dlzka_cesty)++].xy = 0; //prva pozicia cesty
+    get_path(&cesta, dlzka_cesty, map_info, dragon_pos);
+    printf("Cesta ku drakovi:\n");
+    print_path(cesta);
+
     state = change_d(state, 1);
     state = change_x(state, get_x(dragon_pos.xy));
     state = change_y(state, get_y(dragon_pos.xy));
-    print_map_info(map_info, n, m, 'a');
-    //TUTO JE NIEKDE CHYBA
+
     //zachran princeze
+    printf("Princene\n");
     for (int i = princess_counter; i > 0; i--) {
-        printf("\nprincezna %d\n\n", i);
         map_info = reset(map_info, n, m);
-        map_info = dijkstra(mapa, map_info, state, n, m, &shortest_path, &path_index);
-        print_map_info(map_info, n, m, 'a');
-        shortest_princess_path(map_info, &state, &princess_pos, princess_counter, &dlzka_cesty);
+        map_info = dijkstra(mapa, map_info, state, n, m, t, &cesta);
+        for (int j = 0; j < princess_counter; j++) {
+            printf("x:%d y:%d\n", get_x(princess_pos[j].xy), get_y(princess_pos[j].xy));
+            printf("dist:%d\n", map_info[get_x(princess_pos[j].xy)][get_y(princess_pos[j].xy)].dist);
+            if (map_info[get_x(princess_pos[j].xy)][get_y(princess_pos[j].xy)].dist == UNRELAXED){
+                printf("\nPopolvar sa nevedel dostat k princeznej.\n");
+                (*dlzka_cesty) = 0;
+                return NULL;
+            }
+        }
+        state = shortest_princess_path(map_info, state, &princess_pos, princess_counter);
         printf("shortest to princess\n");
         printf("P x:%d y:%d\n", get_x(state), get_y(state));
         p_pos.xy = change_x(p_pos.xy, get_x(state));
         p_pos.xy = change_y(p_pos.xy, get_y(state));
-        get_path(&shortest_path, &path_size, map_info, p_pos);
-        print_path(shortest_path);
+        get_path(&cesta, dlzka_cesty, map_info, p_pos);
     }
 
     free_map_info(map_info, n);
     free_char_map(mapa, n);
 
-    return shortest_path;
+    swap_x_y_path(&cesta);
+
+    return convert_position_arr_to_int(cesta, dlzka_cesty);
 }
 
-MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int width, POSITION **shortest_path, int *path_index) {
+MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int width, int time, POSITION **shortest_path) {
     //min-heap
-    POSITION *min_heap = malloc(SIZE_POSITION * height * width * 3);
+    POSITION *min_heap = (POSITION *)malloc(SIZE_POSITION * height * width * 2);
     int heap_size = 0, obstacles_num = get_obstacles_num(mapa, height, width);
-    uint32_t state_xy = 0;
 
     POSITION neighbour /*sused pola*/, chosen_one;
     int x, y;
-    int count = 0;
+    int count = 0, time_count = 0;
 
     //zaciatocna pozicia je ulozena v premennej state
     x = get_x(state);
     y = get_y(state);
-    state_xy = change_x(state, x);
-    state_xy = change_y(state, y);
     map_info[x][y].dist = 0;
 
     while (1) {
@@ -209,11 +235,6 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
                 change_xy_POS(&neighbour, x - 1, y);
                 change_map_info(&map_info, x - 1, y, x, y, map_info[x][y].dist, get_dist(mapa[x-1][y]));
                 add_min_heap(map_info, &min_heap, neighbour, &heap_size);
-                // if (get_D(state) == 1)
-                // {
-                //     printf("up\tx:%d  y:%d\n", neighbour.x, neighbour.y);
-                //     print_min_heap(map_info, min_heap, heap_size);
-                // }
             }
         }
 
@@ -251,13 +272,6 @@ MAP_I **dijkstra(char **mapa, MAP_I **map_info, uint32_t state, int height, int 
             }
         }
 
-        // if (get_d(state) == 1) {
-        //     printf("chosen x:%d  y:%d\n", x, y);
-        //     print_map_info(map_info, height, width, 'd');
-        //     // print_min_heap(map_info, min_heap, heap_size);
-        //     printf("heap size %d\n", heap_size);
-        // }
-
         chosen_one = pop(map_info, &min_heap, &heap_size);
         x = get_x(chosen_one.xy);
         y = get_y(chosen_one.xy);
@@ -282,14 +296,13 @@ void change_map_info(MAP_I ***map_info, int new_x, int new_y, int x, int y, unsi
 }
 
 void find_positions(char **mapa, int height, int width, POSITION *dragon_pos, POSITION **princess_pos, int *princess_counter) {
-    //potom pridat aj poziciu generatora a aj teleportov (pre teleporty bud 2d pole alebo struktura)
     for (int i = 0; i < height; i++)
         for (int j = 0; j < width; j++)
-            if(mapa[i][j] == 'D') {
+            if(mapa[i][j] == 'D') { //ulozi si poziciu draka
                 (*dragon_pos).xy = change_x((*dragon_pos).xy, i);
                 (*dragon_pos).xy = change_y((*dragon_pos).xy, j);
             }
-            else if (mapa[i][j] == 'P') {
+            else if (mapa[i][j] == 'P') { //ulozi si poziciu princezien, aj ich spocita
                 (*princess_pos)[(*princess_counter)].xy = change_x((*princess_pos)[(*princess_counter)].xy, i);
                 (*princess_pos)[(*princess_counter)].xy = change_y((*princess_pos)[(*princess_counter)].xy, j);
                 (*princess_counter)++;
@@ -302,12 +315,10 @@ void set_path(POSITION **path, int size) {
 }
 
 void get_path(POSITION **path, int *path_size, MAP_I **map_info, POSITION last_pos) {
-    //printf("\tget path\n");
     int tmp_x, tmp_y, x = get_x(last_pos.xy), y = get_y(last_pos.xy), i = (*path_size), start_i = i;
-    POSITION *tmp_path = (*path);
     while (map_info[x][y].dist != 0) {
-        tmp_path[i].xy = change_x(tmp_path[i].xy, x);
-        tmp_path[i].xy = change_y(tmp_path[i].xy, y);
+        (*path)[i].xy = change_x((*path)[i].xy, x);
+        (*path)[i].xy = change_y((*path)[i].xy, y);
         i++;
         tmp_x = get_x(map_info[x][y].xy_p);
         tmp_y = get_y(map_info[x][y].xy_p);
@@ -315,13 +326,11 @@ void get_path(POSITION **path, int *path_size, MAP_I **map_info, POSITION last_p
         y = tmp_y;
     }
     (*path_size) = i;
-    reverse_path(&tmp_path, start_i, (*path_size));
-    (*path) = tmp_path;
-    printf("path size %d\n", (*path_size));
+    reverse_path(path, start_i, (*path_size));
 }
 
 void reverse_path(POSITION **path, int start, int end) {
-    int temp;
+    uint32_t temp;
     while (start < end) { 
         temp = (*path)[start].xy;  
         end--; 
@@ -332,37 +341,65 @@ void reverse_path(POSITION **path, int start, int end) {
 }
 
 void print_path(POSITION *path) {
-    printf("path coordinates\n");
-    printf("x  y\n");
+    printf("x y\n");
     int i = 0;
     while ((path)[i].xy != INT_MAX) {
-        printf("%d  %d\n", get_x((path)[i].xy), get_y((path)[i].xy));
+        printf("%d %d\n", get_x((path)[i].xy), get_y((path)[i].xy));
         i++; 
     }
 }
 
-void shortest_princess_path(MAP_I **map_info, uint32_t *state, POSITION **princess_pos, int princess_counter, int **dlzka_cesty) {
+void print_int_path(int *path, int path_size) {
+    int i = 0;
+    while(i != path_size)
+        printf("%d %d\n", path[i++], path[i++]);    
+}
+
+void swap_x_y_path(POSITION **path) {
+    unsigned int temp;
+    int i = 0;
+    while ((*path)[i].xy != INT_MAX) {
+        temp = get_x((*path)[i].xy);
+        (*path)[i].xy = change_x((*path)[i].xy, get_y((*path)[i].xy));
+        (*path)[i].xy = change_y((*path)[i].xy, temp);
+        i++; 
+    }
+}
+
+int *convert_position_arr_to_int(POSITION *shortest_path, int *path_size) {
+    int j = 0;
+    int *shortest_path_int = (int *)malloc(SIZE_INT * (*path_size) * 2);
+    for (int i = 0; i < (*path_size); i++) {
+        shortest_path_int[j++] = (int) get_x(shortest_path[i].xy);
+        shortest_path_int[j++] = (int) get_y(shortest_path[i].xy);
+    }
+    return shortest_path_int;    
+}
+
+uint32_t shortest_princess_path(MAP_I **map_info, uint32_t state, POSITION **princess_pos, int princess_counter) {
     POSITION temp, best;
     int best_i = 0, i;
 
-    for (i = 0; i < princess_counter; i++)
-        if (get_p((*princess_pos)[i].xy, i) == (unsigned) 0) {
+    for (i = 0; i < princess_counter; i++) {
+        //printf("%d %d %d\n", get_p(state, i), get_x((*princess_pos)[i].xy), get_y((*princess_pos)[i].xy));
+        if (get_p(state, i) == (unsigned) 0) {
             best = (*princess_pos)[i];
+            best_i = i;
             break;
         }
-
+    }
     for (i = 0; i < princess_counter; i++) {
         temp = (*princess_pos)[i];
-        if ((map_info[get_x(temp.xy)][get_x(temp.xy)].dist < map_info[get_x(best.xy)][get_y(best.xy)].dist) && (get_p((*state), i) == 0)) {
+        if ((map_info[get_x(temp.xy)][get_y(temp.xy)].dist < map_info[get_x(best.xy)][get_y(best.xy)].dist) && (get_p(state, i) == (unsigned) 0)) {
             best = temp;
             best_i = i;
         }
     }
 
-    (*state) = change_p((*state), best_i, 1);
-    (*state) = change_x((*state), get_x((*princess_pos)[best_i].xy));
-    (*state) = change_y((*state), get_y((*princess_pos)[best_i].xy));
-    (**dlzka_cesty) += map_info[get_x((*princess_pos)[best_i].xy)][get_y((*princess_pos)[best_i].xy)].dist;
+    state = change_p(state, best_i, 1);
+    state = change_x(state, get_x((*princess_pos)[best_i].xy));
+    state = change_y(state, get_y((*princess_pos)[best_i].xy));
+    return state;
 }
 
 int get_obstacles_num(char **mapa, int height, int width) {
@@ -393,6 +430,7 @@ void free_char_map(char **mapa, int height) {
 
 //generovanie mapy (testovanie vyhladavacieho algoritmu)
 char **generate_map(int height, int width, int princess_num) {
+    srand(time(0)); //kvoli generovaniu nahodnych cisel pri generovani mapy
     char **map = allocate_char_map(height, width);
     int element_index, propability_index;
     /*
@@ -400,30 +438,26 @@ char **generate_map(int height, int width, int princess_num) {
     1 drak                              \
     (zatial konstantne) 2 princezne    -- staticke udaje
     (zatial konstantne) 2 teleporty     /
-    pocet lesnych ciest = 65% zo zostatku (novy zostatok)
+    pocet lesnych ciest = 60% zo zostatku (novy zostatok)
     pocet porastov = 70% z noveho zostatku (uplny zvysok)
     pocet nepriechodnych ciest = uplny zvysok
     */
     int dragon_num = 1;
-    int teleport_num = 0;
-    int generator_num = 0; //bez teleportov
-    int remainder = (width * height) - dragon_num - princess_num - teleport_num - generator_num;
-    int trail_num = get_percentage(remainder, 65);
+    int remainder = (width * height) - dragon_num - princess_num;
+    int trail_num = get_percentage(remainder, 60);
     remainder -= trail_num;
     int undergrowth_num = get_percentage(remainder, 70);
     int impassable_num = remainder - undergrowth_num;
 
     int elements_arr[] = {trail_num, undergrowth_num, impassable_num,
-                          dragon_num, princess_num, teleport_num, generator_num};
+                          dragon_num, princess_num};
 
     //velkost: 30
-    int propability_arr[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //C -> pravdepodobnost: 0,36
-                             1, 1, 1, 1, 1, 1, 1, //H -> pravdepodobnost: 0,23
-                             2, 2, 2, //N -> pravdepodobnost: 0,1
-                             3, //D -> pravdepodobnost: 0,03
-                             4, 4, //P -> pravdepodobnost: 0,06
-                             5, 5, 5, 5, //0-9 -> pravdepodobnost: 0,13
-                             6, 6}; //G -> pravdepodobnost: 0,06
+    int propability_arr[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //C(27) -> pravdepodobnost
+                             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, //H(13) -> pravdepodobnost
+                             2, 2, 2, 2, 2, 2, 2, //N(7) -> pravdepodobnost
+                             3, //D -> pravdepodobnost
+                             4, 4}; //P -> pravdepodobnost
 
     //vkladanie elementov do mapy
     for (int i = 0; i < height; i++) {
@@ -435,7 +469,7 @@ char **generate_map(int height, int width, int princess_num) {
                     elements_arr[element_index]--;
                     break;
                 }
-                propability_index = get_random_range(0, 29);
+                propability_index = get_random_range(0, 49);
                 element_index = propability_arr[propability_index];
                 if (elements_arr[element_index]) {
                     map[i][j] = get_element(element_index);
@@ -507,10 +541,11 @@ int get_dist(char element) {
 }
 
 //funkcia vytlaci mapu
-void print_map(char **mapa, int height, int width) {
+void print_map(char **mapa, int height, int width, int time) {
+    printf("%d %d %d\n", height, width, time);
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++)
-            printf("%c ", mapa[i][j]);
+            printf("%c", mapa[i][j]);
 
         printf("\n");
     }
@@ -520,7 +555,6 @@ MAP_I **allocate_map_info(int height, int width) {
     MAP_I **map = (MAP_I **)malloc(height * SIZE_P_MAP_I);
     for (int i = 0; i < height; i++)
         map[i] = (MAP_I *)malloc(width * SIZE_MAP_I);
-
     return map;
 }
 
@@ -537,11 +571,12 @@ MAP_I **set_map_info(int height, int width) {
 }
 
 MAP_I **reset(MAP_I **map_info, int height, int width) {
-    for(int i = 0; i < height; i++)
+    for(int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             map_info[i][j].dist = UNRELAXED; //"nekonecna" vzdialenost od zaciatocneho bodu
             map_info[i][j].xy_p = 0;
         }
+    }
     return map_info;
 }
 
@@ -791,77 +826,162 @@ void main_zo_zadania() {
         dlzka_cesty = 0, height = 0, width = 0, time_to_kill = 0;
         printf("\nZadajte cislo testu:\n0 : ukonci program\n1 : vyberie mapu zo suboru test.txt\n2 : nacita predefinovanu mapu\n3 : vygeneruje nahodnu mapu\n");
         scanf("%d", &test);
+        printf("\n");
 
         switch (test) {
-            case 0:
-                run = 0;
-                break;
+        case 0:
+            run = 0;
+            break;
 
-            case 1:
-                file = fopen("test.txt", "r");
-                if (file) {
-                    fscanf(file, "%d %d %d", &height, &width, &time_to_kill);
-                } else {
-                    continue;
-                }
+        case 1:
+            file = fopen("mapa.txt", "r");
+            if (file) {
+                fscanf(file, "%d %d %d", &height, &width, &time_to_kill);
+            } else {
+                printf("Subor nebol najdeny alebo ho nemozno otvorit.\n");
+                continue;
+            }
+            char field;
+            map = allocate_char_map(height, width);
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    field = fgetc(file);
+                    if (field == '\n')
+                        field = fgetc(file);
+                    map[i][j] = field; 
+                }   
+            }
+            fclose(file);
+            break;
 
-                char policko;
-                map = allocate_char_map(height, width);
-                for (int i = 0; i < height; i++) {
-                    for (int j = 0; j < width; j++) {
-                    policko = fgetc(file);
-                    if (policko == '\n') {
-                        policko = fgetc(file);
-                    }
-                    map[i][j] = policko; 
-                    }   
-                }
-                fclose(file);
-                break;
+        case 2:
+            main_zo_zadania_case_2(&height, &width, &time_to_kill, &map);
+            break;
+            
+        case 3:
+            height = HEIGHT;
+            width = WIDTH;
+            time_to_kill = TIME_TO_KILL;
+            map = generate_map(HEIGHT, WIDTH, PRINCESS_NUM); //generovanie nahodnej mapy 
+            break;
 
-            case 2:
-                height = 10;
-                width = 10;
-                time_to_kill = 12;
-                map = (char **)malloc(height * SIZE_P_CHAR);
-                map[0]="CCHCNHCCHN";
-                map[1]="NNCCCHHCCC";
-                map[2]="DNCCNNHHHC";
-                map[3]="CHHHCCCCCC";
-                map[4]="CCCCCNHHHH";
-                map[5]="PCHCCCNNNN";
-                map[6]="NNNNNHCCCC";
-                map[7]="CCCCCPCCCC";
-                map[8]="CCCNNHHHHH";
-                map[9]="HHHPCCCCCC";
-                break;
-                
-            case 3:
-                height = HEIGHT;
-                width = WIDTH;
-                time_to_kill = TIME_TO_KILL;
-                srand(time(0)); //kvoli generovaniu nahodnych cisel pri generovani mapy
-                map = generate_map(HEIGHT, WIDTH, PRINCESS_NUM); //generovanie nahodnej mapy 
-                break;
-
-            default:
-                run = 0;
-                break;
+        default:
+            run = 0;
+            break;
         }
 
         if (!run) {
             break;
         }
 
-        print_map(map, height, width);
+        print_map(map, height, width, time_to_kill);
 
         //*************zachrana*************
-        POSITION *cesta = zachran_princezne(map, height, width, time_to_kill, &dlzka_cesty);
-        printf("\ndlzka cesty: %d\n", dlzka_cesty);
+        int *cesta = zachran_princezne(map, height, width, time_to_kill, &dlzka_cesty);
+        
+        if (dlzka_cesty) {
+            //print_int_path(cesta, dlzka_cesty - 1);
+            printf("\nVysledna cesta:\n");
+            for (int i = 0; i < dlzka_cesty; ++i)
+                printf("%d %d\n", cesta[i*2], cesta[i*2+1]);
+            printf("Dlzka cesty: %d\n", dlzka_cesty);
+        } else {
+            printf("\nCesta nebola najdena.\n");
+            printf("Dlzka cesty: %d\n", dlzka_cesty);
+        }
+    }
+}
 
-        print_path(cesta);
+void main_zo_zadania_case_2(int *height, int *width, int *time_to_kill, char ***map) {
+    int map_num, run = 1;
+    printf("\nZadajte cislo mapy:\n0 : mapa zo zadania\n1 : mapa so zatarasenym Popolvarom\n2 : mapa so zatarasenou 1. najblizsou princeznou\n3 : mapa so zatarasenou inou princeznou\n4\n");
+    scanf("%d", &map_num);
+    while (run) {
+        switch (map_num) {
+        case 0:
+            (*height) = 10;
+            (*width) = 10;
+            (*time_to_kill) = 12;
+            (*map) = (char **)malloc((*height) * SIZE_P_CHAR);
+            (*map)[0]="CCHCNHCCHN";
+            (*map)[1]="NNCCCHHCCC";
+            (*map)[2]="DNCCNNHHHC";
+            (*map)[3]="CHHHCCCCCC";
+            (*map)[4]="CCCCCNHHHH";
+            (*map)[5]="PCHCCCNNNN";
+            (*map)[6]="NNNNNHCCCC";
+            (*map)[7]="CCCCCPCCCC";
+            (*map)[8]="CCCNNHHHHH";
+            (*map)[9]="HHHPCCCCCC";
+            run = 0;
+            break;
 
-        printf("KONIEC\n");
+        case 1:
+            (*height) = 4;
+            (*width) = 6;
+            (*time_to_kill) = 10;
+            (*map) = (char **)malloc((*height) * SIZE_P_CHAR);
+            (*map)[0]="CCCNHC";
+            (*map)[1]="CCHNNC";
+            (*map)[2]="CCCNCH";
+            (*map)[3]="PCNHCD";
+            run = 0;
+            break;
+
+        case 2:
+            (*height) = 10;
+            (*width) = 10;
+            (*time_to_kill) = 12;
+            (*map) = (char **)malloc((*height) * SIZE_P_CHAR);
+            (*map)[0]="CCHCNHCCHN";
+            (*map)[1]="NNCCCHHCCP";
+            (*map)[2]="DNCCNNHHHC";
+            (*map)[3]="CHHHCCCCCC";
+            (*map)[4]="NNCCCNHHHH";
+            (*map)[5]="PCNCCCNNNN";
+            (*map)[6]="NNNNNHCCCC";
+            (*map)[7]="CCCCCPCCCC";
+            (*map)[8]="CCCNNHHHHH";
+            (*map)[9]="HHHPCCCCCC";
+            run = 0;
+            break;
+
+        case 3:
+            (*height) = 10;
+            (*width) = 10;
+            (*time_to_kill) = 12;
+            (*map) = (char **)malloc((*height) * SIZE_P_CHAR);
+            (*map)[0]="CCHCNHCCHN";
+            (*map)[1]="NNCCCHHCCC";
+            (*map)[2]="DNCCNNHHHC";
+            (*map)[3]="CHHHCCCCCC";
+            (*map)[4]="CCCCCNHHHH";
+            (*map)[5]="PCHCCCNNNN";
+            (*map)[6]="NNNNNHCCCC";
+            (*map)[7]="CCCNPNCCCC";
+            (*map)[8]="CCCNNHHHHH";
+            (*map)[9]="HHHPCCCCCC";
+            run = 0;
+            break;
+
+        case 4:
+            (*height) = 5;
+            (*width) = 4;
+            (*time_to_kill) = 10;
+            (*map) = (char **)malloc((*height) * SIZE_P_CHAR);
+            (*map)[0]="CCPC";
+            (*map)[1]="CCCC";
+            (*map)[2]="DCPC";
+            (*map)[3]="CCCC";
+            (*map)[4]="PCCC";
+            run = 0;
+            break;
+        
+        default:
+            continue;
+        }
+        if (!run)
+            break;
     }
 }
 
@@ -874,24 +994,28 @@ void test_bit_operations() {
     state.xy = change_d(state.xy, 1);
     state.xy = change_x(state.xy, x++);
     state.xy = change_y(state.xy, y++);
-    // state.xy = change_p(state.xy, 0, rand() % 2);
-    // state.xy = change_p(state.xy, 1, rand() % 2);
-    // state.xy = change_p(state.xy, 2, rand() % 2);
-    // state.xy = change_p(state.xy, 3, rand() % 2);
-    // state.xy = change_p(state.xy, 4, rand() % 2);
+    state.xy = change_p(state.xy, 0, p1);
+    state.xy = change_p(state.xy, 1, p2);
+    state.xy = change_p(state.xy, 2, p3);
+    state.xy = change_p(state.xy, 3, p4);
+    state.xy = change_p(state.xy, 4, p5);
     printf("x:%d, y:%d, d:%d, p1:%d, p2:%d, p3:%d, p4:%d, p5:%d\n", get_x(state.xy), get_y(state.xy), get_d(state.xy), get_p(state.xy, 0), get_p(state.xy, 1), get_p(state.xy, 2), get_p(state.xy, 3), get_p(state.xy, 4));
 }
 
 void test_find_positions() {
     srand(time(0)); //kvoli generovaniu nahodnych cisel pri generovani mapy
     char **map = generate_map(HEIGHT, WIDTH, PRINCESS_NUM); //generovanie nahodnej mapy 
-    POSITION dragon_pos, *princess_pos = malloc(5 * SIZE_POSITION);
+    POSITION dragon_pos, *princess_pos = (POSITION *)malloc(5 * SIZE_POSITION);
     int princess_counter = 0;
     find_positions(map, HEIGHT, WIDTH, &dragon_pos, &princess_pos, &princess_counter);
-    print_map(map, HEIGHT, WIDTH);
+    print_map(map, HEIGHT, WIDTH, 0);
     printf("princess positions\n");
     for (int i = 0; i < princess_counter; i++)
        printf("p%d:[%d,%d] ", i+1, get_x(princess_pos[i].xy), get_y(princess_pos[i].xy));
     printf("\n");
     printf("dragon positions:[%d,%d]\n", get_x(dragon_pos.xy), get_y(dragon_pos.xy));
+}
+
+void test_print_structure_size() {
+    printf("Velkost MAP_I: %d\nVelkost POSITION: %d\n", SIZE_MAP_I, SIZE_POSITION);
 }
